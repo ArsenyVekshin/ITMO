@@ -1,4 +1,5 @@
 cd ~
+chmod -R 777 ~/lab0 
 rm -rf lab0
 mkdir lab0
 cd lab0
@@ -22,7 +23,7 @@ echo -e "weight=19.8 height=20.0 atk=6\ndef=6" >>elgyem
 echo -e "Развитые способности Weak Armor" >>dwebble
 mkdir xatu poliwhirl
 
-cd -
+cd ~/lab0 #cd -
 
 
 
@@ -34,7 +35,7 @@ echo "Overland=4 Sky=8 Jump=2 Power=2 Intelligence=4 Sinker=0" >>yanma
 echo -e "Тип \nдиеты Carnivore" >>spinarak
 mkdir gliscor horsea
 
-cd -
+cd ~/lab0
 
 
 
@@ -48,7 +49,7 @@ echo -e "Развитые\nспособности Pickup Unnerve" >>persian
 
 mkdir shelgon kricketune
 
-cd -
+cd ~/lab0
 
 
 
@@ -82,9 +83,45 @@ chmod o=rwx ~/lab0/snover3/shelgon
 
 
 
-# Copy + links
-touch ~/lab0/glaceon6/poliwhirl/cascoon3
+#Copy + links
 cp ~/lab0/cascoon3 ~/lab0/glaceon6/poliwhirl/cascoon3
 
+#cp -R ~/lab0/glaceon6 ~/lab0/glaceon6/poliwhirl/
+echo "Команда копирования glaceon6/ в glaceon6/poliwhirl/ невозможна"
+echo "Директорию нельзя скопировать в собственную поддиректорию"
 
-cp -R ~/lab0/glaceon6 ~/lab0/glaceon6/poliwhirl/
+ln -s ~/lab0/glaceon6 ~/lab0/Copy_86
+
+cp ~/lab0/marshtomp1 ~/lab0/snover3/persianmarshtomp
+
+ln ~/lab0/marshtomp1 ~/lab0/gothorita7/spinarakmarshtomp
+ln -s ~/lab0/cascoon3 ~/lab0/gothorita7/yanmacascoon
+
+cat ~/lab0/glaceon6/dwebble > ~/lab0/roggenrola3_40
+cat ~/lab0/glaceon6/elgyem >> ~/lab0/roggenrola3_40
+
+
+
+#Find + Filter
+wc ~/lab0/cascoon3 -m >> ~/lab0/cascoon3
+ls -R -l -t | head -n 3
+
+
+#grep -l g* | sort -r | cat -n 
+cat ~/lab0/* */g* | sort -r | cat -n 
+
+grep "we" ~/lab0/snover3/* 2>> /tmp/buff
+# cat ~/lab0/snover3/* 2>> /tmp/buff | grep "we" 2>> /tmp/buff
+
+wc -l ~/lab0/* */*3 2>>/tmp/buff | sort
+cat ~/lab0/* */*a 2>/dev/null
+
+
+
+#Delete
+rm ~/lab0/cascoon3
+rm ~/lab0/gothorita7/spinarak
+rm -rf Copy_*
+rm -rf ~/lab0/gothorita7/spinarakmarshto*
+rm -rf ~/lab0/gothorita7
+rm -rf ~/lab0/glaceon6/poliwhirl
