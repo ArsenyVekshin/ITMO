@@ -1,5 +1,5 @@
 import java.lang.Math;
-import java.lang.reflect.Array;
+
 
 public class lab1
 {
