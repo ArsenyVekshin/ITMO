@@ -4,7 +4,7 @@ import ru.ifmo.se.pokemon.*;
 
 public class Psychic extends SpecialMove{
     public Psychic() {
-        super(Type.PSYCHIC, 90, 100);
+        super(Type.PSYCHIC, 90, 1);
     }
 
     @Override

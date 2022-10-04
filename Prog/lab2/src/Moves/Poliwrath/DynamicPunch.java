@@ -4,7 +4,7 @@ import ru.ifmo.se.pokemon.*;
 
 public class DynamicPunch extends PhysicalMove{
     public DynamicPunch() {
-        super(Type.FIGHTING, 100, 50);
+        super(Type.FIGHTING, 100, 0.5);
     }
 
     @Override

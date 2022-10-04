@@ -4,7 +4,7 @@ import ru.ifmo.se.pokemon.*;
 
 public class MetalClaw extends PhysicalMove{
     public MetalClaw() {
-        super(Type.STEEL, 50, 95);
+        super(Type.STEEL, 50, 0.95);
     }
 
     @Override
