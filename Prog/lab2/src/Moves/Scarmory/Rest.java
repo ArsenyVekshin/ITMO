@@ -13,7 +13,7 @@ public class Rest extends StatusMove{
     }
 
     @Override
-    protected void applyOppEffects(Pokemon pokemon) {
+    protected void applySelfEffects(Pokemon pokemon) {
         Effect effect = new Effect().turns(2).condition(Status.SLEEP);
         pokemon.addEffect(effect);
         pokemon.setMod(Stat.HP, (int)Stat.HP.ordinal());

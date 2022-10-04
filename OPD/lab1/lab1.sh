@@ -26,7 +26,6 @@ mkdir xatu poliwhirl
 cd ~/lab0 #cd -
 
 
-
 #init dir gothorita7
 mkdir gothorita7
 cd gothorita7
@@ -37,8 +36,6 @@ mkdir gliscor horsea
 
 cd ~/lab0
 
-
-
 #init dir snover3
 mkdir snover3
 cd snover3
@@ -46,7 +43,6 @@ cd snover3
 echo -e "Способности Landslide Unbreakable Sand Rush Sand\nForce" >>excadrill
 echo -e "Развитые способности Infiltarator" >>zubat
 echo -e "Развитые\nспособности Pickup Unnerve" >>persian
-
 mkdir shelgon kricketune
 
 cd ~/lab0
@@ -80,7 +76,7 @@ chmod 770 ~/lab0/snover3/kricketune		#111 111 000
 chmod u=rwx ~/lab0/snover3/shelgon
 chmod g=rwx ~/lab0/snover3/shelgon
 chmod o=rwx ~/lab0/snover3/shelgon
-
+#chmod u=rwx,g=rw,o=x ~/lab0/snover3/shelgon
 
 
 #Copy + links
@@ -95,27 +91,35 @@ ln -s ~/lab0/glaceon6 ~/lab0/Copy_86
 cp ~/lab0/marshtomp1 ~/lab0/snover3/persianmarshtomp
 
 ln ~/lab0/marshtomp1 ~/lab0/gothorita7/spinarakmarshtomp
+#ln -s cascoon3 gothorita7/yanmacascoon
+#Символьная ссылка с отностиельными именами не будет работать, тк созданная ссылка
+#будет обращаться к  ~/lab0/gothorita7/yanmacascoon/cascoon3 вместо ~/lab0/cascoon3
 ln -s ~/lab0/cascoon3 ~/lab0/gothorita7/yanmacascoon
 
 cat ~/lab0/glaceon6/dwebble > ~/lab0/roggenrola3_40
 cat ~/lab0/glaceon6/elgyem >> ~/lab0/roggenrola3_40
 
 
+##PRINT
+#echo "----------------------------------------------"
+#ls -lR
+#echo "----------------------------------------------"
+
+
 
 #Find + Filter
 wc ~/lab0/cascoon3 -m >> ~/lab0/cascoon3
-ls -R -l -t | head -n 3
-
+ls -Rlt 2>&1 | grep -v "total" | head -n 2
 
 #grep -l g* | sort -r | cat -n 
-cat ~/lab0/* */g* | sort -r | cat -n 
+cat ~/lab0/**/g* | sort -r | cat -n 
 
 grep "we" ~/lab0/snover3/* 2>> /tmp/buff
 # cat ~/lab0/snover3/* 2>> /tmp/buff | grep "we" 2>> /tmp/buff
 
-wc -l ~/lab0/* */*3 2>>/tmp/buff | sort
-cat ~/lab0/* */*a 2>/dev/null
-
+wc -l ~/lab0/**/*3 2>>/tmp/buff | sort -n
+# cat ~/lab0/**/*a 2>/dev/null | sort 
+ls ~/lab0/**/*a 2>/dev/null | sort -r
 
 
 #Delete
@@ -124,4 +128,5 @@ rm ~/lab0/gothorita7/spinarak
 rm -rf Copy_*
 rm -rf ~/lab0/gothorita7/spinarakmarshto*
 rm -rf ~/lab0/gothorita7
-rm -rf ~/lab0/glaceon6/poliwhirl
+rm -rf ~/lab0/
+
