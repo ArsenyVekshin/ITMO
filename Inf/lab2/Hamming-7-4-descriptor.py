@@ -1,3 +1,5 @@
+import sys
+
 def ReadActErrBites(data):
     arr = [0, 0, 0]
     arr[0] = (data[2] + data[4] + data[6]) % 2
@@ -5,8 +7,25 @@ def ReadActErrBites(data):
     arr[2] = (data[4] + data[5] + data[6]) % 2
     return arr
 
+def CheckInputValue(data):
+    if len(data) != 7: return False
+    for s in data:
+        try:
+            buff = int(s)
+            if buff not in [0,1]:
+                return False
 
-bytes = list(map(int, list(input())))
+        except ValueError:
+            return False
+    return True
+
+InData = input()
+if not CheckInputValue(InData):
+    print("Wrong input data")
+    print("Make sure, that you use 7-bit binary word")
+    sys.exit()
+
+bytes = list(map(int, list(InData)))
 ContBitesRed = [bytes[0], bytes[1], bytes[3]]
 ContBitesAct = ReadActErrBites(bytes)
 DataBites = [bytes[2], bytes[4], bytes[5], bytes[6]]
