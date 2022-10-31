@@ -12,7 +12,7 @@ def main(data):
 
 def test():
     f = open("task3_data.txt", encoding="utf-8")
-    data="   "
+    data=" "
     while(len(data)>0):
         data = f.readline()
         flag = re.search(groupe, data)
