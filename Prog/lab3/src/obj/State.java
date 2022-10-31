@@ -1,5 +1,7 @@
 package obj;
 
+import obj.Place.Room;
+
 public enum State {
     DEFAULT("NONE"),
     LIGHT("освещен(-а)"),
@@ -20,4 +22,9 @@ public enum State {
         this.replic = replic;
     }
     public String getReplic(){return replic;}
+
+    @Override
+    public String toString(){
+        return getReplic();
+    }
 }

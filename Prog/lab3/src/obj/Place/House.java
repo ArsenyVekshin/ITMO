@@ -22,4 +22,50 @@ public class House {
         hall.turnOffLight();
         kitchen.turnOffLight();
     }
+
+    @Override
+    public int hashCode() {
+        int buff = 0;
+
+        buff += outside.hashCode();
+        buff += hall.hashCode();
+        buff += kitchen.hashCode();
+        buff += smallerRoom.hashCode();
+        buff += huliousRoom.hashCode();
+        buff += frBokRoom.hashCode();
+
+        buff += outsideDoor.hashCode();
+        buff += huliousDoor.hashCode();
+        buff += frBokDoor.hashCode();
+
+        return buff;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        House check = (House) o;
+        return hashCode() == check.hashCode();
+    }
+
+    @Override
+    public String toString(){
+        String buff = "";
+
+        buff += outside.getName() + " ";
+        buff += hall.getName() + " ";
+        buff += kitchen.getName() + " ";
+        buff += smallerRoom.getName() + " ";
+        buff += huliousRoom.getName() + " ";
+        buff += frBokRoom.getName() + " ";
+
+        buff += outsideDoor.getName() + " ";
+        buff += huliousDoor.getName() + " ";
+        buff += frBokDoor.getName() + " ";
+
+        return buff;
+    }
+
 }
