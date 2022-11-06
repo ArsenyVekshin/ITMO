@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article lang="">
+  <sect1>
+    <title>Понедельник</title>
+    <para>
+      <anchor id="_1day"/>
+    </para>
+    <informaltable frame="all">
+      <tgroup cols="3"><colspec colnum="1" colname="c1"/><colspec colnum="2" colname="c2"/><colspec colnum="3" colname="c3"/><tbody><row><entry><para>$("#1day_btn").show();Пн</para></entry><entry><para>08:20-09:50 </para><para>2, 4, 6, 8, 10, 12, 14, 16</para><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>Программирование(Лаб)четная неделя</para><para>Яркеев Александр Сергеевич </para></entry><entry><para>Очно - дистанционный </para></entry></row><row><entry><para/></entry><entry><para>08:20-09:50 </para><para>3, 5, 7, 9, 11, 13, 15, 17</para><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>Информатика(Лаб)нечетная неделя</para><para>Машина Екатерина Алексеевна </para></entry><entry><para>Очно - дистанционный </para></entry></row><row><entry><para/></entry><entry><para>10:00-11:30 </para><para>2, 4, 6, 8, 10, 12, 14, 16</para><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>Программирование(Лаб)четная неделя</para><para>Яркеев Александр Сергеевич </para></entry><entry><para>Очно - дистанционный </para></entry></row><row><entry><para/></entry><entry><para>10:00-11:30 </para><para>3, 5, 7, 9, 11, 13, 15, 17</para><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>2308 (бывш. 306) ауд. </para><para>Кронверкский пр., д.49, лит.А </para></entry><entry><para>Информатика(Лаб)нечетная неделя</para><para>Машина Екатерина Алексеевна </para></entry><entry><para>Очно - дистанционный </para></entry></row></tbody></tgroup>
+    </informaltable>
+    <para/>
+  </sect1>
+</article>
