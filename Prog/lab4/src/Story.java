@@ -1,3 +1,5 @@
+import exception.DontMoveToMummyException;
+import exception.WrongCreatorException;
 import obj.Alive.*;
 import obj.Components;
 import obj.Entity;
@@ -10,7 +12,8 @@ public class Story {
     Creator creator = new Creator(){
         Components[] allComp = Components.values();
         @Override
-        public void createSmth(Human human, Entity obj){
+        public void createSmth(Human human, Entity obj) throws WrongCreatorException {
+            if(human.getClass()!= Kharlson.class) throw new WrongCreatorException("Он не может создать мумию");
             System.out.print(human.getName() + " создает " + obj.getName() + " из: \n    ");
             for (byte i=0; i<allComp.length; i++)
                 System.out.print(allComp[i].getReplic() + ", ");
@@ -48,7 +51,13 @@ public class Story {
         kharlson.globalLighSwitchOff(house);
         System.out.println();
 
-        creator.createSmth(kharlson, mummy);
+        try {
+            creator.createSmth(kharlson, mummy);
+        }
+        catch (WrongCreatorException e){
+            System.out.println(e.getMessage());
+        }
+        //creator.createSmth(kharlson, mummy);
         kharlson.finallizeMummy(mummy);
         System.out.println();
 
@@ -105,7 +114,12 @@ public class Story {
         smaller.think("Он ведь остался без зубов");
         smaller.think("Где они? Убежали?", friends);
         smaller.setState(State.SCARED);
-        smaller.moveNearTo(kharlson);
+        try {
+            smaller.moveNearTo(kharlson);
+        }
+        catch (DontMoveToMummyException e){
+            System.out.println(e.getMessage());
+        }
         System.out.println();
 
         frBok.moveToRoom(house.frBokRoom);
@@ -117,7 +131,5 @@ public class Story {
         hulious.setState(State.SLEEP);
 
     }
-
-
 
 }
