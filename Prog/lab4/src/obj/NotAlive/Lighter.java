@@ -1,6 +1,6 @@
 package obj.NotAlive;
 
-import obj.Enity;
+import obj.Entity;
 import obj.State;
 
 public class Lighter extends Subject{
@@ -9,14 +9,14 @@ public class Lighter extends Subject{
         this.setState(State.OFF);
     }
 
-    public void switchOn(Enity enity){
+    public void switchOn(Entity entity){
         setState(State.ON);
-        System.out.println(enity.getName() + " включает " + getName());
+        System.out.println(entity.getName() + " включает " + getName());
     }
 
-    public void switchOff(Enity enity){
+    public void switchOff(Entity entity){
         setState(State.OFF);
-        System.out.println(enity.getName() + " выключает " + getName());
+        System.out.println(entity.getName() + " выключает " + getName());
     }
 
 }

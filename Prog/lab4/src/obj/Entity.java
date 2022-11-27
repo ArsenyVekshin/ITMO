@@ -1,13 +1,11 @@
 package obj;
 
-import obj.Alive.Human;
-
-public abstract class Enity implements EnityInterface{
+public abstract class Entity implements EnityInterface{
     private final String name;
     private State state;
 
 
-    public Enity(String name, State state) {
+    public Entity(String name, State state) {
         this.name = name;
         this.state = state;
     }
@@ -40,7 +38,7 @@ public abstract class Enity implements EnityInterface{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Enity check = (Enity) o;
+        Entity check = (Entity) o;
         return hashCode() == check.hashCode();
     }
 

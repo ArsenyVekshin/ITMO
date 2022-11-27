@@ -1,6 +1,7 @@
 package obj.Alive;
 
-import obj.Enity;
+import obj.Components;
+import obj.Entity;
 import obj.NotAlive.Lighter;
 import obj.NotAlive.Subject;
 import obj.Place.House;
@@ -15,19 +16,30 @@ public class Kharlson extends Human{
         super(name, state, place);
     }
 
-    public void pullLeash(Enity dog){
+    public void finallizeMummy(Entity mummy){
+        System.out.println("    " + getName() + " прорезал большие глаза в полотенце и обвел их черным ободком");
+        System.out.println("    " + getName() + " засовывает " + Components.TEETHS + " в " + Components.NAPKINS);
+        System.out.println("    " + getName() + " закрепляет их при помощи " + Components.PATCH);
+    }
+
+    public void setCalm(Human victim){
+        System.out.println(getName() + " успокаивает " + victim.getName());
+        victim.setState(State.CALM);
+    }
+
+    public void pullLeash(Entity dog){
         System.out.println(getName() + " дергает за " + leash.getName());
         leash.effectOn(dog, State.FALLS);
     }
 
-    public void switchOnLighter(Enity enity){
+    public void switchOnLighter(Entity entity){
         System.out.println(getName() + " включает " + lighter.getName());
-        lighter.effectOn(enity, State.LIGHT);
+        lighter.effectOn(entity, State.LIGHT);
     }
 
-    public void switchOffLighter(Enity enity){
+    public void switchOffLighter(Entity entity){
         System.out.println(getName() + " выключает " + lighter.getName());
-        lighter.effectOn(enity, State.DARK);
+        lighter.effectOn(entity, State.DARK);
     }
 
     public void globalLighSwitchOff(House house) {

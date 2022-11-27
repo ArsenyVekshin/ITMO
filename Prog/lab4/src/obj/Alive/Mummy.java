@@ -10,8 +10,8 @@ public class Mummy extends Human {
     }
 
     public void scare_smb(Human victim){
-        victim.setState(State.SCARED);
         System.out.println(getName() + " приводит в ужас " + victim.getName());
+        victim.setState(State.SCARED);
     }
 
 

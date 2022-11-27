@@ -1,16 +1,15 @@
 package obj.NotAlive;
 
-import obj.Alive.Human;
-import obj.Enity;
+import obj.Entity;
 import obj.State;
 
-public class Subject extends Enity {
+public class Subject extends Entity {
 
     public Subject(String name, State state) {
         super(name, state);
     }
 
-    public void effectOn(Enity victim, State stat){
+    public void effectOn(Entity victim, State stat){
         System.out.println(getName() + " накладывает эффект " + stat.getReplic() + " на " + victim.getName());
         victim.setState(stat);
     }

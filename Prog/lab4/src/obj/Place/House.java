@@ -8,6 +8,8 @@ public class House {
     private boolean globalLighSwitch = true;
     public static Room outside = new Room("снаружи", State.DEFAULT);
     public static Room hall = new Room("прихожая", State.LIGHT);
+    public static Room hallTable = new Room("столик в прихожей", State.DARK);
+    public static Room hallCoat = new Room("пальто в прихожей", State.DARK);
     public static Room kitchen = new Room("кухня", State.LIGHT);
     public static Room smallerRoom = new Room("комната Малыша", State.DARK);
     public static Room huliousRoom = new Room("комната Юлиоса", State.LIGHT);

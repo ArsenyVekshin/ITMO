@@ -1,10 +1,9 @@
 package obj.Place;
 
-import obj.Alive.Human;
-import obj.Enity;
+import obj.Entity;
 import obj.State;
 
-public class Room extends Enity {
+public class Room extends Entity {
     public Room(String name, State state) {
         super(name, state);
     }

@@ -4,6 +4,9 @@ import obj.Place.Room;
 
 public enum State {
     DEFAULT("NONE"),
+    CALM("спокоен"),
+    AWAKEN("проснулся"),
+    SLEEP("спит"),
     LIGHT("освещен(-а)"),
     DARK("в темноте"),
     OPEN("открыт(-а)"),

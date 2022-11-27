@@ -1,10 +1,10 @@
 package obj.Alive;
 
-import obj.Enity;
+import obj.Entity;
 import obj.Place.Room;
 import obj.State;
 
-public class Human extends Enity {
+public class Human extends Entity {
     public Room place;
     public Human(String name, State state, Room place) {
         super(name, state);
@@ -13,6 +13,16 @@ public class Human extends Enity {
 
     public void said(String mes){
         System.out.println(getName() + " говорит: " + mes);
+    }
+
+    public void think(String mes){
+        System.out.println(getName() + " подумал: " + mes);
+    }
+
+    public void think(String mes, Entity... obj){
+        String s = "";
+        for(byte i=0; i<obj.length; i++) s += obj[i].getName() + ", ";
+        System.out.println(getName() + " подумал: " + mes + " об " + s);
     }
 
     public void moveToRoom(Room destination){
