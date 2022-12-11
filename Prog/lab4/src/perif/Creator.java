@@ -1,3 +1,5 @@
+package perif;
+
 import exception.WrongCreatorException;
 import obj.Alive.Human;
 import obj.Entity;

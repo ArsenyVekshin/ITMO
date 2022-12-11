@@ -1,3 +1,5 @@
+import perif.Story;
+
 // 12131
 public class Lab4 {
     static Story story = new Story();

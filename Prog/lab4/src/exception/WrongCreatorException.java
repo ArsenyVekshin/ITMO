@@ -1,8 +1,5 @@
 package exception;
-
-import java.io.IOException;
-
-public class WrongCreatorException extends IOException {
+public class WrongCreatorException extends RuntimeException {
     public WrongCreatorException(String message){
         super(message);
     }

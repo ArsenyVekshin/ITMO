@@ -1,3 +1,5 @@
+package perif;
+
 import exception.DontMoveToMummyException;
 import exception.WrongCreatorException;
 import obj.Alive.*;
@@ -10,7 +12,7 @@ import obj.State;
 public class Story {
 
     Creator creator = new Creator(){
-        Components[] allComp = Components.values();
+        final Components[] allComp = Components.values();
         @Override
         public void createSmth(Human human, Entity obj) throws WrongCreatorException {
             if(human.getClass()!= Kharlson.class) throw new WrongCreatorException("Он не может создать мумию");
