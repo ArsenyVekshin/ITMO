@@ -4,7 +4,7 @@ import obj.NotAlive.Door;
 import obj.Place.Room;
 import obj.State;
 
-public class Friends extends Human{
+public class Friends extends Human implements HumanInterface{
 
     public Friends(String name, State state, Room place) {
         super(name, state, place);

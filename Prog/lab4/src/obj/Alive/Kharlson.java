@@ -8,7 +8,7 @@ import obj.Place.House;
 import obj.Place.Room;
 import obj.State;
 
-public class Kharlson extends Human{
+public class Kharlson extends Human implements HumanInterface{
 
     Lighter lighter = new Lighter("фонарик", State.OFF);
     Subject leash = new Subject("поводок", State.DEFAULT);

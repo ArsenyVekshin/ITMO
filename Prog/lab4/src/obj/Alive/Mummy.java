@@ -3,7 +3,7 @@ package obj.Alive;
 import obj.Place.Room;
 import obj.State;
 
-public class Mummy extends Human {
+public class Mummy extends Human implements HumanInterface{
 
     public Mummy(String name, State state, Room place) {
         super(name, state, place);

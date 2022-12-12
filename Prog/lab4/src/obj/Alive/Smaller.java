@@ -5,7 +5,7 @@ import obj.Entity;
 import obj.Place.Room;
 import obj.State;
 
-public class Smaller extends Human{
+public class Smaller extends Human implements HumanInterface{
 
     public Smaller(String name, State state, Room place) {
         super(name, state, place);

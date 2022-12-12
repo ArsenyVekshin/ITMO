@@ -1,5 +1,8 @@
 package exception;
-public class DontMoveToMummyException extends Exception{
+
+import java.io.IOException;
+
+public class DontMoveToMummyException extends IOException{
     public DontMoveToMummyException(String message){
         super(message);
     }
