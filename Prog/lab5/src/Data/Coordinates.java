@@ -1,5 +1,8 @@
 package Data;
 
+import Exceptions.CSVOperator;
+import Exceptions.NoneValueFromCSV;
+
 public class Coordinates {
     private float x;
     private float y;
@@ -20,4 +23,6 @@ public class Coordinates {
     public void setY(float y) {
         this.y = y;
     }
+
+
 }
