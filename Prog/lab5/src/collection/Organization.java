@@ -1,14 +1,17 @@
-package Data;
+package collection;
 
-import Exceptions.CSVOperator;
-import Exceptions.InvalidValueEntered;
-import Exceptions.NoneValueFromCSV;
-
+import collection.exceptions.InvalidValueEntered;
+import com.opencsv.bean.CsvBindByName;
 public class Organization{
+    @CsvBindByName(column = "manufacturer id")
     private long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    @CsvBindByName(column = "manufacturer name")
     private String name; //Поле не может быть null, Строка не может быть пустой
+    @CsvBindByName(column = "manufacturer annual turnover")
     private double annualTurnover; //Значение поля должно быть больше 0
+    @CsvBindByName(column = "manufacturer type")
     private OrganizationType type; //Поле не может быть null
+    @CsvBindByName(column = "manufacturer address")
     private Address postalAddress; //Поле может быть null
 
 

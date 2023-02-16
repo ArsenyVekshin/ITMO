@@ -1,7 +1,4 @@
-package Data;
-
-import Exceptions.CSVOperator;
-import Exceptions.NoneValueFromCSV;
+package collection;
 
 public class Coordinates {
     private float x;

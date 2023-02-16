@@ -1,11 +1,14 @@
-package Data;
+package collection;
 
-import Exceptions.CSVOperator;
-import Exceptions.InvalidValueEntered;
-import Exceptions.NoneValueFromCSV;
+import collection.exceptions.InvalidValueEntered;
+import com.opencsv.bean.CsvBindByName;
 
-public class Address implements CSVOperator {
+import static collection.Storage.key2obj;
+
+public class Address{
+
     private String street; //Строка не может быть пустой, Поле не может быть null
+
     private String zipCode; //Поле может быть null
 
      public Address(String street, String zipCode) throws InvalidValueEntered {
@@ -37,20 +40,8 @@ public class Address implements CSVOperator {
         else this.street = street;
     }
 
-    @Override
-    public void parseCSV(String input) throws NoneValueFromCSV {
-        if(input == null || input.isEmpty() || !input.contains(";")) {
-            throw new NoneValueFromCSV(this.getClass().getName(), input);
-        }
-        else{
-            String[] data = input.split(";");
-            this.street = data[0];
-            this.zipCode = data[1];
-        }
-    }
-    @Override
-    public String generateCSV(){
-        return street + ";" + zipCode;
-    }
+//    public void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered{
+//         if(input == null || input.isEmpty() || input.indexOf(";")==-1)
+//    }
 
 }
