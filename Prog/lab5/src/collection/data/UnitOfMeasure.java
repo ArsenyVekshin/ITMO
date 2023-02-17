@@ -1,4 +1,4 @@
-package collection;
+package collection.data;
 
 public enum UnitOfMeasure {
     DEFAULT,

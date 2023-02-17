@@ -1,17 +1,14 @@
-package collection;
+package collection.data;
 
 import collection.exceptions.InvalidValueEntered;
-import com.opencsv.bean.CsvBindByName;
-public class Organization{
-    @CsvBindByName(column = "manufacturer id")
+
+import java.util.Objects;
+
+public class Organization implements Cloneable{
     private long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    @CsvBindByName(column = "manufacturer name")
     private String name; //Поле не может быть null, Строка не может быть пустой
-    @CsvBindByName(column = "manufacturer annual turnover")
     private double annualTurnover; //Значение поля должно быть больше 0
-    @CsvBindByName(column = "manufacturer type")
     private OrganizationType type; //Поле не может быть null
-    @CsvBindByName(column = "manufacturer address")
     private Address postalAddress; //Поле может быть null
 
 
@@ -76,6 +73,10 @@ public class Organization{
         return postalAddress;
     }
 
+    public Organization clone() throws CloneNotSupportedException {
+        return (Organization) super.clone();
+    }
+
     public void setPostalAddress(Address postalAddress) throws InvalidValueEntered {
         if (postalAddress == null) {
             this.postalAddress = new Address("default", "default");
@@ -83,6 +84,28 @@ public class Organization{
         }
         else this.postalAddress = postalAddress;
     }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, annualTurnover, type, postalAddress);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Organization check = (Organization) o;
+        return hashCode() == check.hashCode();
+    }
+
+    @Override
+    public String toString(){
+        return "Organization(" +
+                "id=" + id +
+                ", name=" + name +
+                ", annualTurnover=" + annualTurnover +
+                ", type=" + type +
+                ", postalAddress=" + postalAddress.toString() + ");";
+    }
 
 }

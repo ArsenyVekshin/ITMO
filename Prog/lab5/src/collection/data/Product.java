@@ -1,28 +1,24 @@
-package collection;
+package collection.data;
 
 import collection.exceptions.InvalidValueEntered;
-import com.opencsv.bean.CsvBindByName;
+
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 
-public class Product {
-    @CsvBindByName(column = "id")
+public class Product implements Cloneable{
     private int id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    @CsvBindByName(column = "name")
     private String name; //Поле не может быть null, Строка не может быть пустой
-    @CsvBindByName(column = "coordinates")
     private Coordinates coordinates; //Поле не может быть null
-    @CsvBindByName(column = "creation date")
     private java.time.LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    @CsvBindByName(column = "price")
     private float price; //Значение поля должно быть больше 0
-    @CsvBindByName(column = "unit of measure")
     private UnitOfMeasure unitOfMeasure; //Поле может быть null
-    @CsvBindByName(column = "manufacturer")
     private Organization manufacturer; //Поле может быть null
 
 
+    public Product(){}
     public Product(int id, String name, Coordinates coordinates, UnitOfMeasure unitOfMeasure, Organization manufacturer){
         this.id = id; //генерируется вне объекта из глобального счетчика
         creationDate = LocalDate.from(java.time.LocalDateTime.now());
@@ -37,6 +33,18 @@ public class Product {
             System.out.println(e.getMessage());
         }
     }
+
+    public void generateID(int counter){
+        setId(counter);
+        manufacturer.setId(counter + Integer.MAX_VALUE);
+    }
+    public void setId(int id){
+        this.id = id;
+    }
+    public int getId() {
+        return id;
+    }
+
 
     public String getName() {
         return name;
@@ -95,13 +103,41 @@ public class Product {
         else this.manufacturer = manufacturer;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public LocalDate getCreationDate() {
         return creationDate;
     }
+
+    public Product clone() throws CloneNotSupportedException {
+        return (Product) super.clone();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name,coordinates, creationDate, price, unitOfMeasure, manufacturer);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product check = (Product) o;
+        return hashCode() == check.hashCode();
+    }
+
+    @Override
+    public String toString(){
+        return "Product(" +
+                "id=" + getId() +
+                ", name=" + getName() +
+                ", coordinates=" + coordinates.toString() +
+                ", creationDate=" + creationDate.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
+                ", price=" + getPrice() +
+                ", unitOfMeasure=" + getName() +
+                ", manufacturer=" + getManufacturer() + ");";
+    }
+
 }
 
 

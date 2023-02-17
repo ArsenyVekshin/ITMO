@@ -1,9 +1,8 @@
-package collection;
+package collection.data;
 
 import collection.exceptions.InvalidValueEntered;
-import com.opencsv.bean.CsvBindByName;
 
-import static collection.Storage.key2obj;
+import java.util.Objects;
 
 public class Address{
 
@@ -43,5 +42,25 @@ public class Address{
 //    public void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered{
 //         if(input == null || input.isEmpty() || input.indexOf(";")==-1)
 //    }
+@Override
+public int hashCode() {
+    return Objects.hash(street, zipCode);
+}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address check = (Address) o;
+        return hashCode() == check.hashCode();
+    }
+
+    @Override
+    public String toString(){
+        return "Address(" +
+                "street=" + street +
+                ", name=" + zipCode + ");";
+    }
 
 }
