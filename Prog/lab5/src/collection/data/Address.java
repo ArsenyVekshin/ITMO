@@ -1,10 +1,11 @@
 package collection.data;
 
+import collection.exceptions.CSVOperator;
 import collection.exceptions.InvalidValueEntered;
 
 import java.util.Objects;
 
-public class Address{
+public class Address implements CSVOperator {
 
     private String street; //Строка не может быть пустой, Поле не может быть null
 
@@ -63,4 +64,8 @@ public int hashCode() {
                 ", name=" + zipCode + ");";
     }
 
+    @Override
+    public String generateCSV() {
+        return street + ", " + zipCode ;
+    }
 }

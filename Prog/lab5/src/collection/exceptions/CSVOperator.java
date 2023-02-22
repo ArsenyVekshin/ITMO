@@ -1,7 +1,12 @@
 package collection.exceptions;
 
 public interface CSVOperator {
-    public void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered;
-    public String generateCSV();
+    default void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered {
+        return;
+    }
+
+    default String generateCSV(){
+        return "";
+    }
 
 }

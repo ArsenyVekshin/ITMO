@@ -1,9 +1,11 @@
 package collection.data;
 
+import collection.exceptions.CSVOperator;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Coordinates implements Cloneable{
+public class Coordinates implements Cloneable, CSVOperator {
     private float x;
     private float y;
 
@@ -49,5 +51,8 @@ public class Coordinates implements Cloneable{
                 ", y=" + y + ");";
     }
 
-
+    @Override
+    public String generateCSV() {
+        return x + ", " + y;
+    }
 }

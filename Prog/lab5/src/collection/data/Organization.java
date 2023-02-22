@@ -1,10 +1,11 @@
 package collection.data;
 
+import collection.exceptions.CSVOperator;
 import collection.exceptions.InvalidValueEntered;
 
 import java.util.Objects;
 
-public class Organization implements Cloneable{
+public class Organization implements Cloneable, CSVOperator {
     private long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private double annualTurnover; //Значение поля должно быть больше 0
@@ -108,4 +109,12 @@ public class Organization implements Cloneable{
                 ", postalAddress=" + postalAddress.toString() + ");";
     }
 
+    @Override
+    public String generateCSV() {
+        return id +
+                ", " + name +
+                ", " + annualTurnover +
+                ", " + type +
+                ", " + postalAddress.generateCSV();
+    }
 }

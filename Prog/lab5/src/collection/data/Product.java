@@ -1,14 +1,17 @@
 package collection.data;
 
+import collection.exceptions.CSVOperator;
 import collection.exceptions.InvalidValueEntered;
+import collection.exceptions.NoneValueFromCSV;
 
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
 
 
-public class Product implements Cloneable{
+public class Product implements Cloneable, CSVOperator {
     private int id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -16,7 +19,6 @@ public class Product implements Cloneable{
     private float price; //Значение поля должно быть больше 0
     private UnitOfMeasure unitOfMeasure; //Поле может быть null
     private Organization manufacturer; //Поле может быть null
-
 
     public Product(){}
     public Product(int id, String name, Coordinates coordinates, UnitOfMeasure unitOfMeasure, Organization manufacturer){
@@ -129,15 +131,25 @@ public class Product implements Cloneable{
     @Override
     public String toString(){
         return "Product(" +
-                "id=" + getId() +
-                ", name=" + getName() +
+                "id=" + id +
+                ", name=" + name +
                 ", coordinates=" + coordinates.toString() +
                 ", creationDate=" + creationDate.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
-                ", price=" + getPrice() +
-                ", unitOfMeasure=" + getName() +
-                ", manufacturer=" + getManufacturer() + ");";
+                ", price=" + price +
+                ", unitOfMeasure=" + unitOfMeasure +
+                ", manufacturer=" + manufacturer.toString() + ");";
     }
 
+    @Override
+    public String generateCSV() {
+        return id +
+                ", " + name +
+                ", " + coordinates.generateCSV() +
+                ", " + creationDate.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
+                ", " + price +
+                ", " + unitOfMeasure +
+                ", " + manufacturer.generateCSV();
+    }
 }
 
 
