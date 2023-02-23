@@ -1,3 +1,4 @@
+package org.com;
 //Вариант 3116003
 
 public class Main {

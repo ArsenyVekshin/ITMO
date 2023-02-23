@@ -1,4 +1,4 @@
-package collection.data;
+package org.com.collection.data;
 
 public enum OrganizationType {
     DEFAULT,

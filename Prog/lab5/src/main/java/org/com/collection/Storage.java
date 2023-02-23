@@ -1,11 +1,7 @@
-package collection;
+package org.com.collection;
 
-
-import collection.data.*;
-import collection.exceptions.CSVOperator;
-import collection.exceptions.InvalidValueEntered;
-import collection.exceptions.NoneValueFromCSV;
-import collection.exceptions.WrongID;
+import org.com.collection.data.*;
+import org.com.collection.exceptions.*;
 
 import java.io.*;
 import java.time.ZonedDateTime;
@@ -259,8 +255,7 @@ public class Storage <T> implements CSVOperator {
 
 
     //TODO ИСПРАВЬ КОСТЫЛЬ!!!
-    @Override
-    public void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered {
+    public void parseCSV(String input) throws NoneValueFromCSV {
         if(input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
         collection.clear();
         String[] data = input.split("\n");

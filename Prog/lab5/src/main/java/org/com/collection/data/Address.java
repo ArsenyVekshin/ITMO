@@ -1,7 +1,6 @@
-package collection.data;
+package org.com.collection.data;
 
-import collection.exceptions.CSVOperator;
-import collection.exceptions.InvalidValueEntered;
+import org.com.collection.exceptions.*;
 
 import java.util.Objects;
 
