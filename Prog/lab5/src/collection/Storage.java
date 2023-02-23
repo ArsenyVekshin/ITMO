@@ -245,14 +245,14 @@ public class Storage <T> implements CSVOperator {
             array[i] = collection.get(i).getPrice();
         }
         Arrays.sort(array);
-        return array.toString();
+        return Arrays.toString(array);
     }
 
     public static float getPricesSum(){
         float out = 0;
-        for (int i=0; i<collection.size(); i++){
-            if(collection.get(i) == null) continue;
-            out += collection.get(i).getPrice();
+        for (Product product : collection) {
+            if (product == null) continue;
+            out += product.getPrice();
         }
         return out;
     }
@@ -264,26 +264,39 @@ public class Storage <T> implements CSVOperator {
         if(input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
         collection.clear();
         String[] data = input.split("\n");
-        for(int i=1; i < data.length; i++){
 
+        String[] markup = data[0].split(", ");
+        Map<String, String> dataMap = new HashMap<String, String>();
+        for(int i=1; i < markup.length; i++){
+            dataMap.put(markup[i], "");
+        }
+
+
+        for(int i=1; i < data.length; i++){
             String[] line = data[i].split(", ");
             if(data[i].isEmpty() || line.length != 11)
                 throw new NoneValueFromCSV(data[i] + " - line " + i+1);
+
+            for(int j=1; j < markup.length; j++){
+                dataMap.replace(markup[j], line[j]);
+            }
+
             try{
                 add(new Product(
-                        Integer.parseInt(line[0]),
-                        line[1],
+                        Integer.parseInt(dataMap.get("id")),
+                        dataMap.get("name"),
                         new Coordinates(
-                                Integer.valueOf(line[2]),
-                                Integer.valueOf(line[3])),
+                                Integer.parseInt(dataMap.get("x")),
+                                Integer.parseInt(dataMap.get("y"))),
                         //creation date -- line[4]
-                        UnitOfMeasure.valueOf(line[5]),
+                        UnitOfMeasure.valueOf(dataMap.get("price")),
                         new Organization(
-                                Integer.parseInt(line[6]),
-                                line[7],
-                                Double.valueOf(line[8]),
-                                OrganizationType.valueOf(line[9]),
-                                new Address(line[10], line[11])
+                                Integer.parseInt(dataMap.get("manufacturer id")),
+                                dataMap.get("manufacturer name"),
+                                Double.parseDouble(dataMap.get("manufacturer annualTurnover")),
+                                OrganizationType.valueOf(dataMap.get("manufacturer type")),
+                                new Address(dataMap.get("manufacturer street"),
+                                            dataMap.get("manufacturer zipCode"))
                         )
                 ));
             } catch (IllegalArgumentException | InvalidValueEntered e) {
@@ -291,7 +304,6 @@ public class Storage <T> implements CSVOperator {
             }
         }
     }
-
 
     @Override
     public String generateCSV() {
@@ -306,7 +318,8 @@ public class Storage <T> implements CSVOperator {
                 ", manufacturer name" +
                 ", manufacturer annualTurnover" +
                 ", manufacturer type" +
-                ", manufacturer postalAddress" + "\n");
+                ", manufacturer street" +
+                ", manufacturer zipCode" + "\n");
 
         for (Product product : collection) {
             if (product == null) continue;

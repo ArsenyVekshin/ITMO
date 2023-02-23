@@ -40,9 +40,7 @@ public class Address implements CSVOperator {
         else this.street = street;
     }
 
-//    public void parseCSV(String input) throws NoneValueFromCSV, InvalidValueEntered{
-//         if(input == null || input.isEmpty() || input.indexOf(";")==-1)
-//    }
+
 @Override
 public int hashCode() {
     return Objects.hash(street, zipCode);
