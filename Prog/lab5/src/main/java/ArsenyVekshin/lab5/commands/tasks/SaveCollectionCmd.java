@@ -1,17 +1,18 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
+import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 
 public class SaveCollectionCmd extends DataCmd{
 
-    public SaveCollectionCmd(Storage collection) {
-        super("save", "save collection to .csv file", collection);
+    public SaveCollectionCmd(Storage collection, OutputHandler outputHandler) {
+        super("save", "save collection to .csv file", collection, outputHandler);
     }
 
     @Override
-    public boolean execute(String arg) {
-        if(checkHelpFlag(arg)) { help(); return true; }
+    public boolean execute(String[] args) {
+        if(checkHelpFlag(args)) { help(); return true; }
         collection.save();
         return true;
     }
@@ -20,12 +21,11 @@ public class SaveCollectionCmd extends DataCmd{
     public void help() {
         try {
             outputStream.println("""
-                Syntax:
-                > save
-                Command responsive for save collection to .csv file
-                file path: """ + collection.fileName + """
-               PARAMS:
-                -h / --help\tShow this menu
+               > save
+                  Command responsive for save collection to .csv file
+                  file path:  """ + collection.fileName + """ 
+                   PARAMS:
+                   -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
             e.printStackTrace();

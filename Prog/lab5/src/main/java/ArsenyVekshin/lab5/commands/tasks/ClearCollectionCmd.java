@@ -1,17 +1,18 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
+import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 
 public class ClearCollectionCmd extends DataCmd{
 
-    public ClearCollectionCmd(Storage collection) {
-        super("clear", "clear collection", collection);
+    public ClearCollectionCmd(Storage collection, OutputHandler outputHandler) {
+        super("clear", "clear collection", collection, outputHandler);
     }
 
     @Override
-    public boolean execute(String arg) {
-        if(checkHelpFlag(arg)) { help(); return true; }
+    public boolean execute(String[] args) {
+        if(checkHelpFlag(args)) { help(); return true; }
         collection.clear();
         return true;
     }
@@ -20,11 +21,10 @@ public class ClearCollectionCmd extends DataCmd{
     public void help() {
         try {
             outputStream.println("""
-                Syntax:
                 > clear
-                Command responsive for clear collection
-                PARAMS:
-                -h / --help\tShow this menu
+                   Command responsive for clear collection
+                   PARAMS:
+                   -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
             e.printStackTrace();

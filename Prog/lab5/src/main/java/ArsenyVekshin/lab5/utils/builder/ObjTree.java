@@ -68,7 +68,7 @@ public class ObjTree {
 
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }

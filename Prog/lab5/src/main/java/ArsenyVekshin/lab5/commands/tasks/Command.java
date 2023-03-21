@@ -27,12 +27,15 @@ public abstract class Command {
         this.name = name;
     }
 
-    public abstract boolean execute(String arg);
+    public abstract boolean execute(String[] args);
 
     public abstract void help();
 
-    protected boolean checkHelpFlag(String arg){
-        return arg.contains("-h");
+    protected boolean checkHelpFlag(String[] args){
+        for (String arg : args){
+            if(arg.contains("-h")) return true;
+        }
+        return false;
     }
 
 

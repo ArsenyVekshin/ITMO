@@ -4,13 +4,21 @@ import ArsenyVekshin.lab5.collection.Storage;
 import ArsenyVekshin.lab5.commands.CommandManager;
 import ArsenyVekshin.lab5.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab5.ui.console.ConsoleOutputHandler;
+import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Программа запущена");
-        Storage collection = new Storage();
-        CommandManager commandManager = new CommandManager(new ConsoleInputHandler(), new ConsoleOutputHandler(), collection);
-        commandManager.startExecuting();
+        try {
+            System.out.println("Программа запущена");
+            Storage collection = new Storage();
+            collection.init();
+            CommandManager commandManager = new CommandManager(collection, new ConsoleInputHandler(), new ConsoleOutputHandler());
+            commandManager.startExecuting();
+        }
+        catch (StreamBrooked e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

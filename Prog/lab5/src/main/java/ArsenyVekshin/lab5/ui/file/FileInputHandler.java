@@ -9,6 +9,10 @@ public class FileInputHandler implements InputHandler {
     private InputStream file = null;
     private Scanner stream = null;
 
+    public FileInputHandler(String path) throws FileNotFoundException {
+        open(path);
+    }
+
     public void open(String path) throws FileNotFoundException {
         try{
             file = new FileInputStream(path);

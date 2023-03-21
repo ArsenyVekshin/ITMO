@@ -1,17 +1,18 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
+import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 
 public class ShowCollectionCmd extends DataCmd{
 
-    public ShowCollectionCmd(Storage collection) {
-        super("show", "print collection content", collection);
+    public ShowCollectionCmd(Storage collection, OutputHandler outputHandler) {
+        super("show", "print collection content", collection, outputHandler);
     }
 
     @Override
-    public boolean execute(String arg) {
-        if(checkHelpFlag(arg)) { help(); return true; }
+    public boolean execute(String[] args) {
+        if(checkHelpFlag(args)) { help(); return true; }
         try {
             outputStream.println(collection.show());
         } catch (StreamBrooked e) {
@@ -25,11 +26,10 @@ public class ShowCollectionCmd extends DataCmd{
     public void help() {
         try {
             outputStream.println("""
-                Syntax:
                 > show
-                Command responsive for print collection content
-                PARAMS:
-                -h / --help\tShow this menu
+                   Command responsive for print collection content
+                   PARAMS:
+                   -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
             e.printStackTrace();

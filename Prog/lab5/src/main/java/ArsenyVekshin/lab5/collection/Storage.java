@@ -247,6 +247,7 @@ public class Storage <T extends Object> implements CSVOperator {
     }
 
     public static String getPrices(){
+        if(collection.isEmpty()) return "collection is null";
         float[] array = new float[collection.size()];
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null) continue;
@@ -377,7 +378,7 @@ public class Storage <T extends Object> implements CSVOperator {
 
     public void save(){
         try {
-            FileOutputHandler file = new FileOutputHandler();
+            FileOutputHandler file = new FileOutputHandler(fileName);
             file.open(path);
             file.println(generateCSV());
             file.close();
@@ -388,7 +389,7 @@ public class Storage <T extends Object> implements CSVOperator {
 
     public void load(){
         try {
-            FileInputHandler file = new FileInputHandler();
+            FileInputHandler file = new FileInputHandler(fileName);
             StringBuilder buff = new StringBuilder();
             while (file.hasNextLine())
                 buff.append(file.get());

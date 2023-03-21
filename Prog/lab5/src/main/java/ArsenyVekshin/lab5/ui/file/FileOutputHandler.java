@@ -9,6 +9,14 @@ public class FileOutputHandler implements OutputHandler {
     private OutputStream file = null;
     private Writer stream = null;
 
+    public FileOutputHandler(String path){
+        try {
+            open(path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void open(String path) throws FileNotFoundException {
         try{
             file = new FileOutputStream(path);
