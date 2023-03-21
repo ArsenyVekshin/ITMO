@@ -38,7 +38,7 @@ public class DataFirewall {
         if(data.length() >= MAX_STR_LENGTH) return "";
         data = data.trim();
         for (byte i=0; i<data.length(); i++){
-            if((int)data.charAt(i) <= 32 || (int)data.charAt(i) >= 126) return "";
+            if((int)data.charAt(i) < 32 || (int)data.charAt(i) >= 126) return "";
         }
         return data;
     }

@@ -170,7 +170,7 @@ public class Product implements Cloneable, CSVOperator {
                 "id=" + id +
                 ", name=" + name +
                 ", coordinates=" + coordinates.toString() +
-                ", creationDate=" + creationDate.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
+                ", creationDate=" + creationDate +//.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
                 ", price=" + price +
                 ", unitOfMeasure=" + unitOfMeasure +
                 ", manufacturer=" + manufacturer.toString() + ");";
@@ -181,7 +181,7 @@ public class Product implements Cloneable, CSVOperator {
         return id +
                 ", " + name +
                 ", " + coordinates.generateCSV() +
-                ", " + creationDate.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
+                ", " + creationDate +
                 ", " + price +
                 ", " + unitOfMeasure +
                 ", " + manufacturer.generateCSV();

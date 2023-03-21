@@ -34,6 +34,7 @@ public class CommandManager {
         commands.put("show", new ShowCollectionCmd(collection, outputHandler));
         commands.put("clear", new ClearCollectionCmd(collection, outputHandler));
         commands.put("save", new SaveCollectionCmd(collection, outputHandler));
+        commands.put("load", new LoadCollectionCmd(collection, outputHandler));
         commands.put("remove_all_by_unit_of_measure", new RemoveByUnitOfMeasureCmd(collection, outputHandler));
         commands.put("sum_of_price", new SumOfPriceCmd(collection, outputHandler));
         commands.put("print_field_ascending_price", new PricesListCmd(collection, outputHandler));
@@ -61,12 +62,13 @@ public class CommandManager {
     public void startExecuting() throws StreamBrooked {
         while (inputHandler.hasNextLine()) {
             String command = inputHandler.get();
+            System.out.println("DEBUG: \"" + command + "\"");
             if(command.isEmpty() || command.isBlank()) {
                 continue;
             }
             try {
                 command = filterInputString(command);
-                System.out.println("DEBUG: \"" + command + "\"");
+
                 executeCommand(command.split(" "));
             } catch (IllegalArgumentException | StreamBrooked e) {
                 outputHandler.printErr(e.getMessage());
@@ -84,6 +86,12 @@ public class CommandManager {
     public void executeCommand(String[] args) throws StreamBrooked {
         if(args == null) return;
         if(args[0] == "execute_script ") executeScript(args[1]);
+
+        //DEBUG
+        System.out.print("DEBUG: received cmd: \"");
+        for(String a : args) System.out.print(a + "\", \"");
+        System.out.println(" ");
+
         if(!commands.containsKey(args[0])){
             if(args[0].contains("help")) {
                 help();
@@ -93,8 +101,7 @@ public class CommandManager {
                 throw new IllegalArgumentException("Данной команды не существует");
             }
         }
-        System.out.println(Arrays.stream(args).toArray().toString());
         commands.get(args[0]).execute(args);
-        logFile.println(args.toString());
+        //logFile.println(args.toString());
     }
 }

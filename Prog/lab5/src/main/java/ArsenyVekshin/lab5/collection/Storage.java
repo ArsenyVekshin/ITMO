@@ -14,11 +14,9 @@ public class Storage <T extends Object> implements CSVOperator {
     public Storage() {
     }
 
-
-
     public String fileName = "none"; //default value
     private static Vector<Product> collection;
-    public static String path = "\"C:\\Users\\Арсений\\Documents\\ITMO\\Prog\\lab5\"";
+    public static String path = "D:\\Documents\\ITMO\\Prog\\lab5\\sys files\\";
     private static ZonedDateTime creationTime;
     private static int usersCounter = 0;
 
@@ -39,20 +37,42 @@ public class Storage <T extends Object> implements CSVOperator {
             creationTime = ZonedDateTime.now();
             path = System.getenv("lab5");
             if (path == null) {
+                path = "D:\\Documents\\ITMO\\Prog\\lab5\\sys files\\";
                 System.out.println("""
                         ###########! WARNING !###########
                         Database location is not set 
-                        Collection will be saved on default path
-                        ~/lab5_data/data.csv
+                        Collection will be saved on default directory"""
+                        + "\n" + path +  "\n" +
+                        """
                         #################################
                         """);
-                path = "~/lab5_data/data.csv";
+
             }
-            //TODO: PARSE CSV FILE
+            load();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public void fillRandom() throws InvalidValueEntered {
+        try {
+            addNew(new Product(0, "test", new Coordinates(1, 1), 55, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "test1", new Coordinates(2, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "1test", new Coordinates(12, 1), 3000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "3test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "t2est", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "434test", new Coordinates(1, 1), 7000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "56yhbftest", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "test1", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "ssgtest", new Coordinates(1, 1), 9000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, " test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "test2", new Coordinates(1, 1), 800, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+            addNew(new Product(0, "test3", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
+        } catch (InvalidValueEntered e) {
+            e.printStackTrace();
+        }
     }
 
     public static String info(){
@@ -314,19 +334,35 @@ public class Storage <T extends Object> implements CSVOperator {
 
         String[] markup = data[0].split(", ");
         Map<String, String> dataMap = new HashMap<String, String>();
+
         for(int i=1; i < markup.length; i++){
             dataMap.put(markup[i], "");
         }
 
 
         for(int i=1; i < data.length; i++){
+            if (data[i].isEmpty()) continue;
             String[] line = data[i].split(", ");
-            if(data[i].isEmpty() || line.length != 11)
+
+//            System.out.print("DEBUG: ");
+//            System.out.println(data[i]);
+//            for (String a : line) System.out.print(" \"" + a + "\",");
+//            System.out.println(line.length);
+
+            if(data[i].isEmpty() || line.length != 13)
                 throw new NoneValueFromCSV(data[i] + " - line " + i+1);
 
-            for(int j=1; j < markup.length; j++){
+            for(int j=0; j < markup.length; j++){
                 dataMap.replace(markup[j], line[j]);
             }
+
+            System.out.println("DEBUG: ");
+            System.out.println("   " + data[i]);
+            for(int j=0; j < markup.length; j++){
+                dataMap.replace(markup[j], line[j]);
+                System.out.println("       " + markup[j] + "=" + line[j] );
+            }
+            System.out.println(" ");
 
             try{
                 add(new Product(
@@ -349,6 +385,10 @@ public class Storage <T extends Object> implements CSVOperator {
                 ));
             } catch (IllegalArgumentException | InvalidValueEntered e) {
                 e.printStackTrace();
+                System.out.print("DEBUG: ");
+                System.out.println(data[i]);
+                for (String a : line) System.out.print(" \"" + a + "\",");
+                System.out.println(line.length);
             }
         }
     }
@@ -371,28 +411,31 @@ public class Storage <T extends Object> implements CSVOperator {
 
         for (Product product : collection) {
             if (product == null) continue;
-            out.append(product.generateCSV());
+            out.append(product.generateCSV() + "\n");
         }
         return out.toString();
     }
 
     public void save(){
         try {
-            FileOutputHandler file = new FileOutputHandler(fileName);
-            file.open(path);
+            FileOutputHandler file = new FileOutputHandler(path + "data.csv");
             file.println(generateCSV());
             file.close();
+            System.out.println("file saved at: " + path + "data.csv");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void load(){
+        load(path + "data.csv");
+    }
+    public void load(String newPath){
         try {
-            FileInputHandler file = new FileInputHandler(fileName);
+            FileInputHandler file = new FileInputHandler(newPath);
             StringBuilder buff = new StringBuilder();
             while (file.hasNextLine())
-                buff.append(file.get());
+                buff.append(file.get() + "\n");
             parseCSV(buff.toString());
             file.close();
         } catch (IOException e) {
@@ -400,5 +443,11 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        for(Product a : collection) out.append(a.toString());
+        return out.toString();
+    }
 }
 

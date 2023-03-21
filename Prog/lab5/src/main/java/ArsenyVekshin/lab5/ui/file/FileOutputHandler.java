@@ -1,7 +1,10 @@
 package ArsenyVekshin.lab5.ui.file;
 
 import ArsenyVekshin.lab5.ui.OutputHandler;
+import ArsenyVekshin.lab5.ui.exeptions.FileAccessRightsException;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
+
+import java.io.*;
 
 import java.io.*;
 
@@ -14,14 +17,17 @@ public class FileOutputHandler implements OutputHandler {
             open(path);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+
         }
     }
 
     public void open(String path) throws FileNotFoundException {
         try{
+            if(! new java.io.File(path).isFile()) new java.io.File(path).createNewFile();
+            if(! new java.io.File(path).canWrite()) throw new FileAccessRightsException("write");
             file = new FileOutputStream(path);
             stream = new OutputStreamWriter(file);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
