@@ -1,14 +1,21 @@
 package ArsenyVekshin.lab5.collection;
 
+import ArsenyVekshin.lab5.Main;
 import ArsenyVekshin.lab5.collection.data.*;
 import ArsenyVekshin.lab5.collection.exceptions.*;
+import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.ui.file.FileInputHandler;
 import ArsenyVekshin.lab5.ui.file.FileOutputHandler;
+import ArsenyVekshin.lab5.utils.builder.Builder;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.*;
+
+import static ArsenyVekshin.lab5.tools.Comparators.compareFields;
 
 public class Storage <T extends Object> implements CSVOperator {
     public Storage() {
@@ -16,11 +23,13 @@ public class Storage <T extends Object> implements CSVOperator {
 
     public String fileName = "none"; //default value
     private static Vector<Product> collection;
-    public static String path = "D:\\Documents\\ITMO\\Prog\\lab5\\sys files\\";
+    public static String path;
     private static ZonedDateTime creationTime;
     private static int usersCounter = 0;
 
     private static final String defaultFieldForComp = "id";
+
+    public static final ObjTree productTree = new ObjTree(Product.class);
 
     public static ZonedDateTime getCreationTime() {
         return creationTime;
@@ -30,23 +39,30 @@ public class Storage <T extends Object> implements CSVOperator {
         Storage.creationTime = creationTime;
     }
 
-
     public void init() {
         try {
             collection = new Vector<>();
             creationTime = ZonedDateTime.now();
-            path = System.getenv("lab5");
-            if (path == null) {
-                path = "D:\\Documents\\ITMO\\Prog\\lab5\\sys files\\";
+            if (System.getenv("lab5") == null) {
+                path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + File.separatorChar + "sysFiles" + File.separatorChar;
                 System.out.println("""
                         ###########! WARNING !###########
-                        Database location is not set 
-                        Collection will be saved on default directory"""
+                        Directory for interaction-files is not set 
+                        They will be saved on default directory"""
                         + "\n" + path +  "\n" +
                         """
                         #################################
                         """);
 
+            }
+            else{
+                System.out.println("""
+                        #################################
+                        Directory for interaction-files set at"""
+                        + "\n" + path +  "\n" +
+                        """
+                        #################################
+                        """);
             }
             load();
         } catch (Exception e) {
@@ -161,39 +177,7 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
-    private static int compareStrings(String s1, String s2) {
-        if (s1 == s2) return 0;
-        for (int i = 0; i < s1.length() && i < s2.length(); i++) {
-            if (s1.charAt(i) > s2.charAt(i)) return 1;
-            if (s1.charAt(i) < s2.charAt(i)) return -1;
-        }
-        return 0;
-    }
 
-    public int compareFields(T f1, T f2) {
-        if (f1.getClass().equals(String.class)) {
-            String a = (String) f1;
-            String b = (String) f2;
-            return compareStrings(a, b);
-        }
-        if (f1.getClass() == Number.class) {
-            if(f1.getClass().equals(Float.class) ||
-                    f1.getClass().equals(Double.class)){
-                float a = (float) f1;
-                float b = (float) f2;
-
-                if (a > b) return 1;
-                if (a < b) return -1;
-            }  else {
-                long a = (long) f1;
-                long b = (long) f2;
-
-                if (a > b) return 1;
-                if (a < b) return -1;
-            }
-        }
-        return 0;
-    }
 
     public void sortBy(String field) {
         collection.sort((f1, f2) -> {
@@ -327,7 +311,7 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }*/
 
-    public void parseCSV(String input) throws NoneValueFromCSV {
+/*    public void parseCSV(String input) throws NoneValueFromCSV {
         if(input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
         collection.clear();
         String[] data = input.split("\n");
@@ -335,8 +319,8 @@ public class Storage <T extends Object> implements CSVOperator {
         String[] markup = data[0].split(", ");
         Map<String, String> dataMap = new HashMap<String, String>();
 
-        for(int i=1; i < markup.length; i++){
-            dataMap.put(markup[i], "");
+        for (String s : markup) {
+            dataMap.put(s, "");
         }
 
 
@@ -349,29 +333,25 @@ public class Storage <T extends Object> implements CSVOperator {
 //            for (String a : line) System.out.print(" \"" + a + "\",");
 //            System.out.println(line.length);
 
-            if(data[i].isEmpty() || line.length != 13)
-                throw new NoneValueFromCSV(data[i] + " - line " + i+1);
-
-            for(int j=0; j < markup.length; j++){
-                dataMap.replace(markup[j], line[j]);
-            }
-
-            System.out.println("DEBUG: ");
-            System.out.println("   " + data[i]);
-            for(int j=0; j < markup.length; j++){
-                dataMap.replace(markup[j], line[j]);
-                System.out.println("       " + markup[j] + "=" + line[j] );
-            }
-            System.out.println(" ");
-
             try{
+                if(line.length != 13)
+                    throw new NoneValueFromCSV(data[i] + " - line " + i+1);
+
+                for(int j=0; j < markup.length; j++){
+                    dataMap.replace(markup[j], line[j]);
+                }
+
+//                HashMap<String, Object> values = new HashMap<>();
+//                for (String key : dataMap.keySet()){
+//                    values.put(key, productTree.)
+//                }
                 add(new Product(
+
                         Integer.parseInt(dataMap.get("id")),
                         dataMap.get("name"),
                         new Coordinates(
-                                Integer.parseInt(dataMap.get("x")),
-                                Integer.parseInt(dataMap.get("y"))),
-                        //creation date -- line[4]
+                                Float.parseFloat(dataMap.get("x")),
+                                Float.parseFloat(dataMap.get("y"))),
                         Float.parseFloat(dataMap.get("price")),
                         UnitOfMeasure.valueOf(dataMap.get("unitOfMeasure")),
                         new Organization(
@@ -383,12 +363,47 @@ public class Storage <T extends Object> implements CSVOperator {
                                             dataMap.get("manufacturer zipCode"))
                         )
                 ));
-            } catch (IllegalArgumentException | InvalidValueEntered e) {
-                e.printStackTrace();
-                System.out.print("DEBUG: ");
-                System.out.println(data[i]);
+            } catch (Exception e) {
+                System.out.println("Error in csv-parse string: ");
+                System.out.print("\t");
                 for (String a : line) System.out.print(" \"" + a + "\",");
-                System.out.println(line.length);
+                System.out.println("err type=" + e.getMessage());
+            }
+        }
+    }*/
+
+
+    public void parseCSV(String input) throws NoneValueFromCSV {
+        if (input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
+        collection.clear();
+        String[] data = input.split("\n");
+
+        String[] markup = data[0].split(", ");
+        HashMap<String, String> dataMap = new HashMap<String, String>();
+
+        for (String s : markup) {
+            dataMap.put(s, "");
+        }
+
+        for(int i=1; i < data.length; i++) {
+            if (data[i].isEmpty()) continue;
+            String[] line = data[i].split(", ");
+
+
+            try {
+                if (line.length != 13)
+                    throw new NoneValueFromCSV(data[i] + " - line " + (i + 1));
+
+                for (int j = 0; j < markup.length; j++) {
+                    dataMap.replace(markup[j], line[j]);
+                }
+
+                Builder builder = new Builder();
+                Product newElem = builder.buildByString(productTree, dataMap);
+                if(newElem == null) System.out.println("error in csv-import: " + data[i]);
+                else add(newElem);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -397,8 +412,8 @@ public class Storage <T extends Object> implements CSVOperator {
     public String generateCSV() {
         StringBuilder out = new StringBuilder("id" +
                 ", name" +
-                ", x" +
-                ", y" +
+                ", coordinates x" +
+                ", coordinates y" +
                 ", creationDate" +
                 ", price" +
                 ", unitOfMeasure" +
@@ -406,8 +421,8 @@ public class Storage <T extends Object> implements CSVOperator {
                 ", manufacturer name" +
                 ", manufacturer annualTurnover" +
                 ", manufacturer type" +
-                ", manufacturer street" +
-                ", manufacturer zipCode" + "\n");
+                ", manufacturer postalAddress street" +
+                ", manufacturer postalAddress zipCode" + "\n");
 
         for (Product product : collection) {
             if (product == null) continue;
@@ -439,7 +454,7 @@ public class Storage <T extends Object> implements CSVOperator {
             parseCSV(buff.toString());
             file.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

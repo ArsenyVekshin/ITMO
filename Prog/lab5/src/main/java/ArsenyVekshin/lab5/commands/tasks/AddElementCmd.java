@@ -9,21 +9,17 @@ import ArsenyVekshin.lab5.utils.builder.Builder;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 public class AddElementCmd extends DialogueCmd{
-
-    public AddElementCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler) {
+    ObjTree tree;
+    public AddElementCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
         super("add", "add add new element to collection", collection, outputHandler, inputHandler);
+        this.tree = tree;
     }
 
     @Override
     public boolean execute(String[] args) {
         if(checkHelpFlag(args)) { help(); return true; }
-        try {
-            Builder newElem = new Builder(inputStream, outputStream);
-            collection.add(newElem.build(new ObjTree(Product.class)));
-        } catch (StreamBrooked e) {
-            e.printStackTrace();
-            return false;
-        }
+        Builder newElem = new Builder(inputStream, outputStream);
+        collection.addNew(newElem.build(tree));
         return true;
     }
 

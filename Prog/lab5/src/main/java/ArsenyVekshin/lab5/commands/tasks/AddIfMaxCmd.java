@@ -9,9 +9,10 @@ import ArsenyVekshin.lab5.utils.builder.Builder;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 public class AddIfMaxCmd extends DialogueCmd{
-
-    public AddIfMaxCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler) {
+    ObjTree tree;
+    public AddIfMaxCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
         super("add_if_max", "add new element to collection if it greater than others", collection, outputHandler, inputHandler);
+        this.tree = tree;
     }
 
     @Override
@@ -19,8 +20,8 @@ public class AddIfMaxCmd extends DialogueCmd{
         if(checkHelpFlag(args)) { help(); return true; }
         try {
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.addIfMax(newElem.build(new ObjTree(Product.class)));
-        } catch (StreamBrooked | NoSuchFieldException | IllegalAccessException e) {
+            collection.addIfMax(newElem.build(tree));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return false;
         }

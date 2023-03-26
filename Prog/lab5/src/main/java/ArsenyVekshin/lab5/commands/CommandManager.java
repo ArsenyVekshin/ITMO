@@ -39,17 +39,18 @@ public class CommandManager {
         commands.put("sum_of_price", new SumOfPriceCmd(collection, outputHandler));
         commands.put("print_field_ascending_price", new PricesListCmd(collection, outputHandler));
 
-        commands.put("add", new AddElementCmd(collection, outputHandler, inputHandler));
-        commands.put("update", new UpdateElementByIDCmd(collection, outputHandler, inputHandler));
+        commands.put("add", new AddElementCmd(collection, outputHandler, inputHandler, Storage.productTree));
+        commands.put("update", new UpdateElementByIDCmd(collection, outputHandler, inputHandler, Storage.productTree));
         commands.put("remove_by_id", new RemoveElementByIDCmd(collection, outputHandler, inputHandler));
-        commands.put("insert_at", new InsertElementOnCmd(collection, outputHandler, inputHandler));
-        commands.put("add_if_max", new AddIfMaxCmd(collection, outputHandler, inputHandler));
+        commands.put("insert_at", new InsertElementOnCmd(collection, outputHandler, inputHandler, Storage.productTree));
+        commands.put("add_if_max", new AddIfMaxCmd(collection, outputHandler, inputHandler, Storage.productTree));
         commands.put("remove_greater", new RemoveGreaterCmd(collection, outputHandler, inputHandler));
 
         commands.put("exit", new ExitCmd(collection, outputHandler));
     }
 
     public void executeScript(String path) throws StreamBrooked {
+        System.out.println("DEBUG: begun executing script " + path);
         try {
             inputHandler = new FileInputHandler(path);
             startExecuting();
@@ -70,7 +71,7 @@ public class CommandManager {
                 command = filterInputString(command);
 
                 executeCommand(command.split(" "));
-            } catch (IllegalArgumentException | StreamBrooked e) {
+            } catch (Exception e) {
                 outputHandler.printErr(e.getMessage());
             }
         }
@@ -85,7 +86,6 @@ public class CommandManager {
 
     public void executeCommand(String[] args) throws StreamBrooked {
         if(args == null) return;
-        if(args[0] == "execute_script ") executeScript(args[1]);
 
         //DEBUG
         System.out.print("DEBUG: received cmd: \"");
@@ -93,6 +93,10 @@ public class CommandManager {
         System.out.println(" ");
 
         if(!commands.containsKey(args[0])){
+            if(args[0].contains("execute_script")) {
+                executeScript(args[1]);
+            }
+
             if(args[0].contains("help")) {
                 help();
                 return;

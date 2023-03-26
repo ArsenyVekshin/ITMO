@@ -20,7 +20,7 @@ public class FileInputHandler implements InputHandler {
             if (new java.io.File(path).length() >= 2000) throw new LargeFileException();
             stream = new Scanner(file);
         } catch (FileNotFoundException | LargeFileException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

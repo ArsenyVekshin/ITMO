@@ -20,7 +20,7 @@ public class RemoveGreaterCmd extends DialogueCmd{
         try {
             Builder newElem = new Builder(inputStream, outputStream);
             collection.removeGreater(newElem.build(new ObjTree(Product.class)));
-        } catch (StreamBrooked | NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return false;
         }

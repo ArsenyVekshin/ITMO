@@ -11,9 +11,10 @@ import ArsenyVekshin.lab5.utils.builder.Builder;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 public class InsertElementOnCmd extends DialogueCmd{
-
-    public InsertElementOnCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler) {
+    ObjTree tree;
+    public InsertElementOnCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
         super("insert_at", "add new element at idx-position at collection", collection, outputHandler, inputHandler);
+        this.tree = tree;
     }
 
     @Override
@@ -23,8 +24,8 @@ public class InsertElementOnCmd extends DialogueCmd{
             if(args.length<2) throw new WrongCmdParam("параметр не найден");
 
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.insertToPosition(Integer.parseInt(args[1]) ,newElem.build(new ObjTree(Product.class))) ;
-        } catch (StreamBrooked | WrongID | WrongCmdParam | NumberFormatException | CloneNotSupportedException e) {
+            collection.insertToPosition(Integer.parseInt(args[1]) ,newElem.build(tree)) ;
+        } catch (WrongID | WrongCmdParam | NumberFormatException | CloneNotSupportedException e) {
             e.printStackTrace();
             return false;
         }
