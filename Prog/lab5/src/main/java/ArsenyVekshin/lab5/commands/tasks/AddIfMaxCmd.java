@@ -1,7 +1,6 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
-import ArsenyVekshin.lab5.collection.data.Product;
 import ArsenyVekshin.lab5.ui.InputHandler;
 import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
@@ -20,7 +19,7 @@ public class AddIfMaxCmd extends DialogueCmd{
         if(checkHelpFlag(args)) { help(); return true; }
         try {
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.addIfMax(newElem.build(tree));
+            collection.addIfMax(newElem.buildDialogue(tree));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return false;

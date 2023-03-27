@@ -27,8 +27,16 @@ public abstract class Command {
         this.name = name;
     }
 
+    /**
+     * execution call for cmd
+     * @param args parsed cmd
+     * @return
+     */
     public abstract boolean execute(String[] args);
 
+    /**
+     * help-print sector
+     */
     public abstract void help();
 
     protected boolean checkHelpFlag(String[] args){

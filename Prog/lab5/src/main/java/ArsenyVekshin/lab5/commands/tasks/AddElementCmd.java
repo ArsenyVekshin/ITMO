@@ -1,7 +1,6 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
-import ArsenyVekshin.lab5.collection.data.Product;
 import ArsenyVekshin.lab5.ui.InputHandler;
 import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
@@ -19,7 +18,7 @@ public class AddElementCmd extends DialogueCmd{
     public boolean execute(String[] args) {
         if(checkHelpFlag(args)) { help(); return true; }
         Builder newElem = new Builder(inputStream, outputStream);
-        collection.addNew(newElem.build(tree));
+        collection.addNew(newElem.buildDialogue(tree));
         return true;
     }
 

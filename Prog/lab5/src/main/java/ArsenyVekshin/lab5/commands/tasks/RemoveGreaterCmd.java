@@ -19,7 +19,7 @@ public class RemoveGreaterCmd extends DialogueCmd{
         if(checkHelpFlag(args)) { help(); return true; }
         try {
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.removeGreater(newElem.build(new ObjTree(Product.class)));
+            collection.removeGreater(newElem.buildDialogue(new ObjTree(Product.class)));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return false;
