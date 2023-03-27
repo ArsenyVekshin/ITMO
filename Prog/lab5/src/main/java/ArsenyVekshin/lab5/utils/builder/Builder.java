@@ -1,7 +1,6 @@
 package ArsenyVekshin.lab5.utils.builder;
 
 import ArsenyVekshin.lab5.collection.data.Entity;
-import ArsenyVekshin.lab5.collection.data.Product;
 import ArsenyVekshin.lab5.ui.InputHandler;
 import ArsenyVekshin.lab5.ui.OutputHandler;
 import ArsenyVekshin.lab5.ui.console.ConsoleInputHandler;
@@ -10,25 +9,40 @@ import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.ui.file.FileInputHandler;
 import ArsenyVekshin.lab5.utils.validators.Validator;
 
-import java.io.Serial;
 import java.util.HashMap;
 
+/**
+ * Class for build entity-extends object
+ */
 public class Builder {
     InputHandler inputHandler;
     OutputHandler outputHandler;
     private int errCounter = 0;
 
+    /**
+     * default constructor (streams = cli)
+     */
     public Builder(){
         this.inputHandler = new ConsoleInputHandler();
         this.outputHandler = new ConsoleOutputHandler();
     }
 
+    /**
+     * custom-streams constructor
+     * @param inputHandler input stream
+     * @param outputHandler output stream
+     */
     public Builder(InputHandler inputHandler, OutputHandler outputHandler){
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
     }
 
-    public <T extends Entity> T build(ObjTree tree) {
+    /**
+     * create new object by user-dialogue
+     * @param tree object tree by ObjTree class
+     * @return new object
+     */
+    public <T extends Entity> T buildDialogue(ObjTree tree) {
         T obj = (T) tree.constructor.get();
         HashMap<String, Object> values = new HashMap<>();
 
@@ -38,15 +52,13 @@ public class Builder {
                     continue;
                 }
 
-
-
                 if (!field.isPrimitive()) {
                     if (field.isMayNull() && askForSkip(field.getFieldName())) {
                         values.put(field.getFieldName(), null);
                     }
                     else {
                         System.out.println("Сектор " + field.getFieldName());
-                        values.put(field.getFieldName(), build(field));
+                        values.put(field.getFieldName(), buildDialogue(field));
                     }
                         continue;
                 }
@@ -75,13 +87,19 @@ public class Builder {
             } catch (StreamBrooked e) {
                 e.printStackTrace();
             }
-
         }
         obj.init(values);
         return (T) obj;
     }
 
-    public <T extends Entity> T buildByString(ObjTree tree, HashMap<String, String> data) throws StreamBrooked {
+    /**
+     * Build object by values string-map
+     * @param tree object tree by ObjTree class
+     * @param data values string-map
+     * @return new object
+     * @throws StreamBrooked
+     */
+    public <T extends Entity> T buildByStringMap(ObjTree tree, HashMap<String, String> data) throws StreamBrooked {
         T obj = (T) tree.constructor.get();
         HashMap<String, Object> values = new HashMap<>();
 
@@ -97,7 +115,7 @@ public class Builder {
                         }
                     }
                     if(nullFlag) values.put(field.getFieldName(), null);
-                    else values.put(field.getFieldName(), buildByString(field, buffData));
+                    else values.put(field.getFieldName(), buildByStringMap(field, buffData));
                     continue;
                 }
 
@@ -110,6 +128,10 @@ public class Builder {
         return (T)obj;
     }
 
+    /**
+     * protector-func for stop loop entering
+     * @return flag to stop
+     */
     private boolean dumbUserProtection(){
         errCounter++;
         if(errCounter>20 || isFile()){
@@ -118,6 +140,12 @@ public class Builder {
         return false;
     }
 
+    /**
+     * answer user for skip this field
+     * @param name field name
+     * @return flag to skip
+     * @throws StreamBrooked
+     */
     private boolean askForSkip(String name) throws StreamBrooked {
         String ans;
         outputHandler.println("Поле " + name + " не обязательное, пропустить? (Y/N)");
@@ -132,6 +160,13 @@ public class Builder {
         return ans.equals("Y");
     }
 
+    /**
+     * Check is entered value are valid
+     * @param field target field
+     * @param value entered value
+     * @return validated value
+     * @throws IllegalArgumentException
+     */
     private Object isValid(ObjTree field, String value) throws IllegalArgumentException {
         if(field.isEnum()) {
             if(field.getEnumContains().containsKey(value)) {
@@ -147,6 +182,11 @@ public class Builder {
             return Converter.convert(field.getFieldType(), value);
         }
     }
+
+    /**
+     * is this script-executing??
+     * @return boolean flag
+     */
     private boolean isFile(){
         return inputHandler.getClass() == FileInputHandler.class;
     }

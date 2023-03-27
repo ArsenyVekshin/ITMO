@@ -14,6 +14,10 @@ public class FileInputHandler implements InputHandler {
         open(path);
     }
 
+    /**
+     * Open input-stream from file
+     * @param path file path
+     */
     public void open(String path){
         try {
             file = new FileInputStream(path);

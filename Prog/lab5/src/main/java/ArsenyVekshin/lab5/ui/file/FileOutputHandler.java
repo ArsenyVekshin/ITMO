@@ -21,6 +21,10 @@ public class FileOutputHandler implements OutputHandler {
         }
     }
 
+    /**
+     * Open output-stream to file
+     * @param path file path
+     */
     public void open(String path) throws FileNotFoundException {
         try{
             if(! new java.io.File(path).isFile()) new java.io.File(path).createNewFile();

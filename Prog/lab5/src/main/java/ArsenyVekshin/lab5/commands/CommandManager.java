@@ -8,6 +8,7 @@ import ArsenyVekshin.lab5.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.ui.file.FileInputHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,17 @@ public class CommandManager {
 
     private final String logFilePath = "";
     OutputHandler logFile ;
+    private ArrayList<String> parsedScripts = new ArrayList<>();
 
     private Map<String, Command> commands = new HashMap<>();
 
 
-
+    /**
+     * default cmd-manager constructor
+     * @param collection collection manager
+     * @param inputHandler stream for input
+     * @param outputHandler stream for output
+     */
     public CommandManager(Storage collection, InputHandler inputHandler, OutputHandler outputHandler){
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
@@ -49,17 +56,34 @@ public class CommandManager {
         commands.put("exit", new ExitCmd(collection, outputHandler));
     }
 
+    /**
+     * execute script func
+     * @param path script-file location
+     * @throws StreamBrooked
+     */
     public void executeScript(String path) throws StreamBrooked {
-        System.out.println("DEBUG: begun executing script " + path);
-        try {
-            inputHandler = new FileInputHandler(path);
-            startExecuting();
-        } catch (Exception e) {
-            outputHandler.printErr(e.getMessage());
+        System.out.println("DEBUG: begin executing script " + path);
+        if(parsedScripts.contains(path)){
+            outputHandler.println("Sorry you can't execute this script recursive");
+            outputHandler.println("Execution blocked, returned to cli-mode");
+            parsedScripts.clear();
+        }
+        else {
+            parsedScripts.add(path);
+            try {
+                inputHandler = new FileInputHandler(path);
+                startExecuting();
+            } catch (Exception e) {
+                outputHandler.printErr(e.getMessage());
+            }
         }
         inputHandler = new ConsoleInputHandler();
     }
 
+    /**
+     * while true cycle with cmd read->parse->execute
+     * @throws StreamBrooked
+     */
     public void startExecuting() throws StreamBrooked {
         while (inputHandler.hasNextLine()) {
             String command = inputHandler.get();
@@ -77,6 +101,10 @@ public class CommandManager {
         }
     }
 
+    /**
+     * help table printer
+     * @throws StreamBrooked
+     */
     private void help() throws StreamBrooked {
         for (Command cmd : commands.values()){
             cmd.help();
@@ -84,6 +112,11 @@ public class CommandManager {
         outputHandler.println("Вы можете вызвать подробную информацию по команде при помощи ключа -h\n");
     }
 
+    /**
+     * execute parsed cmd
+     * @param args parsed cmd
+     * @throws StreamBrooked
+     */
     public void executeCommand(String[] args) throws StreamBrooked {
         if(args == null) return;
 

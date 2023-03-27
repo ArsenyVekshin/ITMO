@@ -28,6 +28,11 @@ public class ObjTree {
     private HashMap<String, Enum<?>> enumContains = new HashMap<>();
 
 
+    /**
+     * Create field note (with param importing)
+     * @param fieldName field name
+     * @param fieldType field type
+     */
     public <T> ObjTree(String fieldName, Class<T> fieldType){
         this.fieldName = fieldName;
         this.fieldType = fieldType;
@@ -51,6 +56,13 @@ public class ObjTree {
             }
         }
     }
+
+    /**
+     * Create field note (with param importing) with validators
+     * @param name field name
+     * @param type field type
+     * @param validators field validators
+     */
     public ObjTree(String name, Class<?> type, ArrayList<Validatable> validators) {
         this(name, type);
         this.validators = validators;
@@ -64,6 +76,15 @@ public class ObjTree {
         }
     }
 
+    /**
+     * get field validators from annotation
+     * @param field field
+     * @return validators array
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     private ArrayList<Validatable> getValidators(Field field) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         ArrayList<Validatable> validatables = new ArrayList<>();
         Annotation[] annotations = field.getAnnotations();
@@ -86,6 +107,12 @@ public class ObjTree {
     public <T> ObjTree(Class<T> type) {
         this(type.getName(), type);
     }
+
+    /**
+     * Debug object tree print
+     * @param tree tree to print
+     * @param tab tab size
+     */
     public static void print(ObjTree tree, String tab) {
         System.out.println(tab + tree.fieldName + "   " +
                 " (null=" + tree.isMayNull +
@@ -100,18 +127,34 @@ public class ObjTree {
         }
     }
 
+    /**
+     * get field constructor
+     * @return field constructor
+     */
     public Supplier<? extends Entity> getConstructor() {
         return constructor;
     }
 
+    /**
+     * get fields on object
+     * @return fields list
+     */
     public ArrayList<ObjTree> getFields() {
         return fields;
     }
 
+    /**
+     * get all possible enum-values
+     * @return map of key - value
+     */
     public HashMap<String, Enum<?>> getEnumContains() {
         return enumContains;
     }
 
+    /**
+     * get validators array for this field
+     * @return validator
+     */
     public ArrayList<Validatable> getValidators() {
         return validators;
     }

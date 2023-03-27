@@ -2,6 +2,9 @@ package ArsenyVekshin.lab5.utils.validators;
 
 import java.lang.annotation.*;
 
+/**
+ * this field generates automatically
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented

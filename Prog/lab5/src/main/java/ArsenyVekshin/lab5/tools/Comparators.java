@@ -2,8 +2,17 @@ package ArsenyVekshin.lab5.tools;
 
 import com.sun.jdi.Type;
 
+/**
+ * Static multi-type comparators
+ */
 public class Comparators {
 
+    /**
+     * Custom string comparator
+     * @param s1 string 1
+     * @param s2 string 2
+     * @return
+     */
     private static int compareStrings(String s1, String s2) {
         if (s1 == s2) return 0;
         for (int i = 0; i < s1.length() && i < s2.length(); i++) {
@@ -13,6 +22,12 @@ public class Comparators {
         return 0;
     }
 
+    /**
+     * Comparator for any primitive
+     * @param f1 obj 1
+     * @param f2 obj 2
+     * @return
+     */
     public static int compareFields(Object f1, Object f2) {
         if (f1.getClass().equals(String.class)) {
             String a = (String) f1;

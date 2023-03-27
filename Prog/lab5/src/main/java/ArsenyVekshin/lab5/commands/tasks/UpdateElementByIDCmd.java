@@ -1,7 +1,6 @@
 package ArsenyVekshin.lab5.commands.tasks;
 
 import ArsenyVekshin.lab5.collection.Storage;
-import ArsenyVekshin.lab5.collection.data.Product;
 import ArsenyVekshin.lab5.collection.exceptions.WrongCmdParam;
 import ArsenyVekshin.lab5.collection.exceptions.WrongID;
 import ArsenyVekshin.lab5.ui.InputHandler;
@@ -24,7 +23,7 @@ public class UpdateElementByIDCmd extends DialogueCmd{
             if(args.length<2) throw new WrongCmdParam("параметр не найден");
 
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.update(Integer.parseInt(args[1]) ,newElem.build(tree)) ;
+            collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree)) ;
         } catch (WrongID | WrongCmdParam | NumberFormatException e) {
             e.printStackTrace();
             return false;

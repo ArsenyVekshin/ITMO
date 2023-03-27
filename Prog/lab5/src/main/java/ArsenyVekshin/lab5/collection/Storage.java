@@ -3,20 +3,23 @@ package ArsenyVekshin.lab5.collection;
 import ArsenyVekshin.lab5.Main;
 import ArsenyVekshin.lab5.collection.data.*;
 import ArsenyVekshin.lab5.collection.exceptions.*;
-import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.ui.file.FileInputHandler;
 import ArsenyVekshin.lab5.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab5.utils.builder.Builder;
 import ArsenyVekshin.lab5.utils.builder.ObjTree;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.*;
 
 import static ArsenyVekshin.lab5.tools.Comparators.compareFields;
 
+/**
+ Main collection manager
+ includes:
+    - functions for collection-operations cmd
+    - CSV load/save functions
+ */
 public class Storage <T extends Object> implements CSVOperator {
     public Storage() {
     }
@@ -39,6 +42,9 @@ public class Storage <T extends Object> implements CSVOperator {
         Storage.creationTime = creationTime;
     }
 
+    /**
+     * Init collection save-path and automatically load
+     */
     public void init() {
         try {
             collection = new Vector<>();
@@ -71,6 +77,10 @@ public class Storage <T extends Object> implements CSVOperator {
 
     }
 
+    /**
+     * append random-values to collection
+     * @throws InvalidValueEntered
+     */
     public void fillRandom() throws InvalidValueEntered {
         try {
             addNew(new Product(0, "test", new Coordinates(1, 1), 55, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
@@ -91,6 +101,10 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * Generate string with collection meta-data
+     * @return String data to print
+     */
     public static String info(){
         String out = "";
         out += "contains classes: " + Product.class.getName() + "\n";
@@ -100,7 +114,12 @@ public class Storage <T extends Object> implements CSVOperator {
         return out;
     }
 
+    /**
+     * Generate string with collection elements
+     * @return
+     */
     public static String show(){
+        if(collection.size() == 0 ) return "collection is empty";
         StringBuilder out = new StringBuilder();
         for (Product product : collection) {
             out.append(product.toString()).append("\n");
@@ -108,6 +127,12 @@ public class Storage <T extends Object> implements CSVOperator {
         return out.toString();
     }
 
+    /**
+     * Find collection-index of entered id
+     * @param id product-id to find
+     * @return collection-index
+     * @throws WrongID
+     */
     private static int findIdx(int id) throws WrongID {
         for (int i = 0; i < collection.toArray().length; i++) {
             if (id == collection.get(i).getId()) return i;
@@ -115,14 +140,26 @@ public class Storage <T extends Object> implements CSVOperator {
         throw new WrongID((long) id);
     }
 
+    /**
+     * find collection size
+     * @return collection size
+     */
     public static long getElementsCount() {
         return collection.size();
     }
 
+    /**
+     * add element to collection without id-generation
+     * @param product Product-obj to add
+     */
     public static void add(Product product) {
         collection.add(product);
     }
 
+    /**
+     * add element to collection with auto id-generation
+     * @param product Product-obj to add
+     */
     public static void addNew(Product product) {
         collection.add(product);
         collection.lastElement().generateID(usersCounter);
@@ -130,6 +167,10 @@ public class Storage <T extends Object> implements CSVOperator {
 
     }
 
+    /**
+     * add element to collection with auto id-generation
+     * @param tree map-container with product-fields values
+     */
     public static void addNew(HashMap<String, Object> tree) {
         collection.add(new Product(tree));
         collection.lastElement().generateID(usersCounter);
@@ -137,7 +178,12 @@ public class Storage <T extends Object> implements CSVOperator {
 
     }
 
-
+    /**
+     * Update fields on set-id collection elem
+     * @param id id of product to update
+     * @param product new value for elem
+     * @throws WrongID
+     */
     public static void update(long id, Product product) throws WrongID {
         try {
             int _idx = findIdx((int)id);
@@ -147,6 +193,11 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * remove elem from collection by id
+     * @param id product-id to delete
+     * @throws WrongID
+     */
     public static void remove(int id) throws WrongID {
         try {
             int _idx = findIdx(id);
@@ -156,11 +207,20 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * clear collection
+     */
     public static void clear() {
         collection.clear();
         usersCounter = 1;
     }
 
+    /**
+     * swap 2 elems in collection
+     * @param idx1 elem 1
+     * @param idx2 elem 2
+     * @throws CloneNotSupportedException
+     */
     private static void swapPosition(int idx1, int idx2) throws CloneNotSupportedException {
         if (Integer.max(idx1, idx2) >= collection.size()) collection.setSize(Integer.max(idx1, idx2));
         Product buff = collection.get(idx1).clone();
@@ -168,6 +228,13 @@ public class Storage <T extends Object> implements CSVOperator {
         collection.set(idx2, buff);
     }
 
+    /**
+     * insert new product to position
+     * @param idx needable position
+     * @param product new product
+     * @throws WrongID
+     * @throws CloneNotSupportedException
+     */
     public static void insertToPosition(int idx, Product product) throws WrongID, CloneNotSupportedException {
         if (idx < collection.size()) {
             collection.add(product);
@@ -177,8 +244,10 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
-
-
+    /**
+     * sort collection by column
+     * @param field field to compare (id/name/price)
+     */
     public void sortBy(String field) {
         collection.sort((f1, f2) -> {
             try {
@@ -191,10 +260,19 @@ public class Storage <T extends Object> implements CSVOperator {
         });
     }
 
+    /**
+     * default collection sort-function
+     */
     public void sort(){
         sortBy(defaultFieldForComp);
     }
 
+    /**
+     * find max elem from collection (sort param = default)
+     * @return product on max position
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     private Product max() throws NoSuchFieldException, IllegalAccessException {
         Product _max = new Product();
         try {
@@ -211,22 +289,37 @@ public class Storage <T extends Object> implements CSVOperator {
         return _max;
     }
 
+    /**
+     * add new elem to collection if it upper than all (sort param = default)
+     * @param o new product
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     public void addIfMax(Product o) throws NoSuchFieldException, IllegalAccessException {
         try {
+            boolean greaterFlag = true;
             T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
             for (int i = 0; i < collection.size(); i++) {
                 Product b = collection.get(i);
                 if (b == null) continue;
                 if (compareFields(a, (T) b.getClass().getDeclaredField(defaultFieldForComp).get(b)) < 0) {
-                    collection.remove(i);
+                    greaterFlag = false;
+                    return;
                 }
             }
+            add((Product) a);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * remove all elems which are greater than entered
+     * @param o  new product
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     public void removeGreater(Product o) throws NoSuchFieldException, IllegalAccessException {
         try {
             T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
@@ -237,12 +330,16 @@ public class Storage <T extends Object> implements CSVOperator {
                     collection.remove(i);
                 }
             }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * remove all elems with the same unitOfMeasure
+     * @param unitOfMeasure
+     */
     public static void removeSameUnitOfMeasure(UnitOfMeasure unitOfMeasure){
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null || collection.get(i).getUnitOfMeasure() != unitOfMeasure) continue;
@@ -250,6 +347,10 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * generate string with sorted prices of all elems
+     * @return string for print
+     */
     public static String getPrices(){
         if(collection.isEmpty()) return "collection is null";
         float[] array = new float[collection.size()];
@@ -261,6 +362,10 @@ public class Storage <T extends Object> implements CSVOperator {
         return Arrays.toString(array);
     }
 
+    /**
+     * find all elems prices sum
+     * @return prices sum
+     */
     public static float getPricesSum(){
         float out = 0;
         for (Product product : collection) {
@@ -270,109 +375,11 @@ public class Storage <T extends Object> implements CSVOperator {
         return out;
     }
 
-
-    /*public void parseCSV(String input) throws NoneValueFromCSV {
-        if(input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
-        collection.clear();
-        String[] data = input.split("\n");
-
-        String[] markup = data[0].split(", ");
-
-        Map<String, String> buff = new HashMap<>();
-        for (String key : markup) buff.put(key, "");
-
-        for(int j=1; j < data.length; j++){
-            try{
-                HashMap<String, Object> values = new HashMap<>();
-
-                String[] line = data[j].split(", ");
-                if(line.length < markup.length) throw new WrongCSVLine(data[j]);
-                for(int i=0; i < line.length; i++) buff.put(markup[i], line[i]);
-
-                for(ObjTree field : new ObjTree(Product.class).getFields()) {
-                    if(!field.isMayNull() && !buff.containsKey(field.getFieldName())) throw new CSVFileBroken(path);
-
-                    if(field.isEnum()) {
-                        if (field.getEnumContains().containsKey(buff.get(field.getFieldName())))
-                            values.put(field.getFieldName(), field.getEnumContains().get(buff.get(field.getFieldName())));
-                        else
-                            throw new IllegalArgumentException();
-                    }
-
-
-
-
-                }
-            } catch (WrongCSVLine e) {
-                throw new RuntimeException(e);
-            } catch (CSVFileBroken e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
-
-/*    public void parseCSV(String input) throws NoneValueFromCSV {
-        if(input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
-        collection.clear();
-        String[] data = input.split("\n");
-
-        String[] markup = data[0].split(", ");
-        Map<String, String> dataMap = new HashMap<String, String>();
-
-        for (String s : markup) {
-            dataMap.put(s, "");
-        }
-
-
-        for(int i=1; i < data.length; i++){
-            if (data[i].isEmpty()) continue;
-            String[] line = data[i].split(", ");
-
-//            System.out.print("DEBUG: ");
-//            System.out.println(data[i]);
-//            for (String a : line) System.out.print(" \"" + a + "\",");
-//            System.out.println(line.length);
-
-            try{
-                if(line.length != 13)
-                    throw new NoneValueFromCSV(data[i] + " - line " + i+1);
-
-                for(int j=0; j < markup.length; j++){
-                    dataMap.replace(markup[j], line[j]);
-                }
-
-//                HashMap<String, Object> values = new HashMap<>();
-//                for (String key : dataMap.keySet()){
-//                    values.put(key, productTree.)
-//                }
-                add(new Product(
-
-                        Integer.parseInt(dataMap.get("id")),
-                        dataMap.get("name"),
-                        new Coordinates(
-                                Float.parseFloat(dataMap.get("x")),
-                                Float.parseFloat(dataMap.get("y"))),
-                        Float.parseFloat(dataMap.get("price")),
-                        UnitOfMeasure.valueOf(dataMap.get("unitOfMeasure")),
-                        new Organization(
-                                Long.parseLong(dataMap.get("manufacturer id")),
-                                dataMap.get("manufacturer name"),
-                                Double.parseDouble(dataMap.get("manufacturer annualTurnover")),
-                                OrganizationType.valueOf(dataMap.get("manufacturer type")),
-                                new Address(dataMap.get("manufacturer street"),
-                                            dataMap.get("manufacturer zipCode"))
-                        )
-                ));
-            } catch (Exception e) {
-                System.out.println("Error in csv-parse string: ");
-                System.out.print("\t");
-                for (String a : line) System.out.print(" \"" + a + "\",");
-                System.out.println("err type=" + e.getMessage());
-            }
-        }
-    }*/
-
-
+    /**
+     * Parse csv-file to collection
+     * @param input collection DB-file
+     * @throws NoneValueFromCSV
+     */
     public void parseCSV(String input) throws NoneValueFromCSV {
         if (input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
         collection.clear();
@@ -399,7 +406,7 @@ public class Storage <T extends Object> implements CSVOperator {
                 }
 
                 Builder builder = new Builder();
-                Product newElem = builder.buildByString(productTree, dataMap);
+                Product newElem = builder.buildByStringMap(productTree, dataMap);
                 if(newElem == null) System.out.println("error in csv-import: " + data[i]);
                 else add(newElem);
             } catch (Exception e) {
@@ -408,6 +415,10 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * generate csv collection DB-file
+     * @return
+     */
     @Override
     public String generateCSV() {
         StringBuilder out = new StringBuilder("id" +
@@ -431,6 +442,9 @@ public class Storage <T extends Object> implements CSVOperator {
         return out.toString();
     }
 
+    /**
+     * save collection to default path
+     */
     public void save(){
         try {
             FileOutputHandler file = new FileOutputHandler(path + "data.csv");
@@ -442,9 +456,17 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    /**
+     * load collection from default path
+     */
     public void load(){
         load(path + "data.csv");
     }
+
+    /**
+     * load collection from path
+     * @param newPath DB-file path
+     */
     public void load(String newPath){
         try {
             FileInputHandler file = new FileInputHandler(newPath);

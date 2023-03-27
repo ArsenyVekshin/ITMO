@@ -6,6 +6,9 @@ import ArsenyVekshin.lab5.ui.exeptions.UnexpectedSymbolsFounded;
 
 import java.util.regex.Pattern;
 
+/**
+ * input-strings filter
+ */
 public class DataFirewall {
 
     private static final int MAX_STR_LENGTH = 100;
@@ -13,15 +16,30 @@ public class DataFirewall {
     private static Pattern patternSymbols = Pattern.compile("^[A-Z][a-z]*(\\\\s(([a-z]{1,3})|(([a-z]+\\\\')?[A-Z][a-z]*)))*$");
 
 
-
+    /**
+     * Get string by default string-pattern
+     * @param input raw string
+     * @return filtered string
+     */
     public static String readString(String input){
         return getPattern(input, patternSymbols);
     }
 
+    /**
+     * Get string by default numeric-pattern
+     * @param input raw string
+     * @return filtered string
+     */
     public static String readNumeric(String input){
         return getPattern(input, patternNumber);
     }
 
+    /**
+     * Get string by pattern
+     * @param input raw string
+     * @param patternNumber pattern
+     * @return  filtered string
+     */
     private static String getPattern(String input, Pattern patternNumber) {
         try {
             if (input.equals("")) throw new NotNullException();
@@ -34,6 +52,11 @@ public class DataFirewall {
         return "";
     }
 
+    /**
+     * get string after default-filter
+     * @param data raw string
+     * @return filtered string
+     */
     public static String filterInputString(String data){
         if(data.length() >= MAX_STR_LENGTH) return "";
         data = data.trim();
