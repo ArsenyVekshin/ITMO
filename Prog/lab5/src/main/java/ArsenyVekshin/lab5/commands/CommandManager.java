@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ArsenyVekshin.lab5.tools.FilesTools.getAbsolutePath;
 import static ArsenyVekshin.lab5.ui.DataFirewall.filterInputString;
 
 public class CommandManager {
@@ -62,6 +63,7 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void executeScript(String path) throws StreamBrooked {
+        path = getAbsolutePath(path);
         System.out.println("DEBUG: begin executing script " + path);
         if(parsedScripts.contains(path)){
             outputHandler.println("Sorry you can't execute this script recursive");

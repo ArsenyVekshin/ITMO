@@ -6,6 +6,8 @@ import ArsenyVekshin.lab5.ui.exeptions.LargeFileException;
 import java.io.*;
 import java.util.Scanner;
 
+import static ArsenyVekshin.lab5.tools.FilesTools.getAbsolutePath;
+
 public class FileInputHandler implements InputHandler {
     private InputStream file = null;
     private Scanner stream = null;

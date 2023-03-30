@@ -23,7 +23,7 @@ public class UpdateElementByIDCmd extends DialogueCmd{
             if(args.length<2) throw new WrongCmdParam("параметр не найден");
 
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree)) ;
+            collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree, collection.getElemById(Integer.parseInt(args[1])))) ;
         } catch (WrongID | WrongCmdParam | NumberFormatException e) {
             e.printStackTrace();
             return false;

@@ -142,6 +142,7 @@ public class Organization extends Entity implements Cloneable, Comparable, CSVOp
     @Override
     public HashMap<String, Object> getValues() {
         HashMap<String, Object> values = new HashMap<>();
+        values.put("id", id);
         values.put("name", name);
         values.put("annualTurnover", annualTurnover);
         values.put("type", type);

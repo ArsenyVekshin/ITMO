@@ -101,6 +101,10 @@ public class Storage <T extends Object> implements CSVOperator {
         }
     }
 
+    public Product getElemById(int id) throws WrongID{
+        return collection.get(findIdx(id));
+    }
+
     /**
      * Generate string with collection meta-data
      * @return String data to print
