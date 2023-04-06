@@ -16,6 +16,7 @@ public class AddElementCmd extends DialogueCmd{
 
     @Override
     public boolean execute(String[] args) {
+        System.out.println("DEBUG: add cmd execute: " + inputStream);
         if(checkHelpFlag(args)) { help(); return true; }
         Builder newElem = new Builder(inputStream, outputStream);
         collection.addNew(newElem.buildDialogue(tree));

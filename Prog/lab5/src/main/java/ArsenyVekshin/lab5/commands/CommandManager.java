@@ -35,6 +35,10 @@ public class CommandManager {
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
 
+        init(collection);
+    }
+
+    private void init(Storage collection){
         commands.put("info", new CollectionInfoCmd(collection, outputHandler));
         commands.put("show", new ShowCollectionCmd(collection, outputHandler));
         commands.put("clear", new ClearCollectionCmd(collection, outputHandler));
@@ -72,12 +76,14 @@ public class CommandManager {
             try {
                 System.out.println("DEBUG: begin executing script " + path);
                 inputHandler = new FileInputHandler(path);
+                changeGlobalStreams(inputHandler, outputHandler);
                 startExecuting();
             } catch (Exception e) {
                 outputHandler.printErr(e.getMessage());
             }
         }
         inputHandler = new ConsoleInputHandler();
+        changeGlobalStreams(inputHandler, outputHandler);
     }
 
     /**
@@ -85,15 +91,16 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
+        System.out.println("DEBUG: execution by stream started at " + inputHandler.getClass().getName());
         while (inputHandler.hasNextLine()) {
             String command = inputHandler.get();
-            System.out.println("DEBUG: \"" + command + "\" file=" + inputHandler.getClass().getName());
+            System.out.println("DEBUG: \"" + command + "\" stream=" + inputHandler.getClass().getName());
             if(command.isEmpty() || command.isBlank()) {
                 continue;
             }
             try {
                 command = filterInputString(command);
-                System.out.println(command.split(" ");
+                System.out.println(command.split(" "));
                 executeCommand(command.split(" "));
             } catch (NoSuchElementException e) {
                 break;
@@ -102,7 +109,8 @@ public class CommandManager {
                 outputHandler.printErr(e.getMessage());
             }
         }
-        System.out.println("Ввод завершен. Закрываю программу.");
+        if(inputHandler instanceof FileInputHandler) System.out.println("Ввод из файла завершен. Закрываю чтение.");
+        else System.out.println("Ввод завершен. Закрываю программу.");
     }
 
     /**
@@ -113,6 +121,11 @@ public class CommandManager {
         for (Command cmd : commands.values()){
             cmd.help();
         }
+        outputHandler.println("""
+                >execute_script {path}
+                    read file as multiline cmd queue
+                """);
+
         outputHandler.println("Вы можете вызвать подробную информацию по команде при помощи ключа -h\n");
     }
 
@@ -144,5 +157,12 @@ public class CommandManager {
         }
         commands.get(args[0]).execute(args);
         //logFile.println(args.toString());
+    }
+
+    private  <T extends Command> void changeGlobalStreams(InputHandler inputHandler, OutputHandler outputHandler){
+        for( Command cmd : commands.values()) {
+            if(cmd instanceof DataCmd) ((DataCmd) cmd).setOutputStream(outputHandler);
+            if(cmd instanceof DialogueCmd) ((DialogueCmd) cmd).setInputStream(inputHandler);
+        }
     }
 }
