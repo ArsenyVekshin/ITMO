@@ -25,7 +25,7 @@ public class UpdateElementByIDCmd extends DialogueCmd{
             Builder newElem = new Builder(inputStream, outputStream);
             collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree, collection.getElemById(Integer.parseInt(args[1])))) ;
         } catch (WrongID | WrongCmdParam | NumberFormatException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ public class UpdateElementByIDCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

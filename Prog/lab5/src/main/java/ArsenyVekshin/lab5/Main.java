@@ -29,7 +29,7 @@ public class Main {
                     ⠀⠀⠀⠀⠀⠀⠀⠈⢷⣿⡤⠤⠤⠴⠴⠶⠶⠒⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀
                     """);
             Storage collection = new Storage();
-            if(args.length != 0) collection.path = args[1];
+            if(args.length != 0) collection.path = args[0];
             collection.init();
             //collection.fillRandom();
             CommandManager commandManager = new CommandManager(collection, new ConsoleInputHandler(), new ConsoleOutputHandler());

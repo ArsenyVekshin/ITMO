@@ -33,7 +33,7 @@ public class AddElementCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

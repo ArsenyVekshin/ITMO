@@ -20,7 +20,7 @@ public class RemoveElementByIDCmd extends DialogueCmd{
             if(args.length<2) throw new WrongCmdParam("параметр не найден");
             collection.remove(Integer.parseInt(args[1]));
         } catch ( WrongID | WrongCmdParam | NumberFormatException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -36,7 +36,7 @@ public class RemoveElementByIDCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

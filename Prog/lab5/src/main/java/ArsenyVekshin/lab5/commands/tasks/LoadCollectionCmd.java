@@ -29,7 +29,7 @@ public class LoadCollectionCmd extends DataCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

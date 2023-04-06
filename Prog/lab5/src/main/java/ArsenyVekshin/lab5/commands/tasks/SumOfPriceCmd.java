@@ -16,7 +16,7 @@ public class SumOfPriceCmd extends DataCmd{
         try {
             outputStream.println(String.valueOf(collection.getPricesSum()));
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -32,7 +32,7 @@ public class SumOfPriceCmd extends DataCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

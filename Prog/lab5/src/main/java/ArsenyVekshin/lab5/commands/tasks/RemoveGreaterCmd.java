@@ -21,7 +21,7 @@ public class RemoveGreaterCmd extends DialogueCmd{
             Builder newElem = new Builder(inputStream, outputStream);
             collection.removeGreater(newElem.buildDialogue(new ObjTree(Product.class)));
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return false;
         }
         return true;
@@ -38,7 +38,7 @@ public class RemoveGreaterCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

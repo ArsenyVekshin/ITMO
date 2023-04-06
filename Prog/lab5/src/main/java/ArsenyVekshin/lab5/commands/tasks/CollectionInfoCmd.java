@@ -15,7 +15,7 @@ public class CollectionInfoCmd extends DataCmd{
         try {
             outputStream.println(collection.info());
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -31,7 +31,7 @@ public class CollectionInfoCmd extends DataCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

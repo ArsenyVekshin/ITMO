@@ -114,11 +114,11 @@ public class Organization extends Entity implements Cloneable, Comparable, CSVOp
     @Override
     public String toString(){
         return "Organization(" +
-                "id=" + id +
-                ", name=" + name +
-                ", annualTurnover=" + annualTurnover +
-                ", type=" + type +
-                ", postalAddress=" + postalAddress.toString() + ");";
+                "\n\t\tid=" + id +
+                "\n\t\tname=" + name +
+                "\n\t\tannualTurnover=" + annualTurnover +
+                "\n\t\ttype=" + type +
+                "\n\t\tpostalAddress="  + postalAddress.toString() + ");";
     }
 
     @Override

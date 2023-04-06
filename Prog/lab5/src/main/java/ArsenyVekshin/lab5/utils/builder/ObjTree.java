@@ -52,7 +52,7 @@ public class ObjTree {
                     this.fields.add(new ObjTree(field.getName(), field.getType(), getValidators(field)));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());//e.printStackTrace();
             }
         }
     }

@@ -21,7 +21,7 @@ public class AddIfMaxCmd extends DialogueCmd{
             Builder newElem = new Builder(inputStream, outputStream);
             collection.addIfMax(newElem.buildDialogue(tree));
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -39,7 +39,7 @@ public class AddIfMaxCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

@@ -149,14 +149,14 @@ public class Product extends Entity implements Cloneable, CSVOperator {
     @Override
     public String toString(){
         String out = "Product(" +
-                "id=" + id +
-                ", name=" + name +
-                ", coordinates=" + coordinates.toString() +
-                ", creationDate=" + creationDate +//.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
-                ", price=" + price +
-                ", unitOfMeasure=" + unitOfMeasure + ", manufacturer=";
+                "\n\tid=" + id +
+                "\n\tname=" + name +
+                "\n\tcoordinates=" + coordinates.toString() +
+                "\n\tcreationDate=" + creationDate +//.format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")) +
+                "\n\tprice=" + price +
+                "\n\tunitOfMeasure=" + unitOfMeasure + "\n\tmanufacturer=";
                 if(manufacturer!=null) out+=manufacturer.toString();
-                return  out + ");";
+                return  out + ");\n";
     }
 
     @Override

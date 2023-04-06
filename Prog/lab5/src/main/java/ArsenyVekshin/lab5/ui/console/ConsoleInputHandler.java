@@ -2,6 +2,7 @@ package ArsenyVekshin.lab5.ui.console;
 
 import ArsenyVekshin.lab5.ui.InputHandler;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ConsoleInputHandler implements InputHandler {

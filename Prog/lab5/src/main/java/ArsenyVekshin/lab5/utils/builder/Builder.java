@@ -84,15 +84,22 @@ public class Builder {
                         for(Object o : field.getEnumContains().values()) outputHandler.print(o + " ");
                         outputHandler.println(" ");
                     }
+                    System.out.println("DEBUG : ожидаю команду от " + inputHandler.getClass().getSimpleName());
                     String value = inputHandler.get();
+                    if(isFile()) outputHandler.println("> " + value);
+                    //System.out.println("DEBUG: \'" + value+"\'");
 
                     if(value.strip().equals("")) {
 
-                        if(oldObj!=null)
+                        if(oldObj!=null){
                             values.put(field.getFieldName(), oldObj.getValues().get(field.getFieldName()));
-                        else if (field.isMayNull())
+                            break;
+                        }
+                        else if (field.isMayNull()){
                             values.put(field.getFieldName(), Converter.convert(field.getFieldType(), null));
-                        break;
+                            break;
+                        }
+
                     }
 
                     try {
@@ -100,10 +107,12 @@ public class Builder {
                         break;
                     }  catch (IllegalArgumentException e) {
                         System.out.println("Вы ввели недопустимое значение! " + e.getMessage() + ". Повторите ввод");
+                        if(isFile()) break;
                     }
                 }
-            } catch (StreamBrooked e) {
-                e.printStackTrace();
+            }
+            catch (StreamBrooked e) {
+                System.out.println(e.getMessage());//e.printStackTrace();
             }
         }
         obj.init(values);

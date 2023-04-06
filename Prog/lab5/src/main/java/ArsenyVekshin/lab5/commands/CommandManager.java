@@ -8,10 +8,7 @@ import ArsenyVekshin.lab5.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab5.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab5.ui.file.FileInputHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ArsenyVekshin.lab5.tools.FilesTools.getAbsolutePath;
 import static ArsenyVekshin.lab5.ui.DataFirewall.filterInputString;
@@ -73,6 +70,7 @@ public class CommandManager {
         else {
             parsedScripts.add(path);
             try {
+                System.out.println("DEBUG: begin executing script " + path);
                 inputHandler = new FileInputHandler(path);
                 startExecuting();
             } catch (Exception e) {
@@ -89,18 +87,22 @@ public class CommandManager {
     public void startExecuting() throws StreamBrooked {
         while (inputHandler.hasNextLine()) {
             String command = inputHandler.get();
-            System.out.println("DEBUG: \"" + command + "\"");
+            System.out.println("DEBUG: \"" + command + "\" file=" + inputHandler.getClass().getName());
             if(command.isEmpty() || command.isBlank()) {
                 continue;
             }
             try {
                 command = filterInputString(command);
-
+                System.out.println(command.split(" ");
                 executeCommand(command.split(" "));
-            } catch (Exception e) {
+            } catch (NoSuchElementException e) {
+                break;
+            }
+            catch (Exception e) {
                 outputHandler.printErr(e.getMessage());
             }
         }
+        System.out.println("Ввод завершен. Закрываю программу.");
     }
 
     /**

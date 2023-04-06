@@ -16,7 +16,7 @@ public class ShowCollectionCmd extends DataCmd{
             if(checkHelpFlag(args)) { help(); return true; }
             outputStream.println(collection.show());
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -32,7 +32,7 @@ public class ShowCollectionCmd extends DataCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

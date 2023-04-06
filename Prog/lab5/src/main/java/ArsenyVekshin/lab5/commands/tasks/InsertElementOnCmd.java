@@ -25,7 +25,7 @@ public class InsertElementOnCmd extends DialogueCmd{
             Builder newElem = new Builder(inputStream, outputStream);
             collection.insertToPosition(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree)) ;
         } catch (WrongID | WrongCmdParam | NumberFormatException | CloneNotSupportedException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
         return true;
@@ -43,7 +43,7 @@ public class InsertElementOnCmd extends DialogueCmd{
                    -h / --help\tShow this menu
                     """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

@@ -26,7 +26,7 @@ public class Storage <T extends Object> implements CSVOperator {
 
     public String fileName = "none"; //default value
     private static Vector<Product> collection;
-    public static String path;
+    public static String path = null;
     private static ZonedDateTime creationTime;
     private static int usersCounter = 0;
 
@@ -49,8 +49,9 @@ public class Storage <T extends Object> implements CSVOperator {
         try {
             collection = new Vector<>();
             creationTime = ZonedDateTime.now();
-            if (System.getenv("lab5") == null) {
-                path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + File.separatorChar + "sysFiles" + File.separatorChar;
+            if (path== null) {
+                //path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + File.separatorChar + "sysFiles" + File.separatorChar;
+                path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + File.separatorChar + "sysFiles" + File.separatorChar + "data.csv";
                 System.out.println("""
                         ###########! WARNING !###########
                         Directory for interaction-files is not set 
@@ -97,7 +98,7 @@ public class Storage <T extends Object> implements CSVOperator {
             addNew(new Product(0, "test2", new Coordinates(1, 1), 800, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
             addNew(new Product(0, "test3", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
         } catch (InvalidValueEntered e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 
@@ -193,7 +194,7 @@ public class Storage <T extends Object> implements CSVOperator {
             int _idx = findIdx((int)id);
             collection.set(_idx, product);
         } catch (WrongID e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 
@@ -258,7 +259,7 @@ public class Storage <T extends Object> implements CSVOperator {
                 compareFields((T) f1.getClass().getDeclaredField(field).get(f1),
                         (T) f2.getClass().getDeclaredField(field).get(f2));
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
             }
             return 0;
         });
@@ -288,7 +289,7 @@ public class Storage <T extends Object> implements CSVOperator {
                 }
             }
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
         return _max;
     }
@@ -313,7 +314,7 @@ public class Storage <T extends Object> implements CSVOperator {
             }
             add((Product) a);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
 
     }
@@ -335,7 +336,7 @@ public class Storage <T extends Object> implements CSVOperator {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
 
     }
@@ -451,12 +452,12 @@ public class Storage <T extends Object> implements CSVOperator {
      */
     public void save(){
         try {
-            FileOutputHandler file = new FileOutputHandler(path + "data.csv");
+            FileOutputHandler file = new FileOutputHandler(path );
             file.println(generateCSV());
             file.close();
-            System.out.println("file saved at: " + path + "data.csv");
+            System.out.println("file saved at: " + path );
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 
@@ -464,7 +465,7 @@ public class Storage <T extends Object> implements CSVOperator {
      * load collection from default path
      */
     public void load(){
-        load(path + "data.csv");
+        load(path);
     }
 
     /**

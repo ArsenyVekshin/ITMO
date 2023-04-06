@@ -13,6 +13,7 @@ public class ExitCmd extends DataCmd{
     @Override
     public boolean execute(String[] args) {
         if(checkHelpFlag(args)) { help(); return true; }
+        System.exit(0);
         return true;
     }
 
@@ -25,7 +26,7 @@ public class ExitCmd extends DataCmd{
                    WARNING!! don't use this cmd without save cmd
                 """);
         } catch (StreamBrooked e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 }

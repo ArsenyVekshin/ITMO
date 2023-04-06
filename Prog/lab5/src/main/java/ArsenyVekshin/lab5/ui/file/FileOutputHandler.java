@@ -16,7 +16,7 @@ public class FileOutputHandler implements OutputHandler {
         try {
             open(path);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
 
         }
     }
@@ -32,7 +32,7 @@ public class FileOutputHandler implements OutputHandler {
             file = new FileOutputStream(path);
             stream = new OutputStreamWriter(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 
@@ -42,7 +42,7 @@ public class FileOutputHandler implements OutputHandler {
         try {
             stream.write(data);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());//e.printStackTrace();
         }
     }
 
