@@ -84,7 +84,7 @@ public class Builder {
                         for(Object o : field.getEnumContains().values()) outputHandler.print(o + " ");
                         outputHandler.println(" ");
                     }
-                    System.out.println("DEBUG : ожидаю команду от " + inputHandler.getClass().getSimpleName());
+                    //System.out.println("DEBUG : ожидаю команду от " + inputHandler.getClass().getSimpleName());
                     String value = inputHandler.get();
                     if(isFile()) outputHandler.println("> " + value);
                     //System.out.println("DEBUG: \'" + value+"\'");

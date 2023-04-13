@@ -31,7 +31,10 @@ public class Main {
             Storage collection = new Storage();
             if(args.length != 0) collection.path = args[0];
             collection.init();
+
             //collection.fillRandom();
+            //System.out.println("DEBUG: collection filled by example-values");
+
             CommandManager commandManager = new CommandManager(collection, new ConsoleInputHandler(), new ConsoleOutputHandler());
             commandManager.startExecuting();
         }

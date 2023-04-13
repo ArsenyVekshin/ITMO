@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class DataFirewall {
 
-    private static final int MAX_STR_LENGTH = 300;
+    private static final int MAX_STR_LENGTH = 500;
     private static Pattern patternNumber = Pattern.compile("-?\\d+(\\.\\d+)?");
     private static Pattern patternSymbols = Pattern.compile("^[A-Z][a-z]*(\\\\s(([a-z]{1,3})|(([a-z]+\\\\')?[A-Z][a-z]*)))*$");
 

@@ -283,12 +283,11 @@ public class Storage <T extends Object> implements CSVOperator {
         try {
             for (int i = 0; i < collection.size(); i++) {
                 Product a = collection.get(i);
-                if (compareFields((T) _max.getClass().getDeclaredField(defaultFieldForComp).get(_max),
-                        (T) a.getClass().getDeclaredField(defaultFieldForComp).get(a)) < 0) {
+                if (_max.compareTo(a)<0) {
                     _max = a;
                 }
             }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+        } catch (IllegalArgumentException | SecurityException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
         return _max;
@@ -303,17 +302,16 @@ public class Storage <T extends Object> implements CSVOperator {
     public void addIfMax(Product o) throws NoSuchFieldException, IllegalAccessException {
         try {
             boolean greaterFlag = true;
-            T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
             for (int i = 0; i < collection.size(); i++) {
                 Product b = collection.get(i);
                 if (b == null) continue;
-                if (compareFields(a, (T) b.getClass().getDeclaredField(defaultFieldForComp).get(b)) < 0) {
+                if (o.compareTo(b)<0) {
                     greaterFlag = false;
                     return;
                 }
             }
-            add((Product) a);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            addNew(o);
+        } catch (IllegalArgumentException | SecurityException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
 
@@ -327,11 +325,10 @@ public class Storage <T extends Object> implements CSVOperator {
      */
     public void removeGreater(Product o) throws NoSuchFieldException, IllegalAccessException {
         try {
-            T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
             for (int i=0; i<collection.size(); i++){
                 Product b = collection.get(i);
                 if(b==null) continue;
-                if(compareFields(a, (T) b.getClass().getDeclaredField(defaultFieldForComp).get(b))<0){
+                if(o.compareTo(b)<0){
                     collection.remove(i);
                 }
             }

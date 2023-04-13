@@ -30,6 +30,8 @@ public class FileInputHandler implements InputHandler {
         }
     }
 
+    public String nextLine(){return get();}
+
     @Override
     public String get() {
         return stream.nextLine();

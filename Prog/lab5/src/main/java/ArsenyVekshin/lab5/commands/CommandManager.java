@@ -65,7 +65,7 @@ public class CommandManager {
      */
     public void executeScript(String path) throws StreamBrooked {
         path = getAbsolutePath(path);
-        System.out.println("DEBUG: begin executing script " + path);
+        //System.out.println("DEBUG: begin executing script " + path);
         if(parsedScripts.contains(path)){
             outputHandler.println("Sorry you can't execute this script recursive");
             outputHandler.println("Execution blocked, returned to cli-mode");
@@ -74,7 +74,7 @@ public class CommandManager {
         else {
             parsedScripts.add(path);
             try {
-                System.out.println("DEBUG: begin executing script " + path);
+                //System.out.println("DEBUG: begin executing script " + path);
                 inputHandler = new FileInputHandler(path);
                 changeGlobalStreams(inputHandler, outputHandler);
                 startExecuting();
@@ -91,16 +91,16 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
-        System.out.println("DEBUG: execution by stream started at " + inputHandler.getClass().getName());
+        //System.out.println("DEBUG: execution by stream started at " + inputHandler.getClass().getName());
         while (inputHandler.hasNextLine()) {
             String command = inputHandler.get();
-            System.out.println("DEBUG: \"" + command + "\" stream=" + inputHandler.getClass().getName());
+            //System.out.println("DEBUG: \"" + command + "\" stream=" + inputHandler.getClass().getName());
             if(command.isEmpty() || command.isBlank()) {
                 continue;
             }
             try {
-                command = filterInputString(command);
-                System.out.println(command.split(" "));
+                //command = filterInputString(command);
+                //System.out.println("DEBUG: " + command);
                 executeCommand(command.split(" "));
             } catch (NoSuchElementException e) {
                 break;
@@ -138,9 +138,9 @@ public class CommandManager {
         if(args == null) return;
 
         //DEBUG
-        System.out.print("DEBUG: received cmd: \"");
+        /*System.out.print("DEBUG: received cmd: \"");
         for(String a : args) System.out.print(a + "\", \"");
-        System.out.println(" ");
+        System.out.println(" ");*/
 
         if(!commands.containsKey(args[0])){
             if(args[0].contains("execute_script")) {
