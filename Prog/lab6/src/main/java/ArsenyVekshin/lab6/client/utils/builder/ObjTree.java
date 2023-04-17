@@ -1,7 +1,7 @@
 package ArsenyVekshin.lab6.client.utils.builder;
 
 import ArsenyVekshin.lab6.client.utils.validators.*;
-import ArsenyVekshin.lab6.server.collection.data.Entity;
+import ArsenyVekshin.lab6.general.collectionElems.data.Entity;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

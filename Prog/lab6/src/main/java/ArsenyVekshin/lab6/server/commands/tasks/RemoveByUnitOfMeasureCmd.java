@@ -1,42 +1,28 @@
 package ArsenyVekshin.lab6.server.commands.tasks;
 
+import ArsenyVekshin.lab6.general.CommandContainer;
 import ArsenyVekshin.lab6.server.collection.Storage;
-import ArsenyVekshin.lab6.server.collection.data.UnitOfMeasure;
-import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
-import ArsenyVekshin.lab6.server.commands.CommandContainer;
-import ArsenyVekshin.lab6.server.ui.OutputHandler;
-import ArsenyVekshin.lab6.server.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.general.collectionElems.data.UnitOfMeasure;
+import ArsenyVekshin.lab6.general.collectionElems.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.server.commands.tasks.parents.DataCmd;
 
-public class RemoveByUnitOfMeasureCmd extends DataCmd{
+public class RemoveByUnitOfMeasureCmd extends DataCmd {
 
-    public RemoveByUnitOfMeasureCmd(Storage collection, OutputHandler outputHandler) {
-        super("remove_all_by_unit_of_measure", "remove all element with same unitOfMeasure from collection", collection, outputHandler);
+    public RemoveByUnitOfMeasureCmd(Storage collection) {
+        super("remove_all_by_unit_of_measure", "remove all element with same unitOfMeasure from collection", collection);
     }
 
     @Override
     public boolean execute(CommandContainer cmd) {
-        if(cmd.getArgs().contains("h")) { help(); return true; }
         try {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
-            cmd.setReturns(UnitOfMeasure.valueOf(cmd.getArgs().get(0)));
+            collection.removeSameUnitOfMeasure(UnitOfMeasure.valueOf(cmd.getArgs().get(0)));
+            cmd.setReturns("done");
         } catch (Exception  e) {
-            System.out.println(e.getMessage());//e.printStackTrace();
+            cmd.setErrors(e.getMessage());
             return false;
         }
         return true;
     }
 
-    @Override
-    public void help() {
-        try {
-            outputStream.println("""
-                > remove_all_by_unit_of_measure {unitOfMeasure}
-                   remove all element with same unitOfMeasure from collection
-                   PARAMS:
-                   -h / --help\tShow this menu
-                    """);
-        } catch (StreamBrooked e) {
-            System.out.println(e.getMessage());//e.printStackTrace();
-        }
-    }
 }

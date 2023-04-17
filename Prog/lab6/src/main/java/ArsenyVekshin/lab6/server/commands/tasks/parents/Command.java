@@ -1,6 +1,6 @@
-package ArsenyVekshin.lab6.server.commands.tasks;
+package ArsenyVekshin.lab6.server.commands.tasks.parents;
 
-import ArsenyVekshin.lab6.server.commands.CommandContainer;
+import ArsenyVekshin.lab6.general.CommandContainer;
 
 public abstract class Command {
     private String name;
@@ -36,8 +36,4 @@ public abstract class Command {
      */
     public abstract boolean execute(CommandContainer cmd);
 
-    /**
-     * help-print sector
-     */
-    public abstract void help();
 }

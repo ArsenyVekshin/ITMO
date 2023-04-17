@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.server.collection.data;
+package ArsenyVekshin.lab6.general.collectionElems.data;
 
 import java.util.HashMap;
 import java.util.function.Supplier;

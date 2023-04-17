@@ -2,29 +2,33 @@ package ArsenyVekshin.lab6.general.net;
 
 import ArsenyVekshin.lab6.general.CommandContainer;
 
+import javax.print.DocFlavor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class UdpManager {
 
+    public final static int SERVICE_PORT = 50001;
     public static ArrayList<CommandContainer> sendQueue = new ArrayList<>(); // queue of cmd to send
     public static ArrayList<CommandContainer> receivedQueue = new ArrayList<>(); // queue of answers which already received
 
-    public final static int SERVICE_PORT = 50001;
-    InetAddress targetIp ;
-    DatagramSocket socket ;
+    private boolean isServer = false;
+    public InetAddress targetIp ;
+    private DatagramSocket socket ;
 
     byte[] sendingDataBuffer = new byte[1024];
     byte[] receivingDataBuffer = new byte[1024];
 
-    public UdpManager(byte[] ip, int port) throws UnknownHostException, SocketException {
-        targetIp = InetAddress.getByAddress(ip);
-        socket = new DatagramSocket(port, targetIp);
+    public UdpManager(){
+        isServer = true;
+    }
+
+    public UdpManager(String ip, boolean isServer) throws UnknownHostException, SocketException {
+        targetIp = InetAddress.getByName(ip);
+        this.isServer = isServer;
     }
 
     /***
@@ -64,10 +68,17 @@ public class UdpManager {
 
         for(CommandContainer cmd: sendQueue){
             try{
-                DatagramPacket buff =  new DatagramPacket(
-                        sendingDataBuffer,
-                        sendingDataBuffer.length,
-                        cmd.getTarget());
+                DatagramPacket buff;
+                if(isServer)
+                    buff =  new DatagramPacket(
+                            sendingDataBuffer,
+                            sendingDataBuffer.length,
+                            cmd.getSource());
+                else
+                    buff =  new DatagramPacket(
+                            sendingDataBuffer,
+                            sendingDataBuffer.length,
+                            cmd.getTarget());
                 socket.send(buff);
 
                 System.out.println("DEBUG: cmd " + cmd.getType() + " - sent");

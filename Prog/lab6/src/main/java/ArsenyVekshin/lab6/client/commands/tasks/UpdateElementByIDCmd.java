@@ -7,7 +7,7 @@ import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.utils.builder.Builder;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
-import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.general.collectionElems.exceptions.WrongCmdParam;
 
 public class UpdateElementByIDCmd extends NewObjCmd {
     public UpdateElementByIDCmd(OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {

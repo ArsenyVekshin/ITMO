@@ -1,8 +1,9 @@
 package ArsenyVekshin.lab6.server.collection;
 
+import ArsenyVekshin.lab6.general.collectionElems.CSVOperator;
 import ArsenyVekshin.lab6.server.Main;
-import ArsenyVekshin.lab6.server.collection.data.*;
-import ArsenyVekshin.lab6.server.collection.exceptions.*;
+import ArsenyVekshin.lab6.general.collectionElems.data.*;
+import ArsenyVekshin.lab6.general.collectionElems.exceptions.*;
 import ArsenyVekshin.lab6.server.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.server.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab6.server.utils.builder.Builder;
@@ -303,7 +304,7 @@ public class Storage <T extends Object> implements CSVOperator {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void addIfMax(Product o) throws NoSuchFieldException, IllegalAccessException {
+    public void addIfMax(Product o){
         try {
             boolean greaterFlag = true;
             T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);

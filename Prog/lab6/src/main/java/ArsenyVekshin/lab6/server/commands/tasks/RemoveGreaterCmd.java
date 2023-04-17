@@ -1,40 +1,25 @@
 package ArsenyVekshin.lab6.server.commands.tasks;
 
+import ArsenyVekshin.lab6.general.CommandContainer;
 import ArsenyVekshin.lab6.server.collection.Storage;
-import ArsenyVekshin.lab6.server.collection.data.Product;
-import ArsenyVekshin.lab6.server.commands.CommandContainer;
-import ArsenyVekshin.lab6.server.ui.InputHandler;
-import ArsenyVekshin.lab6.server.ui.OutputHandler;
-import ArsenyVekshin.lab6.server.ui.exeptions.StreamBrooked;
-import ArsenyVekshin.lab6.server.utils.builder.Builder;
-import ArsenyVekshin.lab6.server.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.general.collectionElems.data.Product;
+import ArsenyVekshin.lab6.server.commands.tasks.parents.DataCmd;
 
-public class RemoveGreaterCmd extends DialogueCmd{
+public class RemoveGreaterCmd extends DataCmd {
 
-    public RemoveGreaterCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler) {
-        super("remove_greater", "remove all element which are greater than this from collection", collection, outputHandler, inputHandler);
+    public RemoveGreaterCmd(Storage collection) {
+        super("remove_greater", "remove all element which are greater than this from collection", collection);
     }
 
     @Override
     public boolean execute(CommandContainer cmd) {
-        if(cmd.getArgs().contains("h")) { help(); return true; }
-        Builder newElem = new Builder(inputStream, outputStream);
-        cmd.setReturns(newElem.buildDialogue(new ObjTree(Product.class)));
-        return true;
-    }
-
-    @Override
-    public void help() {
-        try {
-            outputStream.println("""
-                > remove_greater
-                   remove all element which are greater than this from collection
-                   Calls creation-dialogue
-                   PARAMS:
-                   -h / --help\tShow this menu
-                    """);
-        } catch (StreamBrooked e) {
-            System.out.println(e.getMessage());//e.printStackTrace();
+        try{
+            collection.removeGreater((Product) cmd.getReturns());
+        } catch (Exception e) {
+            cmd.setErrors(e.getMessage());
+            return false;
         }
+
+        return true;
     }
 }

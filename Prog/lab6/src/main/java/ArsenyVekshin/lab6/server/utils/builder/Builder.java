@@ -1,6 +1,6 @@
 package ArsenyVekshin.lab6.server.utils.builder;
 
-import ArsenyVekshin.lab6.server.collection.data.Entity;
+import ArsenyVekshin.lab6.general.collectionElems.data.Entity;
 import ArsenyVekshin.lab6.server.ui.InputHandler;
 import ArsenyVekshin.lab6.server.ui.OutputHandler;
 import ArsenyVekshin.lab6.server.ui.console.ConsoleInputHandler;

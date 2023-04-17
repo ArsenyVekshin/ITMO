@@ -7,7 +7,7 @@ import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.ui.file.FileInputHandler;
-import ArsenyVekshin.lab6.server.collection.data.Entity;
+import ArsenyVekshin.lab6.general.collectionElems.data.Entity;
 
 import java.util.HashMap;
 
