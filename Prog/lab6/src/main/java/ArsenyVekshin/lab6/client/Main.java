@@ -1,11 +1,26 @@
 package ArsenyVekshin.lab6.client;
 
+import ArsenyVekshin.lab6.client.ui.InputHandler;
+import ArsenyVekshin.lab6.client.ui.OutputHandler;
+import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
+import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;
+import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.general.collectionElems.data.Product;
 import ArsenyVekshin.lab6.general.net.UdpManager;
-import ArsenyVekshin.lab6.server.collection.Storage;
-import ArsenyVekshin.lab6.server.commands.CommandManager;
+import ArsenyVekshin.lab6.client.commands.CommandManager;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
+import static ArsenyVekshin.lab6.general.net.UdpManager.SERVICE_PORT;
 
 public class Main {
     public static UdpManager net;
+    public static InetSocketAddress serverAddress;
+    public static InetSocketAddress userAddress;
+
+    public static InputHandler inputHandler;
+    public static OutputHandler outputHandler;
 
     public static void main(String[] args) {
         try {
@@ -22,12 +37,23 @@ public class Main {
                     ⠀⠀⠀⠀⠀⠀⠘⣦⠘⣏⣭⠽⠷⠞⠛⠛⠋⠉⠁⠀⣀⣠⠤⠶⠶⠚⠛⠋⠉
                     ⠀⠀⠀⠀⠀⠀⠀⠈⢷⣿⡤⠤⠤⠴⠴⠶⠶⠒⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀
                     """);
-            Storage collection = new Storage();
 
-            if (args.length == 0) net = new UdpManager();
-            else net = new UdpManager(args[0], true);
+            if (args.length == 0){
+                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
+                serverAddress = new InetSocketAddress(InetAddress.getByName("192.168.31.254"), SERVICE_PORT);
+                net = new UdpManager(serverAddress, false);
+            }
+            else{
+                userAddress = new InetSocketAddress(InetAddress.getLocalHost(),SERVICE_PORT);
+                serverAddress = new InetSocketAddress(InetAddress.getByName(args[0]),SERVICE_PORT);
+                net = new UdpManager(serverAddress, false);
+            }
             //UdpManager net = new UdpManager();
-            CommandManager commandManager = new CommandManager(collection, net);
+
+            inputHandler = new ConsoleInputHandler();
+            outputHandler = new ConsoleOutputHandler();
+
+            CommandManager commandManager = new CommandManager(inputHandler, outputHandler, net, new ObjTree(Product.class));
 
             while (true) {
                 net.receiveCmd();

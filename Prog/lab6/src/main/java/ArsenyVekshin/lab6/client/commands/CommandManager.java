@@ -10,6 +10,8 @@ import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.general.net.UdpManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,18 +19,19 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 
+import static ArsenyVekshin.lab6.client.Main.serverAddress;
+import static ArsenyVekshin.lab6.client.Main.userAddress;
 import static ArsenyVekshin.lab6.client.ui.DataFirewall.filterInputString;
 import static ArsenyVekshin.lab6.client.tools.FilesTools.getAbsolutePath;
 
 public class CommandManager {
 
-    InputHandler inputHandler;
-    OutputHandler outputHandler;
+    private UdpManager udpManager ;
+    private InputHandler inputHandler;
+    private OutputHandler outputHandler;
 
-    ObjTree objTree;
+    private ObjTree objTree;
 
-    private final String logFilePath = "";
-    OutputHandler logFile ;
     private ArrayList<String> parsedScripts = new ArrayList<>();
 
     private Map<String, Command> commands = new HashMap<>();
@@ -39,9 +42,11 @@ public class CommandManager {
      * @param inputHandler stream for input
      * @param outputHandler stream for output
      */
-    public CommandManager(InputHandler inputHandler, OutputHandler outputHandler){
+    public CommandManager(InputHandler inputHandler, OutputHandler outputHandler, UdpManager udpManager, ObjTree objTree ){
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
+        this.udpManager = udpManager;
+        this.objTree = objTree;
     }
 
     private void init(){
@@ -96,16 +101,16 @@ public class CommandManager {
     public void startExecuting() throws StreamBrooked {
 //        System.out.println("DEBUG: execution by stream started at " + inputHandler.getClass().getName());
         while (inputHandler.hasNextLine()) {
-            String command = inputHandler.get();
-            if(inputHandler instanceof FileInputHandler) System.out.println("> " + command);
+            String raw = inputHandler.get();
+            if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
 //            System.out.println("DEBUG: \"" + command + "\" stream=" + inputHandler.getClass().getName());
-            if(command.isEmpty() || command.isBlank()) {
+            if(raw.isEmpty() || raw.isBlank()) {
                 continue;
             }
             try {
-                command = filterInputString(command);
-                //System.out.println(command.split(" "));
-                executeCommand(command.split(" "));
+                raw = filterInputString(raw);
+                CommandContainer command = new CommandContainer(raw, userAddress, serverAddress);
+                executeCommand(command);
             } catch (NoSuchElementException e) {
                 break;
             }
@@ -127,6 +132,7 @@ public class CommandManager {
         }
         outputHandler.println("""
                 >execute_script {path}
+                    supports only your filesystem
                     read file as multiline cmd queue
                 """);
 
@@ -135,23 +141,18 @@ public class CommandManager {
 
     /**
      * execute parsed cmd
-     * @param args parsed cmd
+     * @param cmd parsed cmd-container
      * @throws StreamBrooked
      */
-    public void executeCommand(String[] args) throws StreamBrooked {
-        if(args == null) return;
+    public void executeCommand(CommandContainer cmd) throws StreamBrooked {
+        if(cmd.getType() == null) return;
 
-        //DEBUG
-        /*System.out.print("DEBUG: received cmd: \"");
-        for(String a : args) System.out.print(a + "\", \"");
-        System.out.println(" ");*/
-
-        if(!commands.containsKey(args[0])){
-            if(args[0].contains("execute_script")) {
-                executeScript(args[1]);
+        if(!commands.containsKey(cmd.getType())){
+            if(cmd.getType().contains("execute_script")) {
+                executeScript(cmd.getArgs().get(0));
             }
 
-            if(args[0].contains("help")) {
+           else if(cmd.getType().contains("help")) {
                 help();
                 return;
             }
@@ -159,8 +160,7 @@ public class CommandManager {
                 throw new IllegalArgumentException("Данной команды не существует");
             }
         }
-        //commands.get(args[0]).execute(args);
-        //logFile.println(args.toString());
+        commands.get(cmd.getType()).execute(cmd);
     }
 
     private  <T extends Command> void changeGlobalStreams(InputHandler inputHandler, OutputHandler outputHandler){
@@ -169,4 +169,21 @@ public class CommandManager {
             if(cmd instanceof DialogueCmd) ((DialogueCmd) cmd).setInputStream(inputHandler);
         }
     }
+
+    public void printServerCallback(){
+        for(CommandContainer cmd: udpManager.receivedQueue){
+            try{
+                if(cmd.isNeedToRecall()) {
+                    executeCommand(cmd);
+                    udpManager.sendQueue.add(cmd);
+                }
+                else outputHandler.println(cmd.toString());
+                udpManager.receivedQueue.remove(cmd);
+
+            } catch (StreamBrooked e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
 }

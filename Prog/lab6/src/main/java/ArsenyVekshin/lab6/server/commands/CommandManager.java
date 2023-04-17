@@ -12,12 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 public class CommandManager {
 
-    UdpManager udpManager ;
+    private UdpManager udpManager ;
 
     private final String logFilePath = "";
     OutputHandler logFile ;
-    private ArrayList<String> parsedScripts = new ArrayList<>();
-
     private Map<String, Command> commands = new HashMap<>();
 
 

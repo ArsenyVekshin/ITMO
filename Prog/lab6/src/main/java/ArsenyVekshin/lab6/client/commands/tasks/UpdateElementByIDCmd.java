@@ -7,7 +7,9 @@ import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.utils.builder.Builder;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.general.collectionElems.data.Product;
 import ArsenyVekshin.lab6.general.collectionElems.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.server.ui.file.FileInputHandler;
 
 public class UpdateElementByIDCmd extends NewObjCmd {
     public UpdateElementByIDCmd(OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
@@ -21,8 +23,18 @@ public class UpdateElementByIDCmd extends NewObjCmd {
         try {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
 
-            Builder newElem = new Builder(inputStream, outputStream);
-            //collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree, collection.getElemById(Integer.parseInt(args[1])))) ;
+            if(inputStream.getClass() == FileInputHandler.class){
+                Builder newElem = new Builder(inputStream, outputStream);
+                cmd.setReturns(newElem.buildDialogue(tree));
+            }
+            else{
+                if(cmd.getReturns() != null){
+                    cmd.setNeedToRecall(false);
+                    Builder newElem = new Builder(inputStream, outputStream);
+                    cmd.setReturns(newElem.buildDialogue(tree, (Product) cmd.getReturns()));
+                }
+                else cmd.setNeedToRecall(true);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
             return false;

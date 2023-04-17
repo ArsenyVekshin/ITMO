@@ -16,7 +16,7 @@ public class UdpManager {
     public static ArrayList<CommandContainer> receivedQueue = new ArrayList<>(); // queue of answers which already received
 
     private boolean isServer = false;
-    public InetAddress targetIp ;
+    public InetSocketAddress targetIp ;
     private DatagramSocket socket ;
 
     byte[] sendingDataBuffer = new byte[1024];
@@ -27,7 +27,12 @@ public class UdpManager {
     }
 
     public UdpManager(String ip, boolean isServer) throws UnknownHostException, SocketException {
-        targetIp = InetAddress.getByName(ip);
+        targetIp = new InetSocketAddress(InetAddress.getByName(ip), SERVICE_PORT);
+        this.isServer = isServer;
+    }
+
+    public UdpManager(InetSocketAddress targetIp, boolean isServer) throws UnknownHostException, SocketException {
+        this.targetIp = targetIp;
         this.isServer = isServer;
     }
 

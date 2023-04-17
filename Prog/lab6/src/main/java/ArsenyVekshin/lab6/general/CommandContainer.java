@@ -17,6 +17,8 @@ public class CommandContainer implements Serializable {
     private InetSocketAddress target;
     private InetSocketAddress source;
 
+    private boolean needToRecall = false;
+
     public CommandContainer(){}
 
     /***
@@ -25,6 +27,11 @@ public class CommandContainer implements Serializable {
      */
     public CommandContainer(String raw){
         parse(raw);
+    }
+
+    public CommandContainer(String raw, InetSocketAddress source, InetSocketAddress target){
+        this(raw);
+        setNetSettings(source, target);
     }
 
     public void parse(String raw){
@@ -99,5 +106,13 @@ public class CommandContainer implements Serializable {
         out += "\ttarget = " + target.getAddress() + " (" + target.getPort() + ")\n";
 
         return out;
+    }
+
+    public boolean isNeedToRecall() {
+        return needToRecall;
+    }
+
+    public void setNeedToRecall(boolean needToRecall) {
+        this.needToRecall = needToRecall;
     }
 }

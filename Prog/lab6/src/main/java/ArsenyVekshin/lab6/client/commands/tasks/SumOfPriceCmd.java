@@ -14,7 +14,6 @@ public class SumOfPriceCmd extends DataCmd {
     @Override
     public boolean execute(CommandContainer cmd) {
         if(cmd.getArgs().contains("h")) { help(); return true; }
-
         return true;
     }
 
