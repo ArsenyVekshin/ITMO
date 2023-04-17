@@ -1,18 +1,17 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.commands.CommandContainer;
+import ArsenyVekshin.lab6.general.CommandContainer;
 
+import ArsenyVekshin.lab6.client.commands.tasks.parents.NewObjCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.utils.builder.Builder;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 
-public class AddElementCmd extends DialogueCmd {
-    ObjTree tree;
+public class AddElementCmd extends NewObjCmd {
     public AddElementCmd(OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
-        super("add", "add add new element to collection", outputHandler, inputHandler);
-        this.tree = tree;
+        super("add", "add add new element to collection", outputHandler, inputHandler, tree);
     }
 
     @Override

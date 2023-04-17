@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.client.commands.tasks;
+package ArsenyVekshin.lab6.client.commands.tasks.parents;
 
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;

@@ -1,6 +1,7 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.commands.CommandContainer;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.NewObjCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
@@ -8,11 +9,9 @@ import ArsenyVekshin.lab6.client.utils.builder.Builder;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
 
-public class InsertElementOnCmd extends DialogueCmd {
-    ObjTree tree;
+public class InsertElementOnCmd extends NewObjCmd {
     public InsertElementOnCmd(OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
-        super("insert_at", "add new element at idx-position at collection", outputHandler, inputHandler);
-        this.tree = tree;
+        super("insert_at", "add new element at idx-position at collection", outputHandler, inputHandler, tree);
     }
 
     @Override
@@ -20,7 +19,6 @@ public class InsertElementOnCmd extends DialogueCmd {
         if(cmd.getArgs().contains("h")) { help(); return true; }
         try {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
-
             Builder newElem = new Builder(inputStream, outputStream);
             cmd.setReturns(newElem.buildDialogue(tree));
         } catch (WrongCmdParam | NumberFormatException e) {

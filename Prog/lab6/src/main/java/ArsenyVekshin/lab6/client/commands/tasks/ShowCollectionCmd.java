@@ -1,14 +1,14 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.commands.CommandContainer;
-import ArsenyVekshin.lab6.client.collection.Storage;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 
 public class ShowCollectionCmd extends DataCmd {
 
-    public ShowCollectionCmd(Storage collection, OutputHandler outputHandler) {
-        super("show", "print collection content", collection, outputHandler);
+    public ShowCollectionCmd(OutputHandler outputHandler) {
+        super("show", "print collection content", outputHandler);
     }
 
     @Override

@@ -1,6 +1,8 @@
-package ArsenyVekshin.lab6.client.commands;
+package ArsenyVekshin.lab6.general;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 
 /***
@@ -12,6 +14,8 @@ public class CommandContainer implements Serializable {
     private ArrayList<String> keys = null;
     private Object returns = null;
     private String errors = null;
+    private InetSocketAddress target;
+    private InetSocketAddress source;
 
     public CommandContainer(){}
 
@@ -20,6 +24,10 @@ public class CommandContainer implements Serializable {
      * @param raw raw cmd-string after filter
      */
     public CommandContainer(String raw){
+        parse(raw);
+    }
+
+    public void parse(String raw){
         if(raw.isEmpty()) return;
         String data[] = raw.split(" ");
         type = data[0];
@@ -29,6 +37,11 @@ public class CommandContainer implements Serializable {
                 for(byte i=1; i<s.length(); i++) keys.add(String.valueOf(s.charAt(i)));
             else args.add(s);
         }
+    }
+
+    public void setNetSettings(InetSocketAddress source, InetSocketAddress target){
+        this.source = source;
+        this.target = target;
     }
 
     public String getType() {
@@ -59,6 +72,14 @@ public class CommandContainer implements Serializable {
         this.errors = errors;
     }
 
+    public InetSocketAddress getSource() {
+        return source;
+    }
+
+    public InetSocketAddress getTarget() {
+        return target;
+    }
+
     @Override
     public String toString() {
         String out = "cmd type = " + type +"\n";
@@ -71,8 +92,11 @@ public class CommandContainer implements Serializable {
         for(String s: args) out += " " + s;
         out += "]\n";
 
-        if(returns != null) out += "\treturns = " + returns.toString();
-        if(errors != null) out += "\terrors = " + errors;
+        if(returns != null) out += "\treturns = " + returns.toString() + "\n";
+        if(errors != null) out += "\terrors = " + errors + "\n";
+
+        out += "\tsource = " + source.getAddress() + " (" + source.getPort() + ")\n";
+        out += "\ttarget = " + target.getAddress() + " (" + target.getPort() + ")\n";
 
         return out;
     }

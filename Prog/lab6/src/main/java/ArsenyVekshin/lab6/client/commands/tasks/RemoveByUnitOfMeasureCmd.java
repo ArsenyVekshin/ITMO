@@ -1,16 +1,16 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.commands.CommandContainer;
-import ArsenyVekshin.lab6.client.collection.Storage;
-import ArsenyVekshin.lab6.client.collection.data.UnitOfMeasure;
-import ArsenyVekshin.lab6.client.collection.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.server.collection.data.UnitOfMeasure;
+import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
 
 public class RemoveByUnitOfMeasureCmd extends DataCmd {
 
-    public RemoveByUnitOfMeasureCmd(Storage collection, OutputHandler outputHandler) {
-        super("remove_all_by_unit_of_measure", "remove all element with same unitOfMeasure from collection", collection, outputHandler);
+    public RemoveByUnitOfMeasureCmd(OutputHandler outputHandler) {
+        super("remove_all_by_unit_of_measure", "remove all element with same unitOfMeasure from collection", outputHandler);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class RemoveByUnitOfMeasureCmd extends DataCmd {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
             cmd.setReturns(UnitOfMeasure.valueOf(cmd.getArgs().get(0)));
         } catch (Exception  e) {
-            System.out.println(e.getMessage());//e.printStackTrace();
+            System.out.println(e.getMessage());
             return false;
         }
         return true;

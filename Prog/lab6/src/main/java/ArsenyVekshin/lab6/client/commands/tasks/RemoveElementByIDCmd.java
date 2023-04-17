@@ -1,16 +1,16 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.commands.CommandContainer;
-import ArsenyVekshin.lab6.client.collection.Storage;
-import ArsenyVekshin.lab6.client.collection.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.DialogueCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
 
 public class RemoveElementByIDCmd extends DialogueCmd {
 
-    public RemoveElementByIDCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler) {
-        super("remove_by_id", "remove element with same id at collection", collection, outputHandler, inputHandler);
+    public RemoveElementByIDCmd(OutputHandler outputHandler, InputHandler inputHandler) {
+        super("remove_by_id", "remove element with same id at collection", outputHandler, inputHandler);
     }
 
     @Override

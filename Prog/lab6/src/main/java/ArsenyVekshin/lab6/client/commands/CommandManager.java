@@ -1,12 +1,16 @@
 package ArsenyVekshin.lab6.client.commands;
 
 import ArsenyVekshin.lab6.client.commands.tasks.*;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.Command;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.DialogueCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.server.commands.tasks.ExitCmd;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +59,7 @@ public class CommandManager {
         commands.put("remove_by_id", new RemoveElementByIDCmd(outputHandler, inputHandler));
         commands.put("insert_at", new InsertElementOnCmd(outputHandler, inputHandler, objTree));
         commands.put("add_if_max", new AddIfMaxCmd(outputHandler, inputHandler, objTree));
-        commands.put("remove_greater", new RemoveGreaterCmd(outputHandler, inputHandler));
-
-        commands.put("exit", new ExitCmd(outputHandler));
+        commands.put("remove_greater", new RemoveGreaterCmd(outputHandler, inputHandler, objTree));
     }
 
     /**
@@ -158,7 +160,7 @@ public class CommandManager {
                 throw new IllegalArgumentException("Данной команды не существует");
             }
         }
-        commands.get(args[0]).execute(args);
+        //commands.get(args[0]).execute(args);
         //logFile.println(args.toString());
     }
 

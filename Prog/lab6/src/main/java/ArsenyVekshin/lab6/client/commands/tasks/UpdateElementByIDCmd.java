@@ -1,18 +1,17 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.client.collection.Storage;
-import ArsenyVekshin.lab6.client.collection.exceptions.WrongCmdParam;
-import ArsenyVekshin.lab6.client.collection.exceptions.WrongID;
+import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.client.commands.tasks.parents.NewObjCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.client.utils.builder.Builder;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
+import ArsenyVekshin.lab6.server.collection.exceptions.WrongCmdParam;
 
-public class UpdateElementByIDCmd extends DialogueCmd {
-    ObjTree tree;
-    public UpdateElementByIDCmd(Storage collection, OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
-        super("update", "update element with same id at collection", collection, outputHandler, inputHandler);
+public class UpdateElementByIDCmd extends NewObjCmd {
+    public UpdateElementByIDCmd(OutputHandler outputHandler, InputHandler inputHandler, ObjTree tree) {
+        super("update", "update element with same id at collection", outputHandler, inputHandler, tree);
         this.tree = tree;
     }
 
@@ -20,11 +19,11 @@ public class UpdateElementByIDCmd extends DialogueCmd {
     public boolean execute(CommandContainer cmd) {
         if(cmd.getArgs().contains("h")) { help(); return true; }
         try {
-            if(args.length<2) throw new WrongCmdParam("параметр не найден");
+            if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
 
             Builder newElem = new Builder(inputStream, outputStream);
-            collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree, collection.getElemById(Integer.parseInt(args[1])))) ;
-        } catch (WrongID | WrongCmdParam | NumberFormatException e) {
+            //collection.update(Integer.parseInt(args[1]) ,newElem.buildDialogue(tree, collection.getElemById(Integer.parseInt(args[1])))) ;
+        } catch (Exception e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
             return false;
         }
