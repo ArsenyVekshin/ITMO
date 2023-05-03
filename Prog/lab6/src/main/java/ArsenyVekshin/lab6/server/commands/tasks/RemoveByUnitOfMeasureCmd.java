@@ -1,9 +1,9 @@
 package ArsenyVekshin.lab6.server.commands.tasks;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.server.collection.Storage;
-import ArsenyVekshin.lab6.general.collectionElems.data.UnitOfMeasure;
-import ArsenyVekshin.lab6.general.collectionElems.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.common.collectionElems.data.UnitOfMeasure;
+import ArsenyVekshin.lab6.common.collectionElems.exceptions.WrongCmdParam;
 import ArsenyVekshin.lab6.server.commands.tasks.parents.DataCmd;
 
 public class RemoveByUnitOfMeasureCmd extends DataCmd {

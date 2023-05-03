@@ -1,15 +1,15 @@
 package ArsenyVekshin.lab6.server;
 
-import ArsenyVekshin.lab6.general.net.UdpManager;
+import ArsenyVekshin.lab6.common.net.UdpManager;
 import ArsenyVekshin.lab6.server.collection.Storage;
 import ArsenyVekshin.lab6.server.commands.CommandManager;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Main {
+    public static InetSocketAddress serverAddress;
     public static void main(String[] args) throws SocketException, UnknownHostException {
         try{
             System.out.println("""

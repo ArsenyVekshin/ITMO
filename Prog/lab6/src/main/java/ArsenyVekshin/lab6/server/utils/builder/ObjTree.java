@@ -1,6 +1,6 @@
 package ArsenyVekshin.lab6.server.utils.builder;
 
-import ArsenyVekshin.lab6.general.collectionElems.data.Entity;
+import ArsenyVekshin.lab6.common.collectionElems.data.Entity;
 import ArsenyVekshin.lab6.server.utils.validators.*;
 
 import java.lang.annotation.Annotation;

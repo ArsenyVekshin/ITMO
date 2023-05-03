@@ -1,6 +1,6 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.common.CommandContainer;
 
 import ArsenyVekshin.lab6.client.commands.tasks.parents.NewObjCmd;
 import ArsenyVekshin.lab6.client.ui.InputHandler;

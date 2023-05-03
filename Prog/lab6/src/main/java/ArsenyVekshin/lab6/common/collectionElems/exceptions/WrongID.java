@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.general.collectionElems.exceptions;
+package ArsenyVekshin.lab6.common.collectionElems.exceptions;
 
 import java.io.IOException;
 

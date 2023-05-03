@@ -1,7 +1,7 @@
-package ArsenyVekshin.lab6.general.collectionElems.data;
+package ArsenyVekshin.lab6.common.collectionElems.data;
 
-import ArsenyVekshin.lab6.general.collectionElems.CSVOperator;
-import ArsenyVekshin.lab6.general.collectionElems.exceptions.*;
+import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
+import ArsenyVekshin.lab6.common.collectionElems.exceptions.*;
 import ArsenyVekshin.lab6.server.utils.validators.NotNull;
 import ArsenyVekshin.lab6.server.utils.validators.StringNotNone;
 

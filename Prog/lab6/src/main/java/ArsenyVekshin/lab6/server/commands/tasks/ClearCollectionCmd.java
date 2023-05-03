@@ -1,10 +1,9 @@
 package ArsenyVekshin.lab6.server.commands.tasks;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.server.collection.Storage;
 
 import ArsenyVekshin.lab6.server.commands.tasks.parents.DataCmd;
-import ArsenyVekshin.lab6.server.ui.OutputHandler;
 
 
 public class ClearCollectionCmd extends DataCmd {

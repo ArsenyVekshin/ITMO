@@ -1,6 +1,6 @@
 package ArsenyVekshin.lab6.client.commands.tasks.parents;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.common.CommandContainer;
 
 public abstract class Command {
     private String name;

@@ -1,13 +1,12 @@
 package ArsenyVekshin.lab6.server.commands;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
-import ArsenyVekshin.lab6.general.net.UdpManager;
+import ArsenyVekshin.lab6.common.CommandContainer;
+import ArsenyVekshin.lab6.common.net.UdpManager;
 import ArsenyVekshin.lab6.server.collection.Storage;
 import ArsenyVekshin.lab6.server.commands.tasks.*;
 import ArsenyVekshin.lab6.server.commands.tasks.parents.Command;
 import ArsenyVekshin.lab6.server.ui.OutputHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 public class CommandManager {

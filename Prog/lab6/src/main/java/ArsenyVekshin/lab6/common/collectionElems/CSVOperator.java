@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.general.collectionElems;
+package ArsenyVekshin.lab6.common.collectionElems;
 
 public interface CSVOperator {
     default String generateCSV(){

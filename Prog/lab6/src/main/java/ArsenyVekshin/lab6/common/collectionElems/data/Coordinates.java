@@ -1,6 +1,6 @@
-package ArsenyVekshin.lab6.general.collectionElems.data;
+package ArsenyVekshin.lab6.common.collectionElems.data;
 
-import ArsenyVekshin.lab6.general.collectionElems.CSVOperator;
+import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
 
 import java.util.HashMap;
 import java.util.Objects;

@@ -1,9 +1,9 @@
 package ArsenyVekshin.lab6.server.collection;
 
-import ArsenyVekshin.lab6.general.collectionElems.CSVOperator;
+import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
 import ArsenyVekshin.lab6.server.Main;
-import ArsenyVekshin.lab6.general.collectionElems.data.*;
-import ArsenyVekshin.lab6.general.collectionElems.exceptions.*;
+import ArsenyVekshin.lab6.common.collectionElems.data.*;
+import ArsenyVekshin.lab6.common.collectionElems.exceptions.*;
 import ArsenyVekshin.lab6.server.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.server.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab6.server.utils.builder.Builder;

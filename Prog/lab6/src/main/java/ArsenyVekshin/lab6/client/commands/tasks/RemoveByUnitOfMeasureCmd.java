@@ -1,11 +1,11 @@
 package ArsenyVekshin.lab6.client.commands.tasks;
 
-import ArsenyVekshin.lab6.general.CommandContainer;
+import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
 import ArsenyVekshin.lab6.client.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
-import ArsenyVekshin.lab6.general.collectionElems.data.UnitOfMeasure;
-import ArsenyVekshin.lab6.general.collectionElems.exceptions.WrongCmdParam;
+import ArsenyVekshin.lab6.common.collectionElems.data.UnitOfMeasure;
+import ArsenyVekshin.lab6.common.collectionElems.exceptions.WrongCmdParam;
 
 public class RemoveByUnitOfMeasureCmd extends DataCmd {
 

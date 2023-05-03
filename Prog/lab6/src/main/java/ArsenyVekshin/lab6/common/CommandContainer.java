@@ -1,8 +1,7 @@
-package ArsenyVekshin.lab6.general;
+package ArsenyVekshin.lab6.common;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 
 /***
@@ -10,8 +9,8 @@ import java.util.ArrayList;
  */
 public class CommandContainer implements Serializable {
     private String type = null;
-    private ArrayList<String> args = null;
-    private ArrayList<String> keys = null;
+    private ArrayList<String> args = new ArrayList<>();
+    private ArrayList<String> keys = new ArrayList<>();
     private Object returns = null;
     private String errors = null;
     private InetSocketAddress target;
@@ -38,7 +37,8 @@ public class CommandContainer implements Serializable {
         if(raw.isEmpty()) return;
         String data[] = raw.split(" ");
         type = data[0];
-        for(String s: data){
+        for(int j=1; j< data.length; j++){
+            String s=data[j];
             if(s.isBlank()) continue;
             if(s.charAt(0) == '-')
                 for(byte i=1; i<s.length(); i++) keys.add(String.valueOf(s.charAt(i)));
@@ -93,11 +93,11 @@ public class CommandContainer implements Serializable {
 
         out += "\tkeys = [";
         for(String s: keys) out += " " + s;
-        out += "]\n";
+        out += " ]\n";
 
         out += "\targs = [";
         for(String s: args) out += " " + s;
-        out += "]\n";
+        out += " ]\n";
 
         if(returns != null) out += "\treturns = " + returns.toString() + "\n";
         if(errors != null) out += "\terrors = " + errors + "\n";
