@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static ArsenyVekshin.lab6.server.tools.Comparators.compareFields;
+import static ArsenyVekshin.lab6.common.tools.Comparators.compareFields;
 
 public class Organization extends Entity implements Cloneable, Comparable, CSVOperator {
     @NotNull

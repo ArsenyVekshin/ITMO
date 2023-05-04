@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 
+import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
+
 public class UdpManager {
 
     public final static int SERVICE_PORT = 50001;
@@ -19,7 +21,7 @@ public class UdpManager {
     public InetSocketAddress userIp;
 
 
-    ByteBuffer channelDataBuffer = ByteBuffer.allocate(2048);
+    ByteBuffer channelDataBuffer = ByteBuffer.allocate(65536);
 
     DatagramChannel channel ;
 
@@ -34,18 +36,20 @@ public class UdpManager {
         this.userIp = userIp;
         this.channel = DatagramChannel.open();
         channel.configureBlocking(false);
+        channel.bind(userIp);
+        channel.socket().setSoTimeout(5000);
+
+        if(!isServer) channel.connect(targetIp);
     }
 
     /***
      * Чтение пакета команд от всех источников
      */
-    public void receiveCmd() throws IOException {
+    public void receiveCmd() {
         try{
-            channel.bind(userIp);
-            channel.configureBlocking(false);
-            System.out.print("DEBUG: receiving mes:");
+            //debugPrint("receiving mes:");
             while(channelDataBuffer.hasRemaining()){
-                System.out.print(".");
+                //debugPrint0(".");
                 channel.receive(channelDataBuffer);
                 channelDataBuffer.flip();
                 byte[] rawData = new byte[channelDataBuffer.remaining()];
@@ -55,20 +59,14 @@ public class UdpManager {
                 ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(rawData));
                 CommandContainer newCmd = (CommandContainer) stream.readObject();
                 receivedQueue.add(newCmd);
-                System.out.print("*");
+                //debugPrint0("*");
             }
         } catch (Exception e) {
             if(e.getClass() == NullPointerException.class) return;
-            System.out.println("receive: " + e.getMessage() + e.getClass());
-            e.printStackTrace();
+            debugPrintln("receiving error: " + e.getMessage() + e.getClass());
+            return;
         }
-        /*try{
-            channel.close();
-        }catch (Exception e) {
-            if(e.getClass() == NullPointerException.class) return;
-            System.out.println("receive: " + e.getMessage() + e.getClass());
-        }*/
-        System.out.println("done");
+        //debugPrintln0("done");
     }
 
     /***
@@ -76,18 +74,9 @@ public class UdpManager {
      */
     public void sendCmd() throws IOException {
         if(sendQueue.size()==0) return;
-        System.out.print("DEBUG: sending mes:");
-        try {
-            channel.bind(targetIp);
-            //channel.bind(new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT));
-        } catch (Exception e) {
-            System.out.println("send: " + e.getMessage());
-            return;
-        }
 
         for(CommandContainer cmd: sendQueue){
             try{
-
                 ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
                 ObjectOutputStream objStream = new ObjectOutputStream(byteStream);
                 objStream.writeObject(cmd);
@@ -96,27 +85,25 @@ public class UdpManager {
 
                 channelDataBuffer = ByteBuffer.wrap(byteStream.toByteArray());
 
-                if(isServer)
+                if(isServer){
+                    channel.connect(cmd.getSource());
                     channel.send(channelDataBuffer, cmd.getSource());
-                else
+                    channel.disconnect();
+                }
+                else{
                     channel.send(channelDataBuffer, cmd.getTarget());
+                }
 
 
-                System.out.println("DEBUG: cmd " + cmd.getType() + " - sent");
-                sendQueue.remove(cmd);
-                System.out.print("*");
+                debugPrintln("cmd " + cmd.getType() + " - sent");
+
             }
             catch (IOException e) {
-                System.out.println("send: " + e.getMessage() + e.getClass());
+                debugPrintln("send: " + e.getMessage() + e.getClass());
+                return;
             }
         }
-        /*try{
-            channel.close();
-        }catch (Exception e) {
-            System.out.println("send: " + e.getMessage() + e.getClass());
-        }*/
-        System.out.println("done");
-
+        sendQueue.clear();
     }
 
     private boolean isEmptyMes(byte[] data){
@@ -124,6 +111,10 @@ public class UdpManager {
         for(byte s: data)
             if(s != 0) return true;
         return false;
+    }
+
+    public void queuesStatus(){
+        System.out.println("QUEUES: to_send=" + sendQueue.size() + " received=" + receivedQueue.size() );
     }
 
 }

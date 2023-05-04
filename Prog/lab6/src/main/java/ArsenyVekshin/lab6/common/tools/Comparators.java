@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.client.tools;
+package ArsenyVekshin.lab6.common.tools;
 
 /**
  * Static multi-type comparators

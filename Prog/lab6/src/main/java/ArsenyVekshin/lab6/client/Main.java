@@ -13,6 +13,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import static ArsenyVekshin.lab6.common.net.UdpManager.SERVICE_PORT;
+import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
+
 
 public class Main {
     public static UdpManager net;
@@ -22,9 +24,13 @@ public class Main {
     public static InputHandler inputHandler;
     public static OutputHandler outputHandler;
 
+    /***
+     *
+     * @param args userIp userPort serverIp serverPort
+     */
     public static void main(String[] args) {
         try {
-            System.out.println("""
+            /*System.out.println("""
                     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠾⢻⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                     ⠀⣀⠀⠀⠀⢀⣠⡴⠖⠚⠋⠉⠉⠀⠀⠉⠛⠲⣤⣀⣴⠶⢶⡄⠀⠀⠀⠀⠀
@@ -36,35 +42,46 @@ public class Main {
                     ⠀⠀⠀⠀⠀⠀⣏⠻⣆⠀⢘⣷⣄⣨⣷⣤⣤⣾⣿⣿⡿⠿⠿⠟⠛⠛⠋⠁⣿
                     ⠀⠀⠀⠀⠀⠀⠘⣦⠘⣏⣭⠽⠷⠞⠛⠛⠋⠉⠁⠀⣀⣠⠤⠶⠶⠚⠛⠋⠉
                     ⠀⠀⠀⠀⠀⠀⠀⠈⢷⣿⡤⠤⠤⠴⠴⠶⠶⠒⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀
+                    """);*/
+
+            System.out.println("""
+                    .| : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :”-'\\,,
+                    ..\\: : : : : : : : : : :'\\: : : : : : : : : : : : : :~,,: : : : : : : : : “~-.,_
+                    ...\\ : : : : : : : : : : :\\: /: : : : : : : : : : : : : : : “,: : : : : : : : : : :"~,_
+                    ... .\\: : : : : : : : : : :\\|: : : : : : : : :_._ : : : : : : \\: : : : : : : : : : : : :”- .
+                    ... ...\\: : : : : : : : : : \\: : : : : : : : ( O ) : : : : : : \\: : : : : : : : : : : : : : '\\._
+                    ... ... .\\ : : : : : : : : : '\\': : : : : : : :"*": : : : : : : :|: : : : : : : : : : : : : : : |0)
+                    ... ... ...\\ : : : : : : : : : '\\: : : : : : : : : : : : : : : :/: : : : : : : : : : : : : : : /""
+                    ... ... .....\\ : : : : : : : : : \\: : : : : : : : : : : : : ,-“: : : : : : : : : : : : : : : :/
+                    ... ... ... ...\\ : : : : : : : : : \\: : : : : : : : : _=" : : : : : ',_.: : : : : : : :,-“
+                    ... ... ... ... \\,: : : : : : : : : \\: :"”'~—-~”" : : : : : : : : : : : : = :"”~~
                     """);
 
             if (args.length < 2){
-                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
+                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT+1);
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
-                System.out.println("DEBUG: init-1 stg");
+                debugPrintln("0 param mode");
             }
-            else{
-                serverAddress = new InetSocketAddress(InetAddress.getByName(args[1]),SERVICE_PORT);
-                ///userAddress = new InetSocketAddress(InetAddress.getByName(args[0]),SERVICE_PORT);
-                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
-                System.out.println("DEBUG: init-1 stg");
+            else if(args.length == 4){
+                userAddress = new InetSocketAddress(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
+                serverAddress = new InetSocketAddress(InetAddress.getByName(args[2]),Integer.parseInt(args[3]));
+                debugPrintln("4 param mode");
             }
-            System.out.println("DEBUG: client begins at "+ userAddress + " with server at " + serverAddress);
+            else if(args.length == 2){
+                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
+                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(),Integer.parseInt(args[1]));
+                debugPrintln("2 param mode");
+            }
+            debugPrintln("client begins at "+ userAddress + " with server at " + serverAddress);
             net = new UdpManager(userAddress, serverAddress, false);
-
-            //UdpManager net = new UdpManager();
 
             inputHandler = new ConsoleInputHandler();
             outputHandler = new ConsoleOutputHandler();
 
             CommandManager commandManager = new CommandManager(inputHandler, outputHandler, net, new ObjTree(Product.class));
-            System.out.println("DEBUG: init stg");
+            debugPrintln("init finished");
 
-            while (true) {
-                //net.receiveCmd();
-                commandManager.startExecuting();
-                //net.sendCmd();
-            }
+            commandManager.startExecuting();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

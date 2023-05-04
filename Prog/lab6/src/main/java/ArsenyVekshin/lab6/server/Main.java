@@ -4,15 +4,19 @@ import ArsenyVekshin.lab6.common.net.UdpManager;
 import ArsenyVekshin.lab6.server.collection.Storage;
 import ArsenyVekshin.lab6.server.commands.CommandManager;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
+import static ArsenyVekshin.lab6.common.net.UdpManager.SERVICE_PORT;
+import static ArsenyVekshin.lab6.common.tools.DebugPrints.debugPrintln;
 
 public class Main {
     public static InetSocketAddress serverAddress;
-    public static void main(String[] args) throws SocketException, UnknownHostException {
+    public static UdpManager net;
+
+    public static void main(String[] args){
         try{
-            System.out.println("""
+            /*System.out.println("""
                     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠾⢻⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                     ⠀⣀⠀⠀⠀⢀⣠⡴⠖⠚⠋⠉⠉⠀⠀⠉⠛⠲⣤⣀⣴⠶⢶⡄⠀⠀⠀⠀⠀
@@ -24,19 +28,35 @@ public class Main {
                     ⠀⠀⠀⠀⠀⠀⣏⠻⣆⠀⢘⣷⣄⣨⣷⣤⣤⣾⣿⣿⡿⠿⠿⠟⠛⠛⠋⠁⣿
                     ⠀⠀⠀⠀⠀⠀⠘⣦⠘⣏⣭⠽⠷⠞⠛⠛⠋⠉⠁⠀⣀⣠⠤⠶⠶⠚⠛⠋⠉
                     ⠀⠀⠀⠀⠀⠀⠀⠈⢷⣿⡤⠤⠤⠴⠴⠶⠶⠒⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀
+                    """);*/
+
+            System.out.println("""
+                    .| : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :”-'\\,,
+                    ..\\: : : : : : : : : : :'\\: : : : : : : : : : : : : :~,,: : : : : : : : : “~-.,_
+                    ...\\ : : : : : : : : : : :\\: /: : : : : : : : : : : : : : : “,: : : : : : : : : : :"~,_
+                    ... .\\: : : : : : : : : : :\\|: : : : : : : : :_._ : : : : : : \\: : : : : : : : : : : : :”- .
+                    ... ...\\: : : : : : : : : : \\: : : : : : : : ( O ) : : : : : : \\: : : : : : : : : : : : : : '\\._
+                    ... ... .\\ : : : : : : : : : '\\': : : : : : : :"*": : : : : : : :|: : : : : : : : : : : : : : : |0)
+                    ... ... ...\\ : : : : : : : : : '\\: : : : : : : : : : : : : : : :/: : : : : : : : : : : : : : : /""
+                    ... ... .....\\ : : : : : : : : : \\: : : : : : : : : : : : : ,-“: : : : : : : : : : : : : : : :/
+                    ... ... ... ...\\ : : : : : : : : : \\: : : : : : : : : _=" : : : : : ',_.: : : : : : : :,-“
+                    ... ... ... ... \\,: : : : : : : : : \\: :"”'~—-~”" : : : : : : : : : : : : = :"”~~
                     """);
+
             Storage collection = new Storage();
 
-            /*if(args.length==0) net = new UdpManager();
-            else net = new UdpManager(args[0], true);*/
-            UdpManager net = new UdpManager();
+            if(args.length==0){
+                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
+            }
+            else{
+                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
+            }
+
+            net = new UdpManager(serverAddress, serverAddress, true);
+            debugPrintln("server begins at " + serverAddress);
             CommandManager commandManager = new CommandManager(collection, net);
 
-            while (true){
-                net.receiveCmd();
-                commandManager.startExecuting();
-                net.sendCmd();
-            }
+            commandManager.startExecuting();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

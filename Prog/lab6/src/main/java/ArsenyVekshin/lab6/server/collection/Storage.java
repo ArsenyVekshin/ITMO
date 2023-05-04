@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
-import static ArsenyVekshin.lab6.server.tools.Comparators.compareFields;
+import static ArsenyVekshin.lab6.common.tools.Comparators.compareFields;
 
 /**
  Main collection manager

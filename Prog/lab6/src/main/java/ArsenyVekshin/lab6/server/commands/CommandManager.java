@@ -7,8 +7,12 @@ import ArsenyVekshin.lab6.server.commands.tasks.*;
 import ArsenyVekshin.lab6.server.commands.tasks.parents.Command;
 import ArsenyVekshin.lab6.server.ui.OutputHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
+
 public class CommandManager {
 
     private UdpManager udpManager ;
@@ -50,11 +54,25 @@ public class CommandManager {
      * while true cycle with cmd read->parse->execute
      */
     public void startExecuting(){
-        for(CommandContainer cmd: udpManager.receivedQueue){
-            if(commands.containsKey(cmd.getType())){
-                commands.get(cmd.getType()).execute(cmd);
-                udpManager.sendQueue.add(cmd);
+        while (true){
+            try{
+                udpManager.receiveCmd();
+                udpManager.queuesStatus();
+                for(CommandContainer cmd: udpManager.receivedQueue){
+
+                    if(commands.containsKey(cmd.getType())){
+                        debugPrintln(cmd.toString());
+                        commands.get(cmd.getType()).execute(cmd);
+                        udpManager.sendQueue.add(cmd);
+                        udpManager.receivedQueue.remove(cmd);
+                    }
+                }
+                udpManager.sendCmd();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
+
         }
+
     }
 }

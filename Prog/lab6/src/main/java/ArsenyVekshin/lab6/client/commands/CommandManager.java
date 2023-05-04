@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 
 import static ArsenyVekshin.lab6.client.Main.*;
 import static ArsenyVekshin.lab6.client.ui.DataFirewall.filterInputString;
-import static ArsenyVekshin.lab6.client.tools.FilesTools.getAbsolutePath;
+import static ArsenyVekshin.lab6.common.tools.FilesTools.getAbsolutePath;
 
 public class CommandManager {
 
@@ -99,7 +99,6 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
-//        System.out.println("DEBUG: execution by stream started at " + inputHandler.getClass().getName());
         while (inputHandler.hasNextLine()) {
             try {
                 String raw = inputHandler.get();
@@ -109,7 +108,6 @@ public class CommandManager {
                     udpManager.receiveCmd();
                     printServerCallback();
                 }
-    //            System.out.println("DEBUG: \"" + command + "\" stream=" + inputHandler.getClass().getName());
                 if(raw.isEmpty() || raw.isBlank()) {
                     continue;
                 }
@@ -122,15 +120,13 @@ public class CommandManager {
 
                 executeCommand(command);
                 System.out.println("DEBUG: execute stg");
-                if (inputHandler instanceof FileInputHandler){
+                if (!(inputHandler instanceof FileInputHandler)){
                    udpManager.sendCmd();
                     System.out.println("DEBUG: sending stg");
                 }
-            } catch (NoSuchElementException e) {
-                break;
             }
             catch (Exception e) {
-                outputHandler.printErr(e.getMessage());
+                outputHandler.println(e.getMessage() + " " + e.getClass());
             }
         }
         if(inputHandler instanceof FileInputHandler) System.out.println("Ввод из файла завершен. Закрываю чтение.");
@@ -176,6 +172,7 @@ public class CommandManager {
             }
         }
         commands.get(cmd.getType()).execute(cmd);
+        if(!cmd.getArgs().contains("h")) udpManager.sendQueue.add(cmd);
     }
 
     private  <T extends Command> void changeGlobalStreams(InputHandler inputHandler, OutputHandler outputHandler){
