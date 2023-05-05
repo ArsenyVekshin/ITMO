@@ -55,24 +55,22 @@ public class CommandManager {
      */
     public void startExecuting(){
         while (true){
-            try{
-                udpManager.receiveCmd();
-                udpManager.queuesStatus();
-                for(CommandContainer cmd: udpManager.receivedQueue){
-
-                    if(commands.containsKey(cmd.getType())){
-                        debugPrintln(cmd.toString());
-                        commands.get(cmd.getType()).execute(cmd);
-                        udpManager.sendQueue.add(cmd);
-                        udpManager.receivedQueue.remove(cmd);
-                    }
+            udpManager.receiveCmd();
+            udpManager.queuesStatus();
+            for(CommandContainer cmd: udpManager.receivedQueue){
+                if(commands.containsKey(cmd.getType())){
+                    debugPrintln(cmd.toString());
+                    commands.get(cmd.getType()).execute(cmd);
+                    udpManager.sendQueue.add(cmd);
                 }
-                udpManager.sendCmd();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
             }
+            udpManager.receivedQueue.clear();
 
+            udpManager.queuesStatus();
+            udpManager.sendCmd();
         }
-
     }
+
+
+
 }

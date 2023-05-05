@@ -1,18 +1,25 @@
-package ArsenyVekshin.lab6.common.net;
+package ArsenyVekshin.lab6.client.net;
 
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.common.tools.ObjectSerializer;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.BindException;
+import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
+import java.net.PortUnreachableException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
+import static ArsenyVekshin.lab6.common.tools.DebugPrints.debugPrintln;
 
+
+/***
+ * Client-type udp manager
+ */
 public class UdpManager {
-    public static final int SERVICE_PORT = 5000;
 
     public static ArrayList<CommandContainer> sendQueue = new ArrayList<>(); // queue of cmd to send
     public static ArrayList<CommandContainer> receivedQueue = new ArrayList<>(); // queue of answers which already received
@@ -52,10 +59,11 @@ public class UdpManager {
             channel.connect(targetAddress);
             channel.socket().setSoTimeout(5000);
             System.out.println("Клиент запущен" +
-                    "\n\tадрес клиента " + userAddress +
-                    "\n\tадрес сервера " + targetAddress);
+                    "\tадрес клиента " + userAddress +
+                    "\tадрес сервера " + targetAddress);
         }
     }
+
 
     /***
      * Send all send-queue to the targets in datagram-format
@@ -74,8 +82,8 @@ public class UdpManager {
                 debugPrint0("-serialised");
 
                 if(isServer) datagramPacket = new DatagramPacket(serializedCmd,
-                        serializedCmd.length,
-                        cmd.getSource()) ;
+                            serializedCmd.length,
+                            cmd.getSource()) ;
                 else datagramPacket = new DatagramPacket(serializedCmd,
                         serializedCmd.length,
                         cmd.getTarget()) ;
@@ -83,10 +91,10 @@ public class UdpManager {
 
                 channel.socket().send(datagramPacket);
                 successfulSent.add(cmd);
-                debugPrintln0("-sent");
+                debugPrint0("-sent");
             } catch (IOException e) {
                 debugPrintln0("-error");
-                System.out.println("DEBUG: sending error " + e.getMessage() + " " + e.getClass());
+                System.out.println("DEBUG: sending error " + e.getMessage());
             }
         }
         for(CommandContainer cmd: successfulSent) sendQueue.remove(cmd);
@@ -99,11 +107,9 @@ public class UdpManager {
         try {
             channel.socket().receive(inputPacket);
         }catch (PortUnreachableException e) {
-            debugPrintln0("-error");
-            System.out.println("Сервер на данный момент недоступен");
+            debugPrintln("Сервер на данный момент недоступен");
             return;
         }catch (IOException e) {
-            debugPrintln0("-error");
             debugPrintln("Ошибка получения пакета: " + e.getMessage());
             return;
         }
@@ -122,23 +128,6 @@ public class UdpManager {
 
     public void targetStatus(){
         System.out.println("Ожидается ответ по " + callbackWaitList + " запросам");
-    }
-
-    public void queuesStatus(){
-        if(receivedQueue.size()!=0){
-            System.out.println("Получено:");
-            for (CommandContainer cmd: receivedQueue){
-                System.out.println("  " + cmd.toString());
-            }
-        }
-
-        if(sendQueue.size()!=0){
-            System.out.println("Готово к отправке:");
-            for (CommandContainer cmd: sendQueue){
-                System.out.println("  " + cmd.toString());
-            }
-        }
-
     }
 
 }

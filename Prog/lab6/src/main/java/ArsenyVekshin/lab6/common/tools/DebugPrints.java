@@ -4,7 +4,7 @@ package ArsenyVekshin.lab6.common.tools;
  * Static multi-type comparators
  */
 public class DebugPrints {
-    static boolean DEBUGMODE = true;
+    static boolean DEBUGMODE = false;
 
     public static void debugPrint(String s){
         if(!DEBUGMODE) return;

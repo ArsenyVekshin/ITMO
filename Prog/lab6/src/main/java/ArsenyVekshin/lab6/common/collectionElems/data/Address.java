@@ -5,13 +5,14 @@ import ArsenyVekshin.lab6.common.collectionElems.exceptions.*;
 import ArsenyVekshin.lab6.server.utils.validators.NotNull;
 import ArsenyVekshin.lab6.server.utils.validators.StringNotNone;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 import static ArsenyVekshin.lab6.common.tools.Comparators.compareFields;
 
-public class Address extends Entity implements Cloneable, Comparable, CSVOperator {
+public class Address extends Entity implements Cloneable, Comparable, CSVOperator, Serializable {
 
     @NotNull
     @StringNotNone

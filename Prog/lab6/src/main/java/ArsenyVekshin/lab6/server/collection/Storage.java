@@ -29,7 +29,7 @@ public class Storage <T extends Object> implements CSVOperator {
     }
 
     public String fileName = "none"; //default value
-    private static Vector<Product> collection;
+    private static Vector<Product> collection = new Vector<>();
     public static String path = null;
     private static ZonedDateTime creationTime;
     private static int usersCounter = 0;

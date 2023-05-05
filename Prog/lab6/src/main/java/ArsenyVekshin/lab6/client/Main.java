@@ -73,7 +73,7 @@ public class Main {
                 debugPrintln("2 param mode");
             }
             debugPrintln("client begins at "+ userAddress + " with server at " + serverAddress);
-            net = new UdpManager(userAddress, serverAddress, false);
+            net = new UdpManager(userAddress, serverAddress);
 
             inputHandler = new ConsoleInputHandler();
             outputHandler = new ConsoleOutputHandler();

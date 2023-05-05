@@ -16,7 +16,6 @@ import ArsenyVekshin.lab6.common.net.UdpManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 
 import static ArsenyVekshin.lab6.client.Main.*;
@@ -99,30 +98,35 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
-        while (inputHandler.hasNextLine()) {
+        while (true) {
+            System.out.println("hasnextline = " + inputHandler.hasNextLine());
+            if(!inputHandler.hasNextLine()) break;
+
             try {
                 String raw = inputHandler.get();
                 if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
                 else{
-                    System.out.println("DEBUG: receive stg");
                     udpManager.receiveCmd();
-                    printServerCallback();
+                    processServerCallback();
+                    udpManager.queuesStatus();
                 }
                 if(raw.isEmpty() || raw.isBlank()) {
                     continue;
                 }
 
                 raw = filterInputString(raw);
-                CommandContainer command = new CommandContainer(raw, net.userIp, net.targetIp);
+                CommandContainer command = new CommandContainer(raw, net.userAddress, net.targetAddress);
 
-                System.out.println("DEBUG:");
-                System.out.println(command.toString());
+//                System.out.println("DEBUG:");
+//                System.out.println(command.toString());
 
                 executeCommand(command);
                 System.out.println("DEBUG: execute stg");
                 if (!(inputHandler instanceof FileInputHandler)){
                    udpManager.sendCmd();
-                    System.out.println("DEBUG: sending stg");
+                    udpManager.receiveCmd();
+                    processServerCallback();
+                    udpManager.queuesStatus();
                 }
             }
             catch (Exception e) {
@@ -182,21 +186,21 @@ public class CommandManager {
         }
     }
 
-    public void printServerCallback(){
-        if(!udpManager.receivedQueue.isEmpty()) System.out.println("Получен ответ от сервера:");
+    public void processServerCallback(){
+        if(udpManager.receivedQueue.isEmpty()) return;
+
         for(CommandContainer cmd: udpManager.receivedQueue){
             try{
                 if(cmd.isNeedToRecall()) {
                     executeCommand(cmd);
                     udpManager.sendQueue.add(cmd);
                 }
-                else outputHandler.println(cmd.toString());
-                udpManager.receivedQueue.remove(cmd);
-
             } catch (StreamBrooked e) {
                 System.out.println(e.getMessage());
             }
         }
     }
+
+
 
 }
