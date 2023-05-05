@@ -2,13 +2,14 @@ package ArsenyVekshin.lab6.common.collectionElems.data;
 
 import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 import static ArsenyVekshin.lab6.common.tools.Comparators.compareFields;
 
-public class Coordinates extends Entity implements Cloneable, Comparable, CSVOperator {
+public class Coordinates extends Entity implements Cloneable, Comparable, CSVOperator, Serializable {
     private float x;
     private float y;
 

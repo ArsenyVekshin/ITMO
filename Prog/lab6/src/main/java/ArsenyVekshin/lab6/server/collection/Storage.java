@@ -29,7 +29,7 @@ public class Storage <T extends Object> implements CSVOperator {
     }
 
     public String fileName = "none"; //default value
-    private static Vector<Product> collection;
+    private static Vector<Product> collection = new Vector<>();
     public static String path = null;
     private static ZonedDateTime creationTime;
     private static int usersCounter = 0;
@@ -132,6 +132,16 @@ public class Storage <T extends Object> implements CSVOperator {
         StringBuilder out = new StringBuilder();
         for (Product product : collection) {
             out.append(product.toString()).append("\n");
+        }
+        return out.toString();
+    }
+
+    public static String showPart(int num, int partSize){
+        if(num*partSize > collection.size()) return "";
+        StringBuilder out = new StringBuilder();
+        for(int i = num*partSize; i<(num+1)*partSize; i++){
+            if(i>=collection.size() || collection.get(i)==null) continue;
+            out.append(collection.get(i).toString()).append("\n");
         }
         return out.toString();
     }

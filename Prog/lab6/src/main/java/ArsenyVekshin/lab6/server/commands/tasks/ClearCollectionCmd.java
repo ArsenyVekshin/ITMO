@@ -16,6 +16,7 @@ public class ClearCollectionCmd extends DataCmd {
     @Override
     public boolean execute(CommandContainer cmd) {
         collection.clear();
+        collection.save();
         cmd.setReturns("done");
         return true;
     }

@@ -30,33 +30,6 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            /*System.out.println("""
-                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠾⢻⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                    ⠀⣀⠀⠀⠀⢀⣠⡴⠖⠚⠋⠉⠉⠀⠀⠉⠛⠲⣤⣀⣴⠶⢶⡄⠀⠀⠀⠀⠀
-                    ⠀⣿⠙⠓⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡿⠙⣯⠁⣷⠀⠀⠀⠀⠀
-                    ⠀⢸⡄⠀⠀⣠⣤⣤⡀⠀⠀⠀⠀⠀⠀⢀⠐⠗⠊⠃⠀⠀⢀⡟⠀⠀⠀⠀⠀
-                    ⠀⣠⠗⠂⣴⢿⡜⣈⣇⢸⡦⠀⠘⠛⠛⠉⢀⣀⣠⣤⠶⢶⣾⣁⣤⡄⠀⠀⠀
-                    ⢰⠏⠀⠀⠁⠘⠋⣩⣇⣀⣤⣤⣶⣶⣻⣯⣽⡷⠟⢻⡟⠋⠻⣄⠀⢳⣄⠀⠀
-                    ⣿⣤⡤⠶⠶⠚⣻⣿⠿⠿⣟⠋⠙⣧⡀⠀⠘⣧⠀⠀⢻⣄⣀⣹⣦⣤⣿⣷⣄
-                    ⠀⠀⠀⠀⠀⠀⣏⠻⣆⠀⢘⣷⣄⣨⣷⣤⣤⣾⣿⣿⡿⠿⠿⠟⠛⠛⠋⠁⣿
-                    ⠀⠀⠀⠀⠀⠀⠘⣦⠘⣏⣭⠽⠷⠞⠛⠛⠋⠉⠁⠀⣀⣠⠤⠶⠶⠚⠛⠋⠉
-                    ⠀⠀⠀⠀⠀⠀⠀⠈⢷⣿⡤⠤⠤⠴⠴⠶⠶⠒⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀
-                    """);*/
-
-            System.out.println("""
-                    .| : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : : :”-'\\,,
-                    ..\\: : : : : : : : : : :'\\: : : : : : : : : : : : : :~,,: : : : : : : : : “~-.,_
-                    ...\\ : : : : : : : : : : :\\: /: : : : : : : : : : : : : : : “,: : : : : : : : : : :"~,_
-                    ... .\\: : : : : : : : : : :\\|: : : : : : : : :_._ : : : : : : \\: : : : : : : : : : : : :”- .
-                    ... ...\\: : : : : : : : : : \\: : : : : : : : ( O ) : : : : : : \\: : : : : : : : : : : : : : '\\._
-                    ... ... .\\ : : : : : : : : : '\\': : : : : : : :"*": : : : : : : :|: : : : : : : : : : : : : : : |0)
-                    ... ... ...\\ : : : : : : : : : '\\: : : : : : : : : : : : : : : :/: : : : : : : : : : : : : : : /""
-                    ... ... .....\\ : : : : : : : : : \\: : : : : : : : : : : : : ,-“: : : : : : : : : : : : : : : :/
-                    ... ... ... ...\\ : : : : : : : : : \\: : : : : : : : : _=" : : : : : ',_.: : : : : : : :,-“
-                    ... ... ... ... \\,: : : : : : : : : \\: :"”'~—-~”" : : : : : : : : : : : : = :"”~~
-                    """);
-
             if (args.length < 2){
                 userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT+1);
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
@@ -73,7 +46,7 @@ public class Main {
                 debugPrintln("2 param mode");
             }
             debugPrintln("client begins at "+ userAddress + " with server at " + serverAddress);
-            net = new UdpManager(userAddress, serverAddress, false);
+            net = new UdpManager(userAddress, serverAddress);
 
             inputHandler = new ConsoleInputHandler();
             outputHandler = new ConsoleOutputHandler();

@@ -15,6 +15,8 @@ public class LoadCollectionCmd extends DataCmd {
         try{
             if(cmd.getArgs().isEmpty()) collection.load();
             else collection.load(cmd.getArgs().get(0));
+            collection.sort();
+            collection.save();
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());
         }

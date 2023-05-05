@@ -16,7 +16,6 @@ import ArsenyVekshin.lab6.common.net.UdpManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 
 import static ArsenyVekshin.lab6.client.Main.*;
@@ -92,6 +91,7 @@ public class CommandManager {
         }
         inputHandler = new ConsoleInputHandler();
         changeGlobalStreams(inputHandler, outputHandler);
+        sendAsGroup();
     }
 
     /**
@@ -104,25 +104,26 @@ public class CommandManager {
                 String raw = inputHandler.get();
                 if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
                 else{
-                    System.out.println("DEBUG: receive stg");
+                    udpManager.sendCmd();
                     udpManager.receiveCmd();
-                    printServerCallback();
+                    processServerCallback();
+                    udpManager.queuesStatus();
+                    udpManager.receivedQueue.clear();
                 }
                 if(raw.isEmpty() || raw.isBlank()) {
                     continue;
                 }
 
                 raw = filterInputString(raw);
-                CommandContainer command = new CommandContainer(raw, net.userIp, net.targetIp);
-
-                System.out.println("DEBUG:");
-                System.out.println(command.toString());
+                CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
 
                 executeCommand(command);
-                System.out.println("DEBUG: execute stg");
                 if (!(inputHandler instanceof FileInputHandler)){
-                   udpManager.sendCmd();
-                    System.out.println("DEBUG: sending stg");
+                    udpManager.sendCmd();
+                    udpManager.receiveCmd();
+                    processServerCallback();
+                    udpManager.queuesStatus();
+                    udpManager.receivedQueue.clear();
                 }
             }
             catch (Exception e) {
@@ -182,21 +183,29 @@ public class CommandManager {
         }
     }
 
-    public void printServerCallback(){
-        if(!udpManager.receivedQueue.isEmpty()) System.out.println("Получен ответ от сервера:");
+    public void sendAsGroup(){
+        CommandContainer groupReceiveCmd = new CommandContainer("groupReceive", udpManager.userAddress, udpManager.targetAddress);
+        groupReceiveCmd.setReturns(udpManager.sendQueue.size());
+        udpManager.sendQueue.add(0, groupReceiveCmd);
+        udpManager.queuesStatus();
+        udpManager.sendCmd();
+    }
+
+    public void processServerCallback(){
+        if(udpManager.receivedQueue.isEmpty()) return;
+
         for(CommandContainer cmd: udpManager.receivedQueue){
             try{
-                if(cmd.isNeedToRecall()) {
+                if(cmd.isNeedToRecall() && cmd.getErrors()==null) {
                     executeCommand(cmd);
                     udpManager.sendQueue.add(cmd);
                 }
-                else outputHandler.println(cmd.toString());
-                udpManager.receivedQueue.remove(cmd);
-
             } catch (StreamBrooked e) {
                 System.out.println(e.getMessage());
             }
         }
     }
+
+
 
 }

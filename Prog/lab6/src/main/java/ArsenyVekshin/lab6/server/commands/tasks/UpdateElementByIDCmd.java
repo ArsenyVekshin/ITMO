@@ -18,8 +18,12 @@ public class UpdateElementByIDCmd extends DataCmd {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
             long _id = Integer.parseInt(cmd.getArgs().get(0));
 
-            if(cmd.getReturns() == null) cmd.setReturns(collection.getElemById((int)_id));
-            else collection.update(_id, (Product) cmd.getReturns());
+            if(cmd.getReturns() == null)cmd.setReturns(collection.getElemById((int)_id));
+            else {
+                collection.update(_id, (Product) cmd.getReturns());
+                collection.sort();
+                collection.save();
+            }
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());
             return false;

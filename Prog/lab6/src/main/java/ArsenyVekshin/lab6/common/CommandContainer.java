@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /***
  * Abstract cmd container class
  */
-public class CommandContainer implements Serializable {
+public class CommandContainer implements Serializable, Cloneable {
     private String type = null;
     private ArrayList<String> args = new ArrayList<>();
     private ArrayList<String> keys = new ArrayList<>();
@@ -114,5 +114,15 @@ public class CommandContainer implements Serializable {
 
     public void setNeedToRecall(boolean needToRecall) {
         this.needToRecall = needToRecall;
+    }
+
+    @Override
+    public CommandContainer clone() {
+        try {
+            CommandContainer clone = (CommandContainer) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

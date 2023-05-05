@@ -16,6 +16,7 @@ public class RemoveElementByIDCmd extends DataCmd {
         try {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
             collection.remove(Integer.parseInt(cmd.getArgs().get(0)));
+            collection.save();
             cmd.setReturns("done");
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());
