@@ -104,9 +104,11 @@ public class CommandManager {
                 String raw = inputHandler.get();
                 if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
                 else{
+                    udpManager.sendCmd();
                     udpManager.receiveCmd();
                     processServerCallback();
                     udpManager.queuesStatus();
+                    udpManager.receivedQueue.clear();
                 }
                 if(raw.isEmpty() || raw.isBlank()) {
                     continue;
@@ -115,12 +117,9 @@ public class CommandManager {
                 raw = filterInputString(raw);
                 CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
 
-//                System.out.println("DEBUG:");
-//                System.out.println(command.toString());
-
                 executeCommand(command);
                 if (!(inputHandler instanceof FileInputHandler)){
-                   udpManager.sendCmd();
+                    udpManager.sendCmd();
                     udpManager.receiveCmd();
                     processServerCallback();
                     udpManager.queuesStatus();
