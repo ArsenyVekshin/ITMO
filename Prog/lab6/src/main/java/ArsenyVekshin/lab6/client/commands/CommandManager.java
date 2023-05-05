@@ -91,6 +91,7 @@ public class CommandManager {
         }
         inputHandler = new ConsoleInputHandler();
         changeGlobalStreams(inputHandler, outputHandler);
+        sendAsGroup();
     }
 
     /**
@@ -98,10 +99,7 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
-        while (true) {
-            System.out.println("hasnextline = " + inputHandler.hasNextLine());
-            if(!inputHandler.hasNextLine()) break;
-
+        while (inputHandler.hasNextLine()) {
             try {
                 String raw = inputHandler.get();
                 if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
@@ -115,18 +113,18 @@ public class CommandManager {
                 }
 
                 raw = filterInputString(raw);
-                CommandContainer command = new CommandContainer(raw, net.userAddress, net.targetAddress);
+                CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
 
 //                System.out.println("DEBUG:");
 //                System.out.println(command.toString());
 
                 executeCommand(command);
-                System.out.println("DEBUG: execute stg");
                 if (!(inputHandler instanceof FileInputHandler)){
                    udpManager.sendCmd();
                     udpManager.receiveCmd();
                     processServerCallback();
                     udpManager.queuesStatus();
+                    udpManager.receivedQueue.clear();
                 }
             }
             catch (Exception e) {
@@ -186,12 +184,20 @@ public class CommandManager {
         }
     }
 
+    public void sendAsGroup(){
+        CommandContainer groupReceiveCmd = new CommandContainer("groupReceive", udpManager.userAddress, udpManager.targetAddress);
+        groupReceiveCmd.setReturns(udpManager.sendQueue.size());
+        udpManager.sendQueue.add(0, groupReceiveCmd);
+        udpManager.queuesStatus();
+        udpManager.sendCmd();
+    }
+
     public void processServerCallback(){
         if(udpManager.receivedQueue.isEmpty()) return;
 
         for(CommandContainer cmd: udpManager.receivedQueue){
             try{
-                if(cmd.isNeedToRecall()) {
+                if(cmd.isNeedToRecall() && cmd.getErrors()==null) {
                     executeCommand(cmd);
                     udpManager.sendQueue.add(cmd);
                 }

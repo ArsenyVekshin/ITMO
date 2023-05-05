@@ -8,6 +8,7 @@ import ArsenyVekshin.lab6.server.commands.tasks.parents.Command;
 import ArsenyVekshin.lab6.server.ui.OutputHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class CommandManager {
 
     private void init(Storage collection){
         commands.put("info", new CollectionInfoCmd(collection));
-        commands.put("show", new ShowCollectionCmd(collection));
+        commands.put("show", new ShowCollectionCmd(collection, udpManager.sendQueue));
         commands.put("clear", new ClearCollectionCmd(collection));
         commands.put("load", new LoadCollectionCmd(collection));
         commands.put("remove_all_by_unit_of_measure", new RemoveByUnitOfMeasureCmd(collection));

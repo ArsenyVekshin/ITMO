@@ -136,6 +136,16 @@ public class Storage <T extends Object> implements CSVOperator {
         return out.toString();
     }
 
+    public static String showPart(int num, int partSize){
+        if(num*partSize > collection.size()) return "";
+        StringBuilder out = new StringBuilder();
+        for(int i = num*partSize; i<(num+1)*partSize; i++){
+            if(i>=collection.size() || collection.get(i)==null) continue;
+            out.append(collection.get(i).toString()).append("\n");
+        }
+        return out.toString();
+    }
+
     /**
      * Find collection-index of entered id
      * @param id product-id to find

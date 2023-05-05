@@ -24,7 +24,7 @@ public class FileInputHandler implements InputHandler {
     public void open(String path){
         try {
             file = new FileInputStream(path);
-            if (new File(path).length() >= 2000) throw new LargeFileException();
+            if (new File(path).length() >= 100000) throw new LargeFileException();
             stream = new Scanner(file);
         } catch (FileNotFoundException | LargeFileException e) {
             System.out.println(e.getMessage());

@@ -8,6 +8,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
 
@@ -21,7 +22,7 @@ public class UdpManager {
 
     private boolean isServer = false;
     public InetSocketAddress targetAddress; //адрес сервера(еси клиент)
-    public InetSocketAddress userAddress; //адрес данного узла
+    public static InetSocketAddress userAddress; //адрес данного узла
 
 
     ByteBuffer channelDataBuffer = ByteBuffer.allocate(65536);
@@ -58,10 +59,11 @@ public class UdpManager {
     }
 
     /***
-     * Send all send-queue to the targets in datagram-format
+     * Отправка всех готовых пакетов адресатам
      */
     public void sendCmd(){
         if(sendQueue.size()==0) return;
+
         debugPrintln("commands num to send " + sendQueue.size());
         ArrayList<CommandContainer> successfulSent = new ArrayList<>();
         DatagramPacket datagramPacket;
@@ -92,6 +94,9 @@ public class UdpManager {
         for(CommandContainer cmd: successfulSent) sendQueue.remove(cmd);
     }
 
+    /***
+     * Чтение 1 пакета через UDP
+     */
     public void receiveCmd(){
         DatagramPacket inputPacket = new DatagramPacket(new byte[1024 * 1024], 1024 * 1024);
         debugPrint("receiving cmd ");
@@ -118,6 +123,53 @@ public class UdpManager {
             debugPrintln("Ошибка чтения полученного пакета: " + e.getMessage());
         }
         debugPrintln0("-done");
+        groupReceiveProcessor();
+    }
+
+    /***
+     * Добавление флага на отправку следующих N команд группой
+     * @param _target целевой адрес
+     * @param num количество пакетов в группе
+     */
+    public static void addGroupFlag(InetSocketAddress _target, int num){
+        CommandContainer groupReceiveCmd = new CommandContainer("groupReceive", _target ,userAddress);
+        groupReceiveCmd.setReturns(num);
+        sendQueue.add(groupReceiveCmd);
+    }
+
+    /***
+     * Запуск чтения группы команд от источника.
+     * Запускается при получении ключ-команды "groupReceive".
+     * Отрабатывает до тех пор, пока от источника не будет получено заданное количество команд.
+     * Полученные команды будут записаны без пробелов.
+     * Команды от других источников будут добавлены в очередь перед ними
+     */
+    public void groupReceiveProcessor(){
+        if(Objects.equals(getLastReceivedCmd().getType(), "groupReceive")){
+            System.out.println("founded flag for group-listening");
+            System.out.println(getLastReceivedCmd().toString());
+            ArrayList<CommandContainer> buffQueue = new ArrayList<>();
+            CommandContainer groupCmd = getLastReceivedCmd();
+            receivedQueue.remove(groupCmd);
+            System.out.print("receiving group size " + (int) groupCmd.getReturns() + ":");
+            while(buffQueue.size() < (int) groupCmd.getReturns()){
+                receiveCmd();
+                CommandContainer cmd = getLastReceivedCmd();
+                if(cmd.getSource().equals(groupCmd.getSource())) {
+                    buffQueue.add(cmd);
+                    receivedQueue.remove(cmd);
+                    //if(cmd.getReturns() == "finished") break;
+                    System.out.print("*");
+                }
+                else System.out.print(".");
+            }
+            System.out.println("-done");
+            receivedQueue.addAll(buffQueue);
+        }
+    }
+
+    private CommandContainer getLastReceivedCmd(){
+        return receivedQueue.get(receivedQueue.size() - 1);
     }
 
     public void targetStatus(){
@@ -138,7 +190,6 @@ public class UdpManager {
                 System.out.println("  " + cmd.toString());
             }
         }
-
     }
 
 }
