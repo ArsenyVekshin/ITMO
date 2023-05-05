@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -283,7 +284,7 @@ public class Storage <T extends Object> implements CSVOperator {
      * default collection sort-function
      */
     public void sort(){
-        sortBy(defaultFieldForComp);
+        collection.sort(Comparator.naturalOrder());
     }
 
     /**
