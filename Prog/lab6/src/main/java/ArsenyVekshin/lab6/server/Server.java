@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 import static ArsenyVekshin.lab6.common.net.UdpManager.SERVICE_PORT;
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.debugPrintln;
 
-public class Main {
+public class Server {
     public static InetSocketAddress serverAddress;
     public static UdpManager net;
 
@@ -30,7 +30,6 @@ public class Main {
             net = new UdpManager(serverAddress);
             debugPrintln("server begins at " + serverAddress);
             CommandManager commandManager = new CommandManager(collection, net);
-
             commandManager.startExecuting();
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -13,12 +13,13 @@ import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.common.net.UdpManager;
 
+import java.io.EOFException;
+import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-import static ArsenyVekshin.lab6.client.Main.*;
 import static ArsenyVekshin.lab6.client.ui.DataFirewall.filterInputString;
 import static ArsenyVekshin.lab6.common.tools.FilesTools.getAbsolutePath;
 
@@ -34,6 +35,7 @@ public class CommandManager {
 
     private Map<String, Command> commands = new HashMap<>();
 
+    Selector selector ;
 
     /**
      * default cmd-manager constructor
@@ -46,6 +48,7 @@ public class CommandManager {
         this.udpManager = udpManager;
         this.objTree = objTree;
         init();
+
     }
 
     private void init(){
@@ -67,11 +70,11 @@ public class CommandManager {
 
     /**
      * execute script func
-     * @param path script-file location
+     * @param cmd command which calls script
      * @throws StreamBrooked
      */
-    public void executeScript(String path) throws StreamBrooked {
-        path = getAbsolutePath(path);
+    public void executeScript(CommandContainer cmd) throws StreamBrooked {
+        String path = getAbsolutePath(cmd.getArgs().get(0));
 //        System.out.println("DEBUG: begin executing script " + path);
         if(parsedScripts.contains(path)){
             outputHandler.println("Sorry you can't execute this script recursive");
@@ -91,7 +94,7 @@ public class CommandManager {
         }
         inputHandler = new ConsoleInputHandler();
         changeGlobalStreams(inputHandler, outputHandler);
-        sendAsGroup();
+        if(cmd.getKeys().contains("g")) sendAsGroup();
     }
 
     /**
@@ -99,32 +102,30 @@ public class CommandManager {
      * @throws StreamBrooked
      */
     public void startExecuting() throws StreamBrooked {
-        while (inputHandler.hasNextLine()) {
+        while (true) {
             try {
-                String raw = inputHandler.get();
-                if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
-                else{
-                    udpManager.sendCmd();
-                    udpManager.receiveCmd();
-                    processServerCallback();
-                    udpManager.queuesStatus();
-                    udpManager.receivedQueue.clear();
-                }
-                if(raw.isEmpty() || raw.isBlank()) {
-                    continue;
-                }
+                //Обработка ввода в консоль
+                if(inputHandler.available()){
+                    String raw =  inputHandler.get();
+                    if(inputHandler instanceof FileInputHandler || true) System.out.println("> " + raw);
 
-                raw = filterInputString(raw);
-                CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
+                    if(raw.isEmpty() || raw.isBlank()) continue;
+                    raw = filterInputString(raw);
+                    CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
+                    executeCommand(command);
+                    }
 
-                executeCommand(command);
-                if (!(inputHandler instanceof FileInputHandler)){
+                //отправка сообщения на сервер, если не чтение из файла
+                if (!(inputHandler instanceof FileInputHandler)) {
                     udpManager.sendCmd();
-                    udpManager.receiveCmd();
-                    processServerCallback();
-                    udpManager.queuesStatus();
-                    udpManager.receivedQueue.clear();
+                    udpManager.receiveCmd();    //читаем с канала
+                    processServerCallback();    //обрабатываем полученные ответы на "повторный вызов"
+                    udpManager.queuesStatus();  //печатаем статус очередей отправка-получение
+                    udpManager.receivedQueue.clear();   //удаляем уже напечатанные команды из очереди полученных
                 }
+            }
+            catch (EOFException e) {
+                break;
             }
             catch (Exception e) {
                 outputHandler.println(e.getMessage() + " " + e.getClass());
@@ -146,6 +147,8 @@ public class CommandManager {
                 >execute_script {path}
                     supports only your filesystem
                     read file as multiline cmd queue
+                    possible keys:
+                        -g send this script as group 
                 """);
 
         outputHandler.println("Вы можете вызвать подробную информацию по команде при помощи ключа -h\n");
@@ -161,7 +164,7 @@ public class CommandManager {
 
         if(!commands.containsKey(cmd.getType())){
             if(cmd.getType().contains("execute_script")) {
-                executeScript(cmd.getArgs().get(0));
+                executeScript(cmd);
             }
 
            else if(cmd.getType().contains("help")) {

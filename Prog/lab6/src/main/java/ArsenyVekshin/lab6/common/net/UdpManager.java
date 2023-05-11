@@ -7,7 +7,10 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
@@ -20,14 +23,16 @@ public class UdpManager {
 
     private static int callbackWaitList = 0;
 
+    private final int bufferSize = 1024*1024;
+    private ByteBuffer  messageBuff = ByteBuffer.allocate(bufferSize);
+
     private boolean isServer = false;
     public InetSocketAddress targetAddress; //адрес сервера(еси клиент)
     public static InetSocketAddress userAddress; //адрес данного узла
 
-
-    ByteBuffer channelDataBuffer = ByteBuffer.allocate(65536);
-
     DatagramChannel channel ;
+
+    Selector selector;
 
     public UdpManager(InetSocketAddress userAddress) throws IOException {
         this(userAddress, userAddress);
@@ -39,23 +44,31 @@ public class UdpManager {
         isServer = (targetAddress == userAddress);
 
         channel = DatagramChannel.open();
-        try {
-            channel.bind(userAddress);
-        } catch (BindException e){
-            System.out.println("ERROR: выбранный адрес недоступен, попробуйте снова с другими настройками сети");
-            System.exit(0);
-        }
+        //channel.socket().setSoTimeout(100);
+        channel.configureBlocking(false);
+
+        channel.setOption(StandardSocketOptions.SO_RCVBUF, bufferSize);
+        channel.setOption(StandardSocketOptions.SO_SNDBUF, bufferSize);
 
         if (isServer){
+            try {
+                channel.bind(userAddress);
+            } catch (BindException e){
+                System.out.println("ERROR: выбранный адрес недоступен, попробуйте снова с другими настройками сети");
+                System.exit(0);
+            }
             System.out.println("Сервер запущен: " + userAddress);
         }
         else{
             channel.connect(targetAddress);
-            channel.socket().setSoTimeout(5000);
+            this.userAddress = (InetSocketAddress) channel.getLocalAddress();
             System.out.println("Клиент запущен" +
-                    "\n\tадрес клиента " + userAddress +
-                    "\n\tадрес сервера " + targetAddress);
+                    "\n\tадрес клиента " + this.userAddress +
+                    "\n\tадрес сервера " + this.targetAddress);
         }
+
+        selector = Selector.open();
+        channel.register(selector, SelectionKey.OP_READ);
     }
 
     /***
@@ -66,42 +79,60 @@ public class UdpManager {
 
         debugPrintln("commands num to send " + sendQueue.size());
         ArrayList<CommandContainer> successfulSent = new ArrayList<>();
-        DatagramPacket datagramPacket;
 
         for(CommandContainer cmd: sendQueue){
             try{
                 debugPrint("sending cmd "+ cmd.getType() + " ");
 
-                byte[] serializedCmd = ObjectSerializer.serializeObject(cmd);
+                messageBuff.clear();
+                messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
                 debugPrint0("-serialised");
 
-                if(isServer) datagramPacket = new DatagramPacket(serializedCmd,
-                        serializedCmd.length,
-                        cmd.getSource()) ;
-                else datagramPacket = new DatagramPacket(serializedCmd,
-                        serializedCmd.length,
-                        cmd.getTarget()) ;
-                debugPrint0("-packet");
-
-                channel.socket().send(datagramPacket);
+                if(isServer) {
+                    channel.send(messageBuff, cmd.getSource());
+                }
+                else {
+                    channel.send(messageBuff, cmd.getTarget());
+                }
                 successfulSent.add(cmd);
                 debugPrintln0("-sent");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 debugPrintln0("-error");
-                System.out.println("DEBUG: sending error " + e.getMessage() + " " + e.getClass());
+                System.out.println("Ошибка при отправке пакета " + e.getMessage() + " " + e.getClass());
             }
         }
-        for(CommandContainer cmd: successfulSent) sendQueue.remove(cmd);
+        sendQueue.removeAll(successfulSent);
     }
 
     /***
      * Чтение 1 пакета через UDP
      */
     public void receiveCmd(){
-        DatagramPacket inputPacket = new DatagramPacket(new byte[1024 * 1024], 1024 * 1024);
-        debugPrint("receiving cmd ");
+        try{
+            selector.select(20);
 
-        try {
+            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+            while (it.hasNext()) {
+                SelectionKey key = it.next();
+                it.remove();
+
+                if(key.isReadable()){
+                    messageBuff.clear();
+                    channel.receive(messageBuff);
+                    System.out.println("Получен пакет размера " + messageBuff.array().length);
+                    CommandContainer cmd = (CommandContainer) ObjectSerializer.deserializeObject(messageBuff.array());
+                    receivedQueue.add(cmd);
+                    groupReceiveProcessor();
+                }
+            }
+
+        }catch (Exception e) {
+            debugPrintln0("-error");
+            debugPrintln("Ошибка получения пакета: " + e.getMessage() + " " + e.getClass());
+            e.printStackTrace();
+        }
+
+/*        try {
             channel.socket().receive(inputPacket);
         }catch (PortUnreachableException e) {
             debugPrintln0("-error");
@@ -123,7 +154,7 @@ public class UdpManager {
             debugPrintln("Ошибка чтения полученного пакета: " + e.getMessage());
         }
         debugPrintln0("-done");
-        groupReceiveProcessor();
+        groupReceiveProcessor();*/
     }
 
     /***

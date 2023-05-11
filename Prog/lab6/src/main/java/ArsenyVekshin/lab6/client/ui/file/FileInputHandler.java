@@ -42,7 +42,13 @@ public class FileInputHandler implements InputHandler {
     }
 
     @Override
+    public boolean available() {
+        return true;
+    }
+
+    @Override
     public void close() {
         stream.close();
     }
+
 }

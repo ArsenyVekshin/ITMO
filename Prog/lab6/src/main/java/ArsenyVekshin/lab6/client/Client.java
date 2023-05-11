@@ -11,12 +11,13 @@ import ArsenyVekshin.lab6.client.commands.CommandManager;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 import static ArsenyVekshin.lab6.common.net.UdpManager.SERVICE_PORT;
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
 
 
-public class Main {
+public class Client {
     public static UdpManager net;
     public static InetSocketAddress serverAddress;
     public static InetSocketAddress userAddress;
@@ -30,22 +31,12 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            if (args.length < 2){
-                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT+1);
-                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
-                debugPrintln("0 param mode");
-            }
-            else if(args.length == 4){
-                userAddress = new InetSocketAddress(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
-                serverAddress = new InetSocketAddress(InetAddress.getByName(args[2]),Integer.parseInt(args[3]));
-                debugPrintln("4 param mode");
-            }
-            else if(args.length == 2){
-                userAddress = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
+            if(args.length == 2){
+                userAddress   = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(),Integer.parseInt(args[1]));
                 debugPrintln("2 param mode");
             }
-            debugPrintln("client begins at "+ userAddress + " with server at " + serverAddress);
+            else throw new RuntimeException();
             net = new UdpManager(userAddress, serverAddress);
 
             inputHandler = new ConsoleInputHandler();

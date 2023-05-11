@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: ArsenyVekshin.lab6.server.Main
+Main-Class: ArsenyVekshin.lab6.server.Server
 

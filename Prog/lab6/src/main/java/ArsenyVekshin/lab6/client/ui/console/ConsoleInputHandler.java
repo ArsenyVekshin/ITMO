@@ -2,6 +2,7 @@ package ArsenyVekshin.lab6.client.ui.console;
 
 import ArsenyVekshin.lab6.client.ui.InputHandler;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class ConsoleInputHandler implements InputHandler {
@@ -18,7 +19,13 @@ public class ConsoleInputHandler implements InputHandler {
     }
 
     @Override
+    public boolean available() throws IOException {
+        return (System.in.available())>0;
+    }
+
+    @Override
     public void close() {
         scanner.close();
     }
+
 }

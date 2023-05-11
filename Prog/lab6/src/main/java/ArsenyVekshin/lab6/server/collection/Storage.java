@@ -1,7 +1,7 @@
 package ArsenyVekshin.lab6.server.collection;
 
 import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
-import ArsenyVekshin.lab6.server.Main;
+import ArsenyVekshin.lab6.server.Server;
 import ArsenyVekshin.lab6.common.collectionElems.data.*;
 import ArsenyVekshin.lab6.common.collectionElems.exceptions.*;
 import ArsenyVekshin.lab6.server.ui.file.FileInputHandler;
@@ -56,7 +56,7 @@ public class Storage <T extends Object> implements CSVOperator {
             creationTime = ZonedDateTime.now();
             if (path== null) {
                 //path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + File.separatorChar + "sysFiles" + File.separatorChar;
-                path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + File.separatorChar + "sysFiles" + File.separatorChar + "data.csv";
+                path = new File(Server.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + File.separatorChar + "sysFiles" + File.separatorChar + "data.csv";
                 System.out.println("""
                         ###########! WARNING !###########
                         Directory for interaction-files is not set 
@@ -80,7 +80,6 @@ public class Storage <T extends Object> implements CSVOperator {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     /**
