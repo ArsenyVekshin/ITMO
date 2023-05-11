@@ -10,6 +10,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -23,8 +24,8 @@ public class UdpManager {
 
     private static int callbackWaitList = 0;
 
-    private final int bufferSize = 1024*1024;
-    private ByteBuffer  messageBuff = ByteBuffer.allocate(bufferSize);
+    private final int bufferSize = 20*1024;
+    //private ByteBuffer  messageBuff = ByteBuffer.allocate(bufferSize);
 
     private boolean isServer = false;
     public InetSocketAddress targetAddress; //адрес сервера(еси клиент)
@@ -76,17 +77,12 @@ public class UdpManager {
      */
     public void sendCmd(){
         if(sendQueue.size()==0) return;
-
         debugPrintln("commands num to send " + sendQueue.size());
         ArrayList<CommandContainer> successfulSent = new ArrayList<>();
 
         for(CommandContainer cmd: sendQueue){
             try{
-                debugPrint("sending cmd "+ cmd.getType() + " ");
-
-                messageBuff.clear();
-                messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
-                debugPrint0("-serialised");
+                ByteBuffer messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
 
                 if(isServer) {
                     channel.send(messageBuff, cmd.getSource());
@@ -95,9 +91,9 @@ public class UdpManager {
                     channel.send(messageBuff, cmd.getTarget());
                 }
                 successfulSent.add(cmd);
-                debugPrintln0("-sent");
+                System.out.println("Отправлен пакет размера " + messageBuff.array().length);
+
             } catch (Exception e) {
-                debugPrintln0("-error");
                 System.out.println("Ошибка при отправке пакета " + e.getMessage() + " " + e.getClass());
             }
         }
@@ -109,7 +105,7 @@ public class UdpManager {
      */
     public void receiveCmd(){
         try{
-            selector.select(20);
+            selector.selectNow();
 
             Iterator<SelectionKey> it = selector.selectedKeys().iterator();
             while (it.hasNext()) {
@@ -117,9 +113,11 @@ public class UdpManager {
                 it.remove();
 
                 if(key.isReadable()){
-                    messageBuff.clear();
+                    ByteBuffer messageBuff = ByteBuffer.allocate(bufferSize);
+
                     channel.receive(messageBuff);
-                    System.out.println("Получен пакет размера " + messageBuff.array().length);
+                    System.out.println("Получен пакет размера: " + messageBuff.array().length);
+
                     CommandContainer cmd = (CommandContainer) ObjectSerializer.deserializeObject(messageBuff.array());
                     receivedQueue.add(cmd);
                     groupReceiveProcessor();
@@ -131,30 +129,6 @@ public class UdpManager {
             debugPrintln("Ошибка получения пакета: " + e.getMessage() + " " + e.getClass());
             e.printStackTrace();
         }
-
-/*        try {
-            channel.socket().receive(inputPacket);
-        }catch (PortUnreachableException e) {
-            debugPrintln0("-error");
-            System.out.println("Сервер на данный момент недоступен");
-            return;
-        }catch (IOException e) {
-            debugPrintln0("-error");
-            debugPrintln("Ошибка получения пакета: " + e.getMessage());
-            return;
-        }
-        debugPrint0("-received");
-
-        try{
-            CommandContainer cmd = (CommandContainer) ObjectSerializer.deserializeObject(inputPacket.getData());
-            receivedQueue.add(cmd);
-            debugPrint0("-deSerialised");
-        } catch (Exception e) {
-            debugPrintln0("-error");
-            debugPrintln("Ошибка чтения полученного пакета: " + e.getMessage());
-        }
-        debugPrintln0("-done");
-        groupReceiveProcessor();*/
     }
 
     /***
@@ -183,8 +157,16 @@ public class UdpManager {
             CommandContainer groupCmd = getLastReceivedCmd();
             receivedQueue.remove(groupCmd);
             System.out.print("receiving group size " + (int) groupCmd.getReturns() + ":");
-            while(buffQueue.size() < (int) groupCmd.getReturns()){
-                receiveCmd();
+
+            long start = new Date().getTime();
+            while(buffQueue.size() < (int) groupCmd.getReturns() ||
+                    (new Date().getTime() - start)>1000){
+                try {
+                    receiveCmd();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                if(getLastReceivedCmd()==null) continue;
                 CommandContainer cmd = getLastReceivedCmd();
                 if(cmd.getSource().equals(groupCmd.getSource())) {
                     buffQueue.add(cmd);
@@ -200,6 +182,7 @@ public class UdpManager {
     }
 
     private CommandContainer getLastReceivedCmd(){
+        if(receivedQueue.size()==0) return null;
         return receivedQueue.get(receivedQueue.size() - 1);
     }
 

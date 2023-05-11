@@ -91,13 +91,17 @@ public class CommandContainer implements Serializable, Cloneable {
     public String toString() {
         String out = "cmd type = " + type +"\n";
 
-        out += "\tkeys = [";
-        for(String s: keys) out += " " + s;
-        out += " ]\n";
+        if(!keys.isEmpty()){
+            out += "\tkeys = [";
+            for(String s: keys) out += " " + s;
+            out += " ]\n";
+        }
 
-        out += "\targs = [";
-        for(String s: args) out += " " + s;
-        out += " ]\n";
+        if(!args.isEmpty()) {
+            out += "\targs = [";
+            for (String s : args) out += " " + s;
+            out += " ]\n";
+        }
 
         if(returns != null) out += "\treturns = " + returns.toString() + "\n";
         if(errors != null) out += "\terrors = " + errors + "\n";

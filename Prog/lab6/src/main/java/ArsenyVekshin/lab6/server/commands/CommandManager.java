@@ -60,7 +60,6 @@ public class CommandManager {
             udpManager.queuesStatus();
             for(CommandContainer cmd: udpManager.receivedQueue){
                 if(commands.containsKey(cmd.getType())){
-                    debugPrintln(cmd.toString());
                     commands.get(cmd.getType()).execute(cmd);
                     udpManager.sendQueue.add(cmd);
                 }

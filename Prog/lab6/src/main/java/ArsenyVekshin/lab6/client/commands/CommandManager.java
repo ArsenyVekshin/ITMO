@@ -97,26 +97,22 @@ public class CommandManager {
         if(cmd.getKeys().contains("g")) sendAsGroup();
     }
 
-    /**
-     * while true cycle with cmd read->parse->execute
-     * @throws StreamBrooked
-     */
-    public void startExecuting() throws StreamBrooked {
+    public void startExecuting(boolean isSendDelay) throws StreamBrooked {
         while (true) {
             try {
                 //Обработка ввода в консоль
                 if(inputHandler.available()){
                     String raw =  inputHandler.get();
-                    if(inputHandler instanceof FileInputHandler || true) System.out.println("> " + raw);
+                    if(inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
 
                     if(raw.isEmpty() || raw.isBlank()) continue;
                     raw = filterInputString(raw);
                     CommandContainer command = new CommandContainer(raw, udpManager.userAddress, udpManager.targetAddress);
                     executeCommand(command);
-                    }
+                }
 
                 //отправка сообщения на сервер, если не чтение из файла
-                if (!(inputHandler instanceof FileInputHandler)) {
+                if (!isSendDelay) {
                     udpManager.sendCmd();
                     udpManager.receiveCmd();    //читаем с канала
                     processServerCallback();    //обрабатываем полученные ответы на "повторный вызов"
@@ -133,6 +129,14 @@ public class CommandManager {
         }
         if(inputHandler instanceof FileInputHandler) System.out.println("Ввод из файла завершен. Закрываю чтение.");
         else System.out.println("Ввод завершен. Закрываю программу.");
+    }
+
+    /**
+     * while true cycle with cmd read->parse->execute
+     * @throws StreamBrooked
+     */
+    public void startExecuting() throws StreamBrooked {
+        startExecuting(false);
     }
 
     /**
@@ -208,7 +212,6 @@ public class CommandManager {
             }
         }
     }
-
 
 
 }

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import static ArsenyVekshin.lab6.common.tools.Comparators.compareFields;
 
@@ -293,18 +294,8 @@ public class Storage <T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     private Product max() throws NoSuchFieldException, IllegalAccessException {
-        Product _max = new Product();
-        try {
-            for (int i = 0; i < collection.size(); i++) {
-                Product a = collection.get(i);
-                if (compareFields((T) _max.getClass().getDeclaredField(defaultFieldForComp).get(_max),
-                        (T) a.getClass().getDeclaredField(defaultFieldForComp).get(a)) < 0) {
-                    _max = a;
-                }
-            }
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
-        }
+        if(collection.isEmpty()) return null;
+        Product _max = collection.stream().max(Comparator.comparingInt(Product::getId)).get();
         return _max;
     }
 
@@ -316,17 +307,8 @@ public class Storage <T extends Object> implements CSVOperator {
      */
     public void addIfMax(Product o){
         try {
-            boolean greaterFlag = true;
-            T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
-            for (int i = 0; i < collection.size(); i++) {
-                Product b = collection.get(i);
-                if (b == null) continue;
-                if (compareFields(a, (T) b.getClass().getDeclaredField(defaultFieldForComp).get(b)) < 0) {
-                    greaterFlag = false;
-                    return;
-                }
-            }
-            add((Product) a);
+            if(max().compareTo(o) < 0) return;
+            add((Product) o);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
@@ -340,18 +322,15 @@ public class Storage <T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     public void removeGreater(Product o) throws NoSuchFieldException, IllegalAccessException {
-        try {
-            T a = (T) o.getClass().getDeclaredField(defaultFieldForComp).get(o);
-            for (int i=0; i<collection.size(); i++){
-                Product b = collection.get(i);
-                if(b==null) continue;
-                if(compareFields(a, (T) b.getClass().getDeclaredField(defaultFieldForComp).get(b))<0){
-                    collection.remove(i);
-                }
+        Product _max = max();
+        if(_max != null) {
+            try {
+                remove(_max.getId());
+            } catch (WrongID e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
+
 
     }
 
@@ -371,14 +350,8 @@ public class Storage <T extends Object> implements CSVOperator {
      * @return string for print
      */
     public static String getPrices(){
-        if(collection.isEmpty()) return "collection is null";
-        float[] array = new float[collection.size()];
-        for (int i=0; i<collection.size(); i++){
-            if(collection.get(i) == null) continue;
-            array[i] = collection.get(i).getPrice();
-        }
-        Arrays.sort(array);
-        return Arrays.toString(array);
+        if(collection.isEmpty()) return "collection is empty";
+        return Arrays.toString(collection.stream().sorted().map(Product::getPrice).toArray());
     }
 
     /**
@@ -386,12 +359,8 @@ public class Storage <T extends Object> implements CSVOperator {
      * @return prices sum
      */
     public static float getPricesSum(){
-        float out = 0;
-        for (Product product : collection) {
-            if (product == null) continue;
-            out += product.getPrice();
-        }
-        return out;
+        if(collection.isEmpty()) return 0;
+        return collection.stream().sorted().map(Product::getPrice).reduce(0f, Float::sum);
     }
 
     /**
