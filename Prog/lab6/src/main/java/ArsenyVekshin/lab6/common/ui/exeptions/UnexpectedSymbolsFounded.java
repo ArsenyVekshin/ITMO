@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.server.ui.exeptions;
+package ArsenyVekshin.lab6.common.ui.exeptions;
 
 import java.io.IOException;
 

@@ -2,8 +2,8 @@ package ArsenyVekshin.lab6.client.commands.tasks;
 
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
 
 public class PricesListCmd extends DataCmd {
 

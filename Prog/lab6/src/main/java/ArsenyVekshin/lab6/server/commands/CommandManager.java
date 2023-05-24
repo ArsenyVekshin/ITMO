@@ -2,10 +2,13 @@ package ArsenyVekshin.lab6.server.commands;
 
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.common.net.UdpManager;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleInputHandler;
+import ArsenyVekshin.lab6.common.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.server.collection.Storage;
 import ArsenyVekshin.lab6.server.commands.tasks.*;
 import ArsenyVekshin.lab6.server.commands.tasks.parents.Command;
-import ArsenyVekshin.lab6.server.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,9 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
+import static ArsenyVekshin.lab6.common.ui.DataFirewall.filterInputString;
 
 public class CommandManager {
-
+    InputHandler inputHandler = new ConsoleInputHandler();
     private UdpManager udpManager ;
 
     private final String logFilePath = "";
@@ -56,18 +60,33 @@ public class CommandManager {
      */
     public void startExecuting(){
         while (true){
-            udpManager.receiveCmd();
-            udpManager.queuesStatus();
-            for(CommandContainer cmd: udpManager.receivedQueue){
-                if(commands.containsKey(cmd.getType())){
-                    commands.get(cmd.getType()).execute(cmd);
-                    udpManager.sendQueue.add(cmd);
-                }
-            }
-            udpManager.receivedQueue.clear();
+            try {
+                if (inputHandler.available()) {
+                    String raw = inputHandler.get();
+                    if (inputHandler instanceof FileInputHandler) System.out.println("> " + raw);
 
-            udpManager.queuesStatus();
-            udpManager.sendCmd();
+                    if (raw.isEmpty() || raw.isBlank()) continue;
+                    raw = filterInputString(raw);
+                    CommandContainer command = new CommandContainer(raw, null, null);
+                    if(command.getType() == "save" || command.getType() == "load"){
+                        commands.get(command.getType()).execute(command);
+                    }
+                }
+                udpManager.receiveCmd();
+                udpManager.queuesStatus();
+                for (CommandContainer cmd : udpManager.receivedQueue) {
+                    if (commands.containsKey(cmd.getType())) {
+                        commands.get(cmd.getType()).execute(cmd);
+                        udpManager.sendQueue.add(cmd);
+                    }
+                }
+                udpManager.receivedQueue.clear();
+
+                udpManager.queuesStatus();
+                udpManager.sendCmd();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

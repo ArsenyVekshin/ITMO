@@ -1,6 +1,6 @@
-package ArsenyVekshin.lab6.client.ui.console;
+package ArsenyVekshin.lab6.common.ui.console;
 
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
 
 public class ConsoleOutputHandler implements OutputHandler {
     @Override

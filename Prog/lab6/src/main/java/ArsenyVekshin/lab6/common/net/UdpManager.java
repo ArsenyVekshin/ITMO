@@ -82,6 +82,11 @@ public class UdpManager {
 
         for(CommandContainer cmd: sendQueue){
             try{
+                if(cmd.getSource() == null || cmd.getTarget()==null){
+                    successfulSent.add(cmd);
+                    continue;
+                }
+
                 ByteBuffer messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
 
                 if(isServer) {

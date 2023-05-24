@@ -1,7 +1,7 @@
 package ArsenyVekshin.lab6.client.commands.tasks.parents;
 
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 
 public abstract class NewObjCmd extends DialogueCmd {

@@ -1,9 +1,9 @@
 package ArsenyVekshin.lab6.client;
 
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleInputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleOutputHandler;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 import ArsenyVekshin.lab6.common.collectionElems.data.Product;
 import ArsenyVekshin.lab6.common.net.UdpManager;
@@ -11,9 +11,7 @@ import ArsenyVekshin.lab6.client.commands.CommandManager;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
-import static ArsenyVekshin.lab6.common.net.UdpManager.SERVICE_PORT;
 import static ArsenyVekshin.lab6.common.tools.DebugPrints.*;
 
 

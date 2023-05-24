@@ -2,9 +2,9 @@ package ArsenyVekshin.lab6.client.commands.tasks;
 
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.DialogueCmd;
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab6.common.collectionElems.exceptions.WrongCmdParam;
 
 public class RemoveElementByIDCmd extends DialogueCmd {

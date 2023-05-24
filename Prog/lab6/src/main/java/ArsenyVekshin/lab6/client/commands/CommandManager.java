@@ -4,11 +4,11 @@ import ArsenyVekshin.lab6.client.commands.tasks.*;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.Command;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.DataCmd;
 import ArsenyVekshin.lab6.client.commands.tasks.parents.DialogueCmd;
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
-import ArsenyVekshin.lab6.client.ui.file.FileInputHandler;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleInputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.client.utils.builder.ObjTree;
 import ArsenyVekshin.lab6.common.CommandContainer;
 import ArsenyVekshin.lab6.common.net.UdpManager;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import static ArsenyVekshin.lab6.client.ui.DataFirewall.filterInputString;
+import static ArsenyVekshin.lab6.common.ui.DataFirewall.filterInputString;
 import static ArsenyVekshin.lab6.common.tools.FilesTools.getAbsolutePath;
 
 public class CommandManager {

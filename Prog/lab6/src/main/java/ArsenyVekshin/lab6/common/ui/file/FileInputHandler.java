@@ -1,7 +1,7 @@
-package ArsenyVekshin.lab6.client.ui.file;
+package ArsenyVekshin.lab6.common.ui.file;
 
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.LargeFileException;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.LargeFileException;
 
 import java.io.File;
 import java.io.FileInputStream;

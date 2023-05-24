@@ -1,6 +1,6 @@
-package ArsenyVekshin.lab6.server.ui;
+package ArsenyVekshin.lab6.common.ui;
 
-import ArsenyVekshin.lab6.server.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
 
 /**
  * output stream handler

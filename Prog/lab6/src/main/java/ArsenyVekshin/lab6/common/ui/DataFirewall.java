@@ -1,8 +1,8 @@
-package ArsenyVekshin.lab6.client.ui;
+package ArsenyVekshin.lab6.common.ui;
 
-import ArsenyVekshin.lab6.client.ui.exeptions.IncorrectLengthException;
-import ArsenyVekshin.lab6.client.ui.exeptions.NotNullException;
-import ArsenyVekshin.lab6.client.ui.exeptions.UnexpectedSymbolsFounded;
+import ArsenyVekshin.lab6.common.ui.exeptions.IncorrectLengthException;
+import ArsenyVekshin.lab6.common.ui.exeptions.NotNullException;
+import ArsenyVekshin.lab6.common.ui.exeptions.UnexpectedSymbolsFounded;
 
 import java.util.regex.Pattern;
 

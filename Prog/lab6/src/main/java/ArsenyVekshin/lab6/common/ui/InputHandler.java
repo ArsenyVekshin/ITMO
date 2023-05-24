@@ -1,4 +1,4 @@
-package ArsenyVekshin.lab6.client.ui;
+package ArsenyVekshin.lab6.common.ui;
 
 import java.io.IOException;
 import java.util.Scanner;

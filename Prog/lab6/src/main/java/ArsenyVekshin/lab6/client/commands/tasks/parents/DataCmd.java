@@ -1,7 +1,7 @@
 package ArsenyVekshin.lab6.client.commands.tasks.parents;
 
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleOutputHandler;
 
 public abstract class DataCmd extends Command {
     protected OutputHandler outputStream = new ConsoleOutputHandler();

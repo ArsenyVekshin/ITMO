@@ -1,12 +1,12 @@
 package ArsenyVekshin.lab6.client.utils.builder;
 
 import ArsenyVekshin.lab6.client.utils.validators.Validator;
-import ArsenyVekshin.lab6.client.ui.InputHandler;
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleInputHandler;
-import ArsenyVekshin.lab6.client.ui.console.ConsoleOutputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
-import ArsenyVekshin.lab6.client.ui.file.FileInputHandler;
+import ArsenyVekshin.lab6.common.ui.InputHandler;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleInputHandler;
+import ArsenyVekshin.lab6.common.ui.console.ConsoleOutputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.file.FileInputHandler;
 import ArsenyVekshin.lab6.common.collectionElems.data.Entity;
 
 import java.util.HashMap;

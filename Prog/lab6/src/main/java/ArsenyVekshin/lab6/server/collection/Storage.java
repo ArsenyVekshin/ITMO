@@ -4,8 +4,8 @@ import ArsenyVekshin.lab6.common.collectionElems.CSVOperator;
 import ArsenyVekshin.lab6.server.Server;
 import ArsenyVekshin.lab6.common.collectionElems.data.*;
 import ArsenyVekshin.lab6.common.collectionElems.exceptions.*;
-import ArsenyVekshin.lab6.server.ui.file.FileInputHandler;
-import ArsenyVekshin.lab6.server.ui.file.FileOutputHandler;
+import ArsenyVekshin.lab6.common.ui.file.FileInputHandler;
+import ArsenyVekshin.lab6.common.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab6.server.utils.builder.Builder;
 import ArsenyVekshin.lab6.server.utils.builder.ObjTree;
 

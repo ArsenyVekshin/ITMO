@@ -1,8 +1,8 @@
-package ArsenyVekshin.lab6.client.ui.file;
+package ArsenyVekshin.lab6.common.ui.file;
 
-import ArsenyVekshin.lab6.client.ui.OutputHandler;
-import ArsenyVekshin.lab6.client.ui.exeptions.FileAccessRightsException;
-import ArsenyVekshin.lab6.client.ui.exeptions.StreamBrooked;
+import ArsenyVekshin.lab6.common.ui.OutputHandler;
+import ArsenyVekshin.lab6.common.ui.exeptions.FileAccessRightsException;
+import ArsenyVekshin.lab6.common.ui.exeptions.StreamBrooked;
 
 import java.io.*;
 
