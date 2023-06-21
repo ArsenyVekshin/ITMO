@@ -1,15 +1,11 @@
-package ArsenyVekshin.lab7.server.collection;
+package ArsenyVekshin.lab7.server;
 
-import ArsenyVekshin.lab7.common.builder.Builder;
+
 import ArsenyVekshin.lab7.common.builder.ObjTree;
 import ArsenyVekshin.lab7.common.collectionElems.CSVOperator;
 import ArsenyVekshin.lab7.common.collectionElems.data.*;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.InvalidValueEntered;
-import ArsenyVekshin.lab7.common.collectionElems.exceptions.NoneValueFromCSV;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.WrongID;
-import ArsenyVekshin.lab7.common.ui.file.FileInputHandler;
-import ArsenyVekshin.lab7.common.ui.file.FileOutputHandler;
-import ArsenyVekshin.lab7.server.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +14,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
 
@@ -31,13 +24,14 @@ import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
     - CSV load/save functions
  */
 public class Storage<T extends Object> implements CSVOperator {
-
+    public Storage() {
+    }
 
     public String fileName = "none"; //default value
-    private volatile static Vector<Product> collection = new Vector<>();
-    public volatile static String path = null;
-    private volatile static ZonedDateTime creationTime;
-    private volatile static int usersCounter = 0;
+    private static Vector<Product> collection = new Vector<>();
+    public static String path = null;
+    private static ZonedDateTime creationTime;
+    private static int usersCounter = 0;
 
     private static final String defaultFieldForComp = "id";
 
@@ -51,14 +45,6 @@ public class Storage<T extends Object> implements CSVOperator {
         Storage.creationTime = creationTime;
     }
 
-    private static Lock lock = new ReentrantLock();
-
-
-
-    public Storage() {
-        init();
-    }
-
     /**
      * Init collection save-path and automatically load
      */
@@ -67,6 +53,7 @@ public class Storage<T extends Object> implements CSVOperator {
             collection = new Vector<>();
             creationTime = ZonedDateTime.now();
             if (path== null) {
+                //path = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParent() + File.separatorChar + "sysFiles" + File.separatorChar;
                 path = new File(Server.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + File.separatorChar + "sysFiles" + File.separatorChar + "data.csv";
                 System.out.println("""
                         ###########! WARNING !###########
@@ -214,15 +201,13 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param product new value for elem
      * @throws WrongID
      */
-    public void update(long id, Product product) throws WrongID {
-        lock.lock();
+    public static void update(long id, Product product) throws WrongID {
         try {
             int _idx = findIdx((int)id);
             collection.set(_idx, product);
         } catch (WrongID e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
-        lock.unlock();
     }
 
     /**
@@ -230,25 +215,21 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param id product-id to delete
      * @throws WrongID
      */
-    public void remove(int id) throws WrongID {
-        lock.lock();
+    public static void remove(int id) throws WrongID {
         try {
             int _idx = findIdx(id);
             collection.remove(_idx);
         } catch (WrongID e) {
             System.out.println(e.getMessage());
         }
-        lock.unlock();
     }
 
     /**
      * clear collection
      */
     public static void clear() {
-        lock.lock();
         collection.clear();
         usersCounter = 1;
-        lock.unlock();
     }
 
     /**
@@ -272,14 +253,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws CloneNotSupportedException
      */
     public static void insertToPosition(int idx, Product product) throws WrongID, CloneNotSupportedException {
-        lock.lock();
         if (idx < collection.size()) {
             collection.add(product);
             swapPosition(collection.size() - 1, idx);
         } else {
             collection.set(idx, product);
         }
-        lock.unlock();
     }
 
     /**
@@ -287,7 +266,6 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param field field to compare (id/name/price)
      */
     public void sortBy(String field) {
-        lock.lock();
         collection.sort((f1, f2) -> {
             try {
                 compareFields((T) f1.getClass().getDeclaredField(field).get(f1),
@@ -297,16 +275,13 @@ public class Storage<T extends Object> implements CSVOperator {
             }
             return 0;
         });
-        lock.unlock();
     }
 
     /**
      * default collection sort-function
      */
     public void sort(){
-        lock.lock();
         collection.sort(Comparator.naturalOrder());
-        lock.unlock();
     }
 
     /**
@@ -328,14 +303,13 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     public void addIfMax(Product o){
-        lock.lock();
         try {
             if(max().compareTo(o) < 0) return;
             add((Product) o);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
-        lock.unlock();
+
     }
 
     /**
@@ -345,7 +319,6 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     public void removeGreater(Product o) throws NoSuchFieldException, IllegalAccessException {
-        lock.lock();
         Product _max = max();
         if(_max != null) {
             try {
@@ -354,7 +327,8 @@ public class Storage<T extends Object> implements CSVOperator {
                 System.out.println(e.getMessage());
             }
         }
-        lock.unlock();
+
+
     }
 
     /**
@@ -362,12 +336,10 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param unitOfMeasure
      */
     public static void removeSameUnitOfMeasure(UnitOfMeasure unitOfMeasure){
-        lock.lock();
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null || collection.get(i).getUnitOfMeasure() != unitOfMeasure) continue;
             collection.remove(i);
         }
-        lock.unlock();
     }
 
     /**
@@ -459,7 +431,6 @@ public class Storage<T extends Object> implements CSVOperator {
      * save collection to default path
      */
     public void save(){
-        lock.lock();
         try {
             FileOutputHandler file = new FileOutputHandler(path );
             file.println(generateCSV());
@@ -468,16 +439,13 @@ public class Storage<T extends Object> implements CSVOperator {
         } catch (IOException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
-        lock.unlock();
     }
 
     /**
      * load collection from default path
      */
     public void load(){
-        lock.lock();
         load(path);
-        lock.unlock();
     }
 
     /**

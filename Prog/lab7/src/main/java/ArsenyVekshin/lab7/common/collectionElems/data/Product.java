@@ -203,7 +203,6 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
         values.put("price", price);
         values.put("unitOfMeasure", unitOfMeasure);
         values.put("manufacturer", manufacturer);
-
         return values;
     }
 

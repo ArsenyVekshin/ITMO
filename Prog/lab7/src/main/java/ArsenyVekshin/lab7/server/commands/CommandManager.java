@@ -18,13 +18,11 @@ import java.util.Map;
 
 import static ArsenyVekshin.lab7.common.ui.DataFirewall.filterInputString;
 
-public class CommandManager {
+public class CommandManager implements Runnable{
     InputHandler inputHandler = new ConsoleInputHandler();
     private UdpManager udpManager ;
     private AuthManager authManager;
 
-    private final String logFilePath = "";
-    OutputHandler logFile ;
     private Map<String, Command> commands = new HashMap<>();
 
 
@@ -37,11 +35,12 @@ public class CommandManager {
         this.udpManager = udpManager;
         this.authManager = authManager;
         init(collection);
+        new Thread(this).start();
     }
 
     private void init(Storage collection){
         commands.put("info", new CollectionInfoCmd(collection));
-        commands.put("show", new ShowCollectionCmd(collection, udpManager.sendQueue));
+        commands.put("show", new ShowCollectionCmd(collection, udpManager));
         commands.put("clear", new ClearCollectionCmd(collection));
         commands.put("load", new LoadCollectionCmd(collection));
         commands.put("remove_all_by_unit_of_measure", new RemoveByUnitOfMeasureCmd(collection));
@@ -55,12 +54,14 @@ public class CommandManager {
         commands.put("add_if_max", new AddIfMaxCmd(collection));
         commands.put("remove_greater", new RemoveGreaterCmd(collection));
 
+        commands.put("new_user", new AddNewUserCmd(authManager));
     }
 
     /**
      * while true cycle with cmd read->parse->execute
      */
     public void startExecuting(){
+        CommandContainer cmd;
         while (true){
             try {
                 if (inputHandler.available()) {
@@ -69,31 +70,28 @@ public class CommandManager {
 
                     if (raw.isEmpty() || raw.isBlank()) continue;
                     raw = filterInputString(raw);
-                    CommandContainer command = new CommandContainer(raw, null, null);
-                    if(command.getType() == "save" || command.getType() == "load"){
-                        commands.get(command.getType()).execute(command);
-                    }
-                }
-                udpManager.receiveCmd();
-                udpManager.queuesStatus();
-                for (CommandContainer cmd : udpManager.receivedQueue) {
-
-                    if (commands.containsKey(cmd.getType())
-                        || authManager.isAuthorised(cmd.getUser())){
+                    cmd = new CommandContainer(raw, null, null);
+                    if(cmd.getType() == "save" || cmd.getType() == "load"){
                         commands.get(cmd.getType()).execute(cmd);
-                        udpManager.sendQueue.add(cmd);
                     }
                 }
-                udpManager.receivedQueue.clear();
 
-                udpManager.queuesStatus();
-                udpManager.sendCmd();
-            } catch (IOException e) {
+                cmd = udpManager.getCommand();
+                while (cmd != null) {
+                    if (commands.containsKey(cmd.getType()) || authManager.isAuthorised(cmd.getUser())){
+                        commands.get(cmd.getType()).execute(cmd);
+                        udpManager.addCallBack(cmd);
+                    }
+                }
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
 
-
+    @Override
+    public void run() {
+        startExecuting();
+    }
 }

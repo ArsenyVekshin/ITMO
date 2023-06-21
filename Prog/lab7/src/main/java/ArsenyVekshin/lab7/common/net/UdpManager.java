@@ -11,31 +11,31 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static ArsenyVekshin.lab7.common.tools.DebugPrints.*;
 
-public class UdpManager {
+public class UdpManager implements Runnable{
     public static final int SERVICE_PORT = 5000;
 
-    public static ArrayList<CommandContainer> sendQueue = new ArrayList<>(); // queue of cmd to send
-    public static ArrayList<CommandContainer> receivedQueue = new ArrayList<>(); // queue of answers which already received
+    public volatile static ArrayList<CommandContainer> sendQueue = new ArrayList<>(); // queue of cmd to send
+    public volatile static ArrayList<CommandContainer> receivedQueue = new ArrayList<>(); // queue of answers which already received
 
-    private static int callbackWaitList = 0;
+    private volatile static int callbackWaitList = 0;
 
     private final int bufferSize = 20*1024;
-    //private ByteBuffer  messageBuff = ByteBuffer.allocate(bufferSize);
+    private volatile boolean isServer = false;
+    public volatile InetSocketAddress targetAddress; //адрес сервера(еси клиент)
+    public volatile static InetSocketAddress userAddress; //адрес данного узла
 
-    private boolean isServer = false;
-    public InetSocketAddress targetAddress; //адрес сервера(еси клиент)
-    public static InetSocketAddress userAddress; //адрес данного узла
+    private volatile static DatagramChannel channel;
 
-    DatagramChannel channel ;
+    private volatile static Selector selector;
 
-    Selector selector;
+    private Lock lock = new ReentrantLock();
 
     public UdpManager(InetSocketAddress userAddress) throws IOException {
         this(userAddress, userAddress);
@@ -72,6 +72,7 @@ public class UdpManager {
 
         selector = Selector.open();
         channel.register(selector, SelectionKey.OP_READ);
+        new Thread(this).start();
     }
 
     /***
@@ -213,4 +214,46 @@ public class UdpManager {
         }
     }
 
+    @Override
+    public void run() {
+        while (true){
+            receiveCmd();
+            sendCmd();
+        }
+    }
+
+    /***
+     * Получить новую команду для исполнения
+     * @return команда
+     */
+    public CommandContainer getCommand(){
+        lock.lock();
+        CommandContainer cmd = null;
+
+        if(!receivedQueue.isEmpty()) {
+            cmd = receivedQueue.get(0).clone();
+            receivedQueue.remove(0);
+        }
+
+        lock.unlock();
+        return cmd;
+    }
+
+    public void addCallBack(CommandContainer cmd){
+        lock.lock();
+        sendQueue.add(cmd);
+        lock.unlock();
+    }
+
+    public void addCallBackToPos(CommandContainer cmd, int idx){
+        lock.lock();
+        sendQueue.add(idx, cmd);
+        lock.unlock();
+    }
+
+    public void addGroupFlag(){
+        CommandContainer groupReceiveCmd = new CommandContainer("groupReceive", userAddress, targetAddress);
+        groupReceiveCmd.setReturns(sendQueue.size());
+        sendQueue.add(0, groupReceiveCmd);
+    }
 }

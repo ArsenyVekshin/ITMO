@@ -18,6 +18,8 @@ public class User  implements Serializable {
         setPassword(password);
     }
 
+    public User() {}
+
     public void setPassword(String password) {
         this.password = getSHA(password);
     }
@@ -41,5 +43,9 @@ public class User  implements Serializable {
     @Override
     public String toString() {
         return  getLogin();
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }
