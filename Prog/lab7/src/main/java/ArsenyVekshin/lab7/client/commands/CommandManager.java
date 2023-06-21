@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ArsenyVekshin.lab7.common.tools.DebugPrints.debugPrintln;
 import static ArsenyVekshin.lab7.common.tools.FilesTools.getAbsolutePath;
 import static ArsenyVekshin.lab7.common.ui.DataFirewall.filterInputString;
 
@@ -105,7 +106,7 @@ public class CommandManager {
 
     public void startExecuting(boolean isSendDelay) throws StreamBrooked {
         if(authManager.getUser() == null)
-            authManager.genUser(inputHandler, outputHandler);
+            authManager.logUser();
 
         while (true) {
             try {
@@ -186,6 +187,7 @@ public class CommandManager {
             commands.get(cmd.getType()).execute(cmd);
             if (!cmd.getArgs().contains("h")) {
                 //System.out.println("send " + cmd.toString());
+                debugPrintln("send " + cmd.toString());
                 udpManager.addCallBack(cmd);
             }
         }
@@ -206,6 +208,7 @@ public class CommandManager {
                 System.out.println("received " + cmd.toString());
                 if(cmd.isNeedToRecall() && cmd.getErrors()==null) {
                     executeCommand(cmd);
+                    debugPrintln("send " + cmd.toString());
                     udpManager.addCallBack(cmd);
                 }
             } catch (StreamBrooked e) {

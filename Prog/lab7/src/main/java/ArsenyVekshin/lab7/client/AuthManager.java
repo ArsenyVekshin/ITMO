@@ -26,6 +26,10 @@ public class AuthManager {
         return genUser(new ConsoleInputHandler(), new ConsoleOutputHandler());
     }
 
+    public void logUser(){
+        user = genUser();
+    }
+
     /***
      * Диалог создания нового пользователя
      * @param inputHandler поток ввода

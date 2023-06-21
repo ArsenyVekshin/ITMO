@@ -4,13 +4,14 @@ import ArsenyVekshin.lab7.common.collectionElems.data.Entity;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.Supplier;
 
-import static ArsenyVekshin.lab7.common.security.Encoder.getSHA;
+import static ArsenyVekshin.lab7.common.security.Encoder.getSHAString;
 
 public class User extends Entity implements Serializable {
     private String login; //также является уникальным ключом
-    private byte[] password; // закодированный пароль
+    private String password; // закодированный пароль
 
     /***
      * Конструктор класса
@@ -25,10 +26,10 @@ public class User extends Entity implements Serializable {
     public User() {}
 
     public void setPassword(String password) {
-        this.password = getSHA(password);
+        this.password = getSHAString(password);
     }
 
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -40,8 +41,8 @@ public class User extends Entity implements Serializable {
     public boolean equals(Object obj) {
         if(obj.getClass() != this.getClass()) return false;
         User u = (User) obj;
-        return getPassword() == u.getPassword() &&
-                getLogin() == u.getLogin();
+        return Objects.equals(getPassword(), u.getPassword()) &&
+                Objects.equals(getLogin(), u.getLogin());
     }
 
     @Override
@@ -56,7 +57,7 @@ public class User extends Entity implements Serializable {
     @Override
     public void init(HashMap<String, Object> values) {
         if(values.containsKey("login")) this.login = (String) values.get("login");
-        if(values.containsKey("password")) this.password = (byte[]) values.get("password");
+        if(values.containsKey("password")) this.password = (String) values.get("password");
     }
 
     @Override

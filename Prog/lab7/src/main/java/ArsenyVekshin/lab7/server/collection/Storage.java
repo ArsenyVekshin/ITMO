@@ -7,6 +7,7 @@ import ArsenyVekshin.lab7.common.collectionElems.data.*;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.InvalidValueEntered;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.NoneValueFromCSV;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.WrongID;
+import ArsenyVekshin.lab7.common.exceptions.AccessRightsException;
 import ArsenyVekshin.lab7.common.ui.file.FileInputHandler;
 import ArsenyVekshin.lab7.common.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab7.server.Database.DataBaseManager;
@@ -58,6 +59,7 @@ public class Storage<T extends Object> implements CSVOperator {
 
 
     public Storage(DataBaseManager dataBaseManager) {
+        this.dataBaseManager = dataBaseManager;
         dataBaseManager.setCollection(collection);
         init();
     }
@@ -193,11 +195,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param product Product-obj to add
      */
     public static void addNew(Product product) {
+        lock.lock();
         collection.add(product);
         dataBaseManager.insert(product);
         collection.lastElement().generateID(usersCounter);
         usersCounter++;
-
+        lock.unlock();
     }
 
     /**
@@ -213,20 +216,53 @@ public class Storage<T extends Object> implements CSVOperator {
     }
 
     /**
+     * Владеет ли этот пользователь объектом?
+     * @param id id объекта
+     * @param redactor пользователь на проверку
+     * @return bool
+     */
+    public boolean checkOwnership(long id, String redactor){
+        try {
+            int _idx = findIdx((int)id);
+            return collection.get(_idx).getOwner().equals(redactor);
+        } catch (WrongID e) {
+            return false;
+        }
+    }
+
+    /**
+     * Владеет ли этот пользователь объектом?
+     * @param product новый объект (обязательно совпадение по id)
+     * @param redactor пользователь на проверку
+     * @return bool
+     */
+    public boolean checkOwnership(Product product, String redactor){
+        try {
+            int _idx = findIdx(product.getId());
+            return collection.get(_idx).getOwner().equals(redactor);
+        } catch (WrongID e) {
+            return false;
+        }
+    }
+
+    /**
      * Update fields on set-id collection elem
      * @param id id of product to update
      * @param product new value for elem
      * @throws WrongID
      */
-    public void update(long id, Product product) throws WrongID {
+    public void update(long id, Product product, String redactor) throws WrongID, AccessRightsException {
         lock.lock();
-        try {
-            int _idx = findIdx((int)id);
-            collection.set(_idx, product);
-            dataBaseManager.update(product);
-        } catch (WrongID e) {
-            System.out.println(e.getMessage());
+
+        int _idx = findIdx((int)id);
+        if(!collection.get(_idx).getOwner().equals(redactor)) {
+            lock.unlock();
+            throw new AccessRightsException("изменение объекта доступно лишь создателю");
         }
+
+        collection.set(_idx, product);
+        dataBaseManager.update(product);
+
         lock.unlock();
     }
 
@@ -235,15 +271,18 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param id product-id to delete
      * @throws WrongID
      */
-    public void remove(int id) throws WrongID {
+    public void remove(int id, String redactor) throws WrongID, AccessRightsException {
         lock.lock();
-        try {
-            int _idx = findIdx(id);
-            dataBaseManager.delete(collection.get(_idx));
-            collection.remove(_idx);
-        } catch (WrongID e) {
-            System.out.println(e.getMessage());
+
+        int _idx = findIdx(id);
+        if(!collection.get(_idx).getOwner().equals(redactor)) {
+            lock.unlock();
+            throw new AccessRightsException("изменение объекта доступно лишь создателю");
         }
+
+        dataBaseManager.delete(collection.get(_idx));
+        collection.remove(_idx);
+
         lock.unlock();
     }
 
@@ -352,16 +391,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void removeGreater(Product o) throws NoSuchFieldException, IllegalAccessException {
+    public void removeGreater(Product o, String redactor) throws NoSuchFieldException, IllegalAccessException, AccessRightsException, WrongID {
         lock.lock();
         Product _max = max();
         if(_max != null) {
-            try {
-                dataBaseManager.delete(_max);
-                remove(_max.getId());
-            } catch (WrongID e) {
-                System.out.println(e.getMessage());
-            }
+            dataBaseManager.delete(_max);
+            remove(_max.getId(), redactor);
         }
         lock.unlock();
     }
@@ -370,14 +405,21 @@ public class Storage<T extends Object> implements CSVOperator {
      * remove all elems with the same unitOfMeasure
      * @param unitOfMeasure
      */
-    public static void removeSameUnitOfMeasure(UnitOfMeasure unitOfMeasure){
+    public static void removeSameUnitOfMeasure(UnitOfMeasure unitOfMeasure, String redactor) throws AccessRightsException {
         lock.lock();
+        boolean accessErrorFlag = false;
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null || collection.get(i).getUnitOfMeasure() != unitOfMeasure) continue;
+
+            if(!collection.get(i).getOwner().equals(redactor))
+                accessErrorFlag = true;
+
             dataBaseManager.delete(collection.get(i));
             collection.remove(i);
         }
         lock.unlock();
+        if(accessErrorFlag)
+            throw new AccessRightsException("изменение объекта доступно лишь создателю");
     }
 
     /**

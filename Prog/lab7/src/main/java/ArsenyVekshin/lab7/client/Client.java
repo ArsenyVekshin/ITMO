@@ -4,6 +4,7 @@ import ArsenyVekshin.lab7.client.commands.CommandManager;
 import ArsenyVekshin.lab7.common.builder.ObjTree;
 import ArsenyVekshin.lab7.common.collectionElems.data.Product;
 import ArsenyVekshin.lab7.common.net.UdpManager;
+import ArsenyVekshin.lab7.common.security.Encoder;
 import ArsenyVekshin.lab7.common.ui.InputHandler;
 import ArsenyVekshin.lab7.common.ui.OutputHandler;
 import ArsenyVekshin.lab7.common.ui.console.ConsoleInputHandler;

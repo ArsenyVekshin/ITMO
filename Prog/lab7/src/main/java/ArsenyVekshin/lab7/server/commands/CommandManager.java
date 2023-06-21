@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
+import static ArsenyVekshin.lab7.common.tools.DebugPrints.debugPrintln;
 import static ArsenyVekshin.lab7.common.ui.DataFirewall.filterInputString;
 
 public class CommandManager implements Runnable{
@@ -83,9 +84,12 @@ public class CommandManager implements Runnable{
 
                 cmd = udpManager.getCommand();
                 if (cmd != null) {
+                    debugPrintln("got " + cmd.toString());
+                    debugPrintln("authorized = " + authManager.isAuthorised(cmd.getUser()));
                     if (commands.containsKey(cmd.getType())){
-                        if(Objects.equals(cmd.getType(), "login") || authManager.isAuthorised(cmd.getUser())){
+                        if(authManager.isAuthorised(cmd.getUser()) || Objects.equals(cmd.getType(), "login")){
                             commands.get(cmd.getType()).execute(cmd);
+                            debugPrintln("send " + cmd.toString());
                             udpManager.addCallBack(cmd);
                         }
                     }

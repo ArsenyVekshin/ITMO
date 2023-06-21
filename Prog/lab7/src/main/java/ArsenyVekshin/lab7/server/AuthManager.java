@@ -23,7 +23,12 @@ public class AuthManager {
     }
 
     public boolean isAuthorised(User user){
-        return userSet.contains(user);
+        //return userSet.contains(user);
+        for(User _user: userSet){
+            if(_user.equals(user))
+                return true;
+        }
+        return false;
     }
 
     /***

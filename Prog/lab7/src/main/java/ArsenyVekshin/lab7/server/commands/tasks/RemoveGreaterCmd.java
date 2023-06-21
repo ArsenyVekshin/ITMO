@@ -14,7 +14,7 @@ public class RemoveGreaterCmd extends DataCmd {
     @Override
     public boolean execute(CommandContainer cmd) {
         try{
-            collection.removeGreater((Product) cmd.getReturns());
+            collection.removeGreater((Product) cmd.getReturns(), cmd.getUser().getLogin());
             cmd.setReturns("done");
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());

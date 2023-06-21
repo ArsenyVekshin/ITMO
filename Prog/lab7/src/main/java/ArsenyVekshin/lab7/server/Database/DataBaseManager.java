@@ -16,6 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DataBaseManager {
 
+    private final boolean ENABLE = false;
     private Set<User> userSet; // коллекция пользователей
     private  Vector<Product> collection;
     private ZonedDateTime lastUpdateTime;
@@ -45,6 +46,7 @@ public class DataBaseManager {
      * Считать коллекцию с базы данных
      */
     public void loadCollectionFromBase(){
+        if(!ENABLE) return;
         lock.lock();
         ResultSet resultSet = sqlManager.getRaw("SELECT product.*, users.username FROM product JOIN users ON product.user_id = users.id ORDER BY name ASC;");
         if (resultSet == null) return;
@@ -71,6 +73,7 @@ public class DataBaseManager {
      * Считать данные всех пользователей с базы данных
      */
     public void loadUsersListFromBase(){
+        if(!ENABLE) return;
         lock.lock();
         ResultSet resultSet = sqlManager.getRaw("SELECT username, password FROM users;");
         if (resultSet == null) return;
@@ -92,6 +95,7 @@ public class DataBaseManager {
      * Считать пользователей и коллекцию с базы данных
      */
     public void updateAll(){
+        if(!ENABLE) return;
         lock.lock();
         loadCollectionFromBase();
         loadUsersListFromBase();
@@ -99,6 +103,7 @@ public class DataBaseManager {
     }
 
     public void insert(Product product){
+        if(!ENABLE) return;
         lock.lock();
         try{
             String out ="INSERT INTO product values " + getElemValuesLine(product) + ";";
@@ -114,6 +119,7 @@ public class DataBaseManager {
     }
 
     public void delete(Product product){
+        if(!ENABLE) return;
         lock.lock();
         try{
             boolean result = sqlManager.sendRaw("DELETE FROM product WHERE id=" + product.getId() +";");
@@ -126,6 +132,7 @@ public class DataBaseManager {
     }
 
     public void clear(){
+        if(!ENABLE) return;
         lock.lock();
         try{
             boolean result = sqlManager.sendRaw("DELETE * FROM product;");
@@ -138,6 +145,7 @@ public class DataBaseManager {
     }
 
     public void update(Product product){
+        if(!ENABLE) return;
         lock.lock();
         try{
             delete(product);
@@ -159,6 +167,7 @@ public class DataBaseManager {
     }
 
     public void addUser(User user){
+        if(!ENABLE) return;
         lock.lock();
         try{
             String out ="INSERT INTO users values " + getElemValuesLine(user) + ";";

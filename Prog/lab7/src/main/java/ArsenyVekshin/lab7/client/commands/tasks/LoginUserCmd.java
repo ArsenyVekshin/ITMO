@@ -19,6 +19,7 @@ public class LoginUserCmd extends DialogueCmd {
     public boolean execute(CommandContainer cmd) {
         if(cmd.getArgs().contains("h")) { help(); return true;}
         authManager.authDialogue(inputStream, outputStream);
+        cmd.setUser(authManager.getUser());
         return true;
     }
 

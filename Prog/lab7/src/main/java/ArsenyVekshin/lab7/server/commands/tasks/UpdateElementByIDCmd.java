@@ -20,7 +20,7 @@ public class UpdateElementByIDCmd extends DataCmd {
 
             if(cmd.getReturns() == null)cmd.setReturns(collection.getElemById((int)_id));
             else {
-                collection.update(_id, (Product) cmd.getReturns());
+                collection.update(_id, (Product) cmd.getReturns(), cmd.getUser().getLogin());
                 collection.sort();
             }
         } catch (Exception e) {

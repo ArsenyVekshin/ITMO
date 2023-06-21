@@ -20,5 +20,9 @@ public class Encoder {
         BigInteger number = new BigInteger(1, hash);
         return number.toString(16);
     }
+
+    public static String getSHAString(String input){
+        return toHexString(getSHA(input));
+    }
 }
 
