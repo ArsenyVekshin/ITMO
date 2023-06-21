@@ -1,6 +1,7 @@
 package ArsenyVekshin.lab7.server;
 
 import ArsenyVekshin.lab7.common.net.UdpManager;
+import ArsenyVekshin.lab7.server.Database.DataBaseManager;
 import ArsenyVekshin.lab7.server.commands.CommandManager;
 import ArsenyVekshin.lab7.server.collection.Storage;
 
@@ -17,9 +18,12 @@ public class Server {
     public static void main(String[] args){
         try{
 
-            Storage collection = new Storage();
+
 
             AuthManager authManager = new AuthManager();
+            DataBaseManager dataBaseManager = new DataBaseManager();
+
+            Storage collection = new Storage(dataBaseManager);
 
             if(args.length==0){
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
@@ -30,8 +34,7 @@ public class Server {
 
             net = new UdpManager(serverAddress);
             debugPrintln("server begins at " + serverAddress);
-            CommandManager commandManager = new CommandManager(collection, net, authManager);
-            commandManager.startExecuting();
+            CommandManager commandManager = new CommandManager(collection, net, authManager, dataBaseManager);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -34,7 +34,7 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
     private UnitOfMeasure unitOfMeasure; //Поле может быть null
     private Organization manufacturer; //Поле может быть null
 
-    private User owner;
+    private String owner;
 
     public Product(){}
 
@@ -131,11 +131,11 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
         return creationDate;
     }
 
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
     //endregion GET_SET functions
@@ -157,7 +157,7 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
     @Override
     public String toString(){
         String out = "Product(" +
-                "\n\towner=" + owner.getLogin() +
+                "\n\towner=" + owner +
                 "\n\tid=" + id +
                 "\n\tname=" + name +
                 "\n\tcoordinates=" + coordinates.toString() +
@@ -191,6 +191,7 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
         this.price = (float) values.get("price");
         if(values.containsKey("unitOfMeasure")) this.unitOfMeasure = (UnitOfMeasure) values.get("unitOfMeasure");
         if(values.containsKey("manufacturer")) this.manufacturer = (Organization) values.get("manufacturer");
+        this.owner = (String) values.get("owner");
     }
 
     @Override
@@ -203,6 +204,7 @@ public class Product extends Entity implements Cloneable, CSVOperator, Serializa
         values.put("price", price);
         values.put("unitOfMeasure", unitOfMeasure);
         values.put("manufacturer", manufacturer);
+        values.put("owner", owner);
         return values;
     }
 

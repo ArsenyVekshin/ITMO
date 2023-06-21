@@ -25,4 +25,8 @@ public class AuthManager {
             throw new AccessRightsException("добавление новых пользователей доступно только администраторам");
         userSet.add(newUser);
     }
+
+    public Set<User> getUserSet() {
+        return userSet;
+    }
 }

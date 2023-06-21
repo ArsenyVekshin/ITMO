@@ -13,10 +13,8 @@ public class LoadCollectionCmd extends DataCmd {
     @Override
     public boolean execute(CommandContainer cmd) {
         try{
-            if(cmd.getArgs().isEmpty()) collection.load();
-            else collection.load(cmd.getArgs().get(0));
+            collection.load();
             collection.sort();
-            collection.save();
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());
         }

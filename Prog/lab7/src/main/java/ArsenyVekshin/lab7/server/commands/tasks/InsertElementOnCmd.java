@@ -19,7 +19,6 @@ public class InsertElementOnCmd extends DataCmd {
             cmd.setReturns("done");
 
             collection.sort();
-            collection.save();
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());
         }

@@ -15,7 +15,6 @@ public class AddIfMaxCmd extends DataCmd {
     public boolean execute(CommandContainer cmd) {
         if(cmd.getReturns()!=null) collection.addIfMax((Product) cmd.getReturns());
         collection.sort();
-        collection.save();
         cmd.setReturns("done");
         return true;
     }

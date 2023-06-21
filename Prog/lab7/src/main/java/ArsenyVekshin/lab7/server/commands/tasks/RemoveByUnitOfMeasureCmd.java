@@ -17,7 +17,6 @@ public class RemoveByUnitOfMeasureCmd extends DataCmd {
         try {
             if(cmd.getArgs().size()==0) throw new WrongCmdParam("параметр не найден");
             collection.removeSameUnitOfMeasure(UnitOfMeasure.valueOf(cmd.getArgs().get(0)));
-            collection.save();
             cmd.setReturns("done");
         } catch (Exception  e) {
             cmd.setErrors(e.getMessage());

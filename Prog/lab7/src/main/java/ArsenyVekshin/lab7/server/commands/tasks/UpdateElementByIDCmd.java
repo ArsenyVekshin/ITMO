@@ -22,7 +22,6 @@ public class UpdateElementByIDCmd extends DataCmd {
             else {
                 collection.update(_id, (Product) cmd.getReturns());
                 collection.sort();
-                collection.save();
             }
         } catch (Exception e) {
             cmd.setErrors(e.getMessage());

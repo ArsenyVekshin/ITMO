@@ -9,6 +9,8 @@ import ArsenyVekshin.lab7.common.collectionElems.exceptions.NoneValueFromCSV;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.WrongID;
 import ArsenyVekshin.lab7.common.ui.file.FileInputHandler;
 import ArsenyVekshin.lab7.common.ui.file.FileOutputHandler;
+import ArsenyVekshin.lab7.server.Database.DataBaseManager;
+import ArsenyVekshin.lab7.server.Database.SQLManager;
 import ArsenyVekshin.lab7.server.Server;
 
 import java.io.File;
@@ -32,6 +34,7 @@ import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
  */
 public class Storage<T extends Object> implements CSVOperator {
 
+    private static DataBaseManager dataBaseManager;
 
     public String fileName = "none"; //default value
     private volatile static Vector<Product> collection = new Vector<>();
@@ -54,8 +57,8 @@ public class Storage<T extends Object> implements CSVOperator {
     private static Lock lock = new ReentrantLock();
 
 
-
-    public Storage() {
+    public Storage(DataBaseManager dataBaseManager) {
+        dataBaseManager.setCollection(collection);
         init();
     }
 
@@ -87,7 +90,7 @@ public class Storage<T extends Object> implements CSVOperator {
                         #################################
                         """);
             }
-            load();
+            dataBaseManager.loadCollectionFromBase();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -192,6 +195,7 @@ public class Storage<T extends Object> implements CSVOperator {
      */
     public static void addNew(Product product) {
         collection.add(product);
+        dataBaseManager.insert(product);
         collection.lastElement().generateID(usersCounter);
         usersCounter++;
 
@@ -203,6 +207,7 @@ public class Storage<T extends Object> implements CSVOperator {
      */
     public static void addNew(HashMap<String, Object> tree) {
         collection.add(new Product(tree));
+        dataBaseManager.insert(new Product(tree));
         collection.lastElement().generateID(usersCounter);
         usersCounter++;
 
@@ -219,8 +224,9 @@ public class Storage<T extends Object> implements CSVOperator {
         try {
             int _idx = findIdx((int)id);
             collection.set(_idx, product);
+            dataBaseManager.update(product);
         } catch (WrongID e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         lock.unlock();
     }
@@ -234,6 +240,7 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         try {
             int _idx = findIdx(id);
+            dataBaseManager.delete(collection.get(_idx));
             collection.remove(_idx);
         } catch (WrongID e) {
             System.out.println(e.getMessage());
@@ -275,6 +282,7 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         if (idx < collection.size()) {
             collection.add(product);
+            dataBaseManager.insert(product);
             swapPosition(collection.size() - 1, idx);
         } else {
             collection.set(idx, product);
@@ -331,7 +339,8 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         try {
             if(max().compareTo(o) < 0) return;
-            add((Product) o);
+            add(o);
+            dataBaseManager.insert(o);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
         }
@@ -349,6 +358,7 @@ public class Storage<T extends Object> implements CSVOperator {
         Product _max = max();
         if(_max != null) {
             try {
+                dataBaseManager.delete(_max);
                 remove(_max.getId());
             } catch (WrongID e) {
                 System.out.println(e.getMessage());
@@ -365,6 +375,7 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null || collection.get(i).getUnitOfMeasure() != unitOfMeasure) continue;
+            dataBaseManager.delete(collection.get(i));
             collection.remove(i);
         }
         lock.unlock();
@@ -388,113 +399,8 @@ public class Storage<T extends Object> implements CSVOperator {
         return collection.stream().sorted().map(Product::getPrice).reduce(0f, Float::sum);
     }
 
-    /**
-     * Parse csv-file to collection
-     * @param input collection DB-file
-     * @throws NoneValueFromCSV
-     */
-    public void parseCSV(String input) throws NoneValueFromCSV {
-        if (input.isEmpty()) throw new NoneValueFromCSV("FILE CONTAINS NULL");
-        collection.clear();
-        String[] data = input.split("\n");
-
-        String[] markup = data[0].split(", ");
-        HashMap<String, String> dataMap = new HashMap<String, String>();
-
-        for (String s : markup) {
-            dataMap.put(s, "");
-        }
-
-        for(int i=1; i < data.length; i++) {
-            if (data[i].isEmpty()) continue;
-            String[] line = data[i].split(", ");
-
-
-            try {
-                if (line.length != 13)
-                    throw new NoneValueFromCSV(data[i] + " - line " + (i + 1));
-
-                for (int j = 0; j < markup.length; j++) {
-                    dataMap.replace(markup[j], line[j]);
-                }
-
-                Builder builder = new Builder();
-                Product newElem = builder.buildByStringMap(productTree, dataMap);
-                if(newElem == null) System.out.println("error in csv-import: " + data[i]);
-                else add(newElem);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * generate csv collection DB-file
-     * @return
-     */
-    @Override
-    public String generateCSV() {
-        StringBuilder out = new StringBuilder("id" +
-                ", name" +
-                ", coordinates x" +
-                ", coordinates y" +
-                ", creationDate" +
-                ", price" +
-                ", unitOfMeasure" +
-                ", manufacturer id" +
-                ", manufacturer name" +
-                ", manufacturer annualTurnover" +
-                ", manufacturer type" +
-                ", manufacturer postalAddress street" +
-                ", manufacturer postalAddress zipCode" + "\n");
-
-        for (Product product : collection) {
-            if (product == null) continue;
-            out.append(product.generateCSV() + "\n");
-        }
-        return out.toString();
-    }
-
-    /**
-     * save collection to default path
-     */
-    public void save(){
-        lock.lock();
-        try {
-            FileOutputHandler file = new FileOutputHandler(path );
-            file.println(generateCSV());
-            file.close();
-            System.out.println("file saved at: " + path );
-        } catch (IOException e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
-        }
-        lock.unlock();
-    }
-
-    /**
-     * load collection from default path
-     */
     public void load(){
-        lock.lock();
-        load(path);
-        lock.unlock();
-    }
-
-    /**
-     * load collection from path
-     * @param newPath DB-file path
-     */
-    public void load(String newPath){
-        try {
-            FileInputHandler file = new FileInputHandler(newPath);
-            StringBuilder buff = new StringBuilder();
-            while (file.hasNextLine())
-                buff.append(file.get() + "\n");
-            parseCSV(buff.toString());
-            file.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        dataBaseManager.loadCollectionFromBase();
     }
 
     @Override
