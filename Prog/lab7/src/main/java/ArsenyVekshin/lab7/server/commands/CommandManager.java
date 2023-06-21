@@ -13,6 +13,7 @@ import ArsenyVekshin.lab7.server.commands.tasks.parents.Command;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 import static ArsenyVekshin.lab7.common.ui.DataFirewall.filterInputString;
@@ -35,9 +36,9 @@ public class CommandManager implements Runnable{
     public CommandManager(Storage collection, UdpManager udpManager, AuthManager authManager, DataBaseManager dataBaseManager){
         this.udpManager = udpManager;
         this.authManager = authManager;
-        init(collection);
         this.dataBaseManager = dataBaseManager;
         dataBaseManager.setUserSet(authManager.getUserSet());
+        init(collection);
         new Thread(this).start();
     }
 
@@ -58,6 +59,7 @@ public class CommandManager implements Runnable{
         commands.put("remove_greater", new RemoveGreaterCmd(collection));
 
         commands.put("new_user", new AddNewUserCmd(authManager));
+        commands.put("login", new LoginUserCmd(authManager));
     }
 
     /**
@@ -80,10 +82,12 @@ public class CommandManager implements Runnable{
                 }
 
                 cmd = udpManager.getCommand();
-                while (cmd != null) {
-                    if (commands.containsKey(cmd.getType()) || authManager.isAuthorised(cmd.getUser())){
-                        commands.get(cmd.getType()).execute(cmd);
-                        udpManager.addCallBack(cmd);
+                if (cmd != null) {
+                    if (commands.containsKey(cmd.getType())){
+                        if(Objects.equals(cmd.getType(), "login") || authManager.isAuthorised(cmd.getUser())){
+                            commands.get(cmd.getType()).execute(cmd);
+                            udpManager.addCallBack(cmd);
+                        }
                     }
                 }
             } catch (Exception e) {

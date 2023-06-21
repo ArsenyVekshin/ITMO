@@ -17,11 +17,9 @@ public class Server {
 
     public static void main(String[] args){
         try{
-
-
-
             AuthManager authManager = new AuthManager();
             DataBaseManager dataBaseManager = new DataBaseManager();
+            dataBaseManager.setUserSet(authManager.getUserSet());
 
             Storage collection = new Storage(dataBaseManager);
 
@@ -33,7 +31,7 @@ public class Server {
             }
 
             net = new UdpManager(serverAddress);
-            debugPrintln("server begins at " + serverAddress);
+            dataBaseManager.updateAll();
             CommandManager commandManager = new CommandManager(collection, net, authManager, dataBaseManager);
         } catch (Exception e) {
             System.out.println(e.getMessage());

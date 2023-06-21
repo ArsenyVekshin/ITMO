@@ -79,39 +79,45 @@ public class UdpManager implements Runnable{
      * Отправка всех готовых пакетов адресатам
      */
     public void sendCmd(){
-        if(sendQueue.size()==0) return;
-        debugPrintln("commands num to send " + sendQueue.size());
-        ArrayList<CommandContainer> successfulSent = new ArrayList<>();
+        lock.lock();
 
-        for(CommandContainer cmd: sendQueue){
-            try{
-                if(cmd.getSource() == null || cmd.getTarget()==null){
+        if(!(sendQueue.size() ==0)) {
+            //debugPrintln("commands num to send " + sendQueue.size());
+            //queuesStatus();
+            ArrayList<CommandContainer> successfulSent = new ArrayList<>();
+
+            for (CommandContainer cmd : sendQueue) {
+                try {
+                    if (cmd.getSource() == null || cmd.getTarget() == null) {
+                        successfulSent.add(cmd);
+                        continue;
+                    }
+
+                    ByteBuffer messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
+
+                    if (isServer) {
+                        channel.send(messageBuff, cmd.getSource());
+                    } else {
+                        channel.send(messageBuff, cmd.getTarget());
+                    }
                     successfulSent.add(cmd);
-                    continue;
-                }
+                    System.out.println("Отправлен пакет размера " + messageBuff.array().length);
 
-                ByteBuffer messageBuff = ByteBuffer.wrap(ObjectSerializer.serializeObject(cmd));
-
-                if(isServer) {
-                    channel.send(messageBuff, cmd.getSource());
+                } catch (Exception e) {
+                    System.out.println("Ошибка при отправке пакета " + e.getMessage() + " " + e.getClass());
                 }
-                else {
-                    channel.send(messageBuff, cmd.getTarget());
-                }
-                successfulSent.add(cmd);
-                System.out.println("Отправлен пакет размера " + messageBuff.array().length);
-
-            } catch (Exception e) {
-                System.out.println("Ошибка при отправке пакета " + e.getMessage() + " " + e.getClass());
             }
+            sendQueue.removeAll(successfulSent);
         }
-        sendQueue.removeAll(successfulSent);
+        lock.unlock();
     }
 
     /***
      * Чтение 1 пакета через UDP
      */
     public void receiveCmd(){
+        lock.lock();
+        //queuesStatus();
         try{
             selector.selectNow();
 
@@ -137,6 +143,7 @@ public class UdpManager implements Runnable{
             debugPrintln("Ошибка получения пакета: " + e.getMessage() + " " + e.getClass());
             e.printStackTrace();
         }
+        lock.unlock();
     }
 
     /***
@@ -158,6 +165,7 @@ public class UdpManager implements Runnable{
      * Команды от других источников будут добавлены в очередь перед ними
      */
     public void groupReceiveProcessor(){
+        lock.lock();
         if(Objects.equals(getLastReceivedCmd().getType(), "groupReceive")){
             System.out.println("founded flag for group-listening");
             System.out.println(getLastReceivedCmd().toString());
@@ -187,6 +195,7 @@ public class UdpManager implements Runnable{
             System.out.println("-done");
             receivedQueue.addAll(buffQueue);
         }
+        lock.unlock();
     }
 
     private CommandContainer getLastReceivedCmd(){
@@ -241,19 +250,23 @@ public class UdpManager implements Runnable{
 
     public void addCallBack(CommandContainer cmd){
         lock.lock();
+        //System.out.println("Новая команда готова к отправке: " + cmd.getType());
         sendQueue.add(cmd);
         lock.unlock();
     }
 
     public void addCallBackToPos(CommandContainer cmd, int idx){
         lock.lock();
+        //System.out.println("Новая команда готова к отправке: " + cmd.getType() + " " + idx);
         sendQueue.add(idx, cmd);
         lock.unlock();
     }
 
     public void addGroupFlag(){
+        lock.lock();
         CommandContainer groupReceiveCmd = new CommandContainer("groupReceive", userAddress, targetAddress);
         groupReceiveCmd.setReturns(sendQueue.size());
         sendQueue.add(0, groupReceiveCmd);
+        lock.unlock();
     }
 }

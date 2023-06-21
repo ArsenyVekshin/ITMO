@@ -16,6 +16,7 @@ import static ArsenyVekshin.lab7.common.tools.DebugPrints.*;
 
 
 public class Client {
+    public static AuthManager authManager;
     public static UdpManager net;
     public static InetSocketAddress serverAddress;
     public static InetSocketAddress userAddress;
@@ -40,7 +41,8 @@ public class Client {
             inputHandler = new ConsoleInputHandler();
             outputHandler = new ConsoleOutputHandler();
 
-            CommandManager commandManager = new CommandManager(inputHandler, outputHandler, net, new ObjTree(Product.class));
+            authManager = new AuthManager();
+            CommandManager commandManager = new CommandManager(inputHandler, outputHandler, net, new ObjTree(Product.class), authManager);
             debugPrintln("init finished");
 
             commandManager.startExecuting();

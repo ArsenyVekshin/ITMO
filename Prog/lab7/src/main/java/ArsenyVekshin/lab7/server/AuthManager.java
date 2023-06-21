@@ -3,12 +3,24 @@ package ArsenyVekshin.lab7.server;
 import ArsenyVekshin.lab7.common.exceptions.AccessRightsException;
 import ArsenyVekshin.lab7.common.security.User;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class AuthManager {
 
     private User masterUser; // пользователь администратора
-    private Set<User> userSet; // коллекция пользователей
+    private Set<User> userSet = new HashSet<>(); // коллекция пользователей
+
+    public AuthManager(){
+        addDefaultUsers();
+    }
+
+    private void addDefaultUsers(){
+        masterUser = new User("admin", "admin");
+        userSet.add(new User("user1", "user1"));
+        userSet.add(new User("user2", "user2"));
+        userSet.add(new User("user3", "user3"));
+    }
 
     public boolean isAuthorised(User user){
         return userSet.contains(user);

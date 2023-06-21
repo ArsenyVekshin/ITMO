@@ -90,7 +90,6 @@ public class Storage<T extends Object> implements CSVOperator {
                         #################################
                         """);
             }
-            dataBaseManager.loadCollectionFromBase();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

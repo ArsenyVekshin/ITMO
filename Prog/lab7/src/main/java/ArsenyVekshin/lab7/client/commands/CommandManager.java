@@ -45,11 +45,12 @@ public class CommandManager {
      * @param inputHandler stream for input
      * @param outputHandler stream for output
      */
-    public CommandManager(InputHandler inputHandler, OutputHandler outputHandler, UdpManager udpManager, ObjTree objTree){
+    public CommandManager(InputHandler inputHandler, OutputHandler outputHandler, UdpManager udpManager, ObjTree objTree, AuthManager authManager){
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
         this.udpManager = udpManager;
         this.objTree = objTree;
+        this.authManager = authManager;
         init();
 
     }
@@ -181,9 +182,13 @@ public class CommandManager {
                 throw new IllegalArgumentException("Данной команды не существует");
             }
         }
-        commands.get(cmd.getType()).execute(cmd);
-        if(!cmd.getArgs().contains("h"))
-            udpManager.addCallBack(cmd);
+        else {
+            commands.get(cmd.getType()).execute(cmd);
+            if (!cmd.getArgs().contains("h")) {
+                //System.out.println("send " + cmd.toString());
+                udpManager.addCallBack(cmd);
+            }
+        }
     }
 
     private  <T extends Command> void changeGlobalStreams(InputHandler inputHandler, OutputHandler outputHandler){
@@ -198,15 +203,15 @@ public class CommandManager {
 
         while(cmd != null){
             try{
-                outputHandler.println(cmd.toString());
+                System.out.println("received " + cmd.toString());
                 if(cmd.isNeedToRecall() && cmd.getErrors()==null) {
                     executeCommand(cmd);
                     udpManager.addCallBack(cmd);
-                    cmd = udpManager.getCommand();
                 }
             } catch (StreamBrooked e) {
                 System.out.println(e.getMessage());
             }
+            cmd = udpManager.getCommand();
         }
     }
 
