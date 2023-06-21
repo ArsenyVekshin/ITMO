@@ -3,11 +3,16 @@ package ArsenyVekshin.lab7.server.Database;
 import java.sql.*;
 
 public class SQLManager {
-    private final String url = "jdbc:postgresql://localhost:5432/prog_lab_7";
-    private final String user = "postgres";
-    private final String password = "ifiksyljc";
+    private final String url = "jdbc:postgresql://localhost:5432/studs";
+    private final String user = "s367133";
+    private String password = "default";
 
     public SQLManager() {}
+
+    public void setDatabasePass(String pass){
+        password = pass;
+    }
+
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
     }

@@ -26,14 +26,13 @@ public class Client {
 
     /***
      *
-     * @param args userIp userPort serverIp serverPort
+     * @param args serverPort
      */
     public static void main(String[] args) {
         try {
-            if(args.length == 2){
+            if(args.length > 0){
                 userAddress   = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
-                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(),Integer.parseInt(args[1]));
-                debugPrintln("2 param mode");
+                serverAddress = new InetSocketAddress(InetAddress.getLocalHost(),Integer.parseInt(args[0]));
             }
             else throw new RuntimeException();
             net = new UdpManager(userAddress, serverAddress);

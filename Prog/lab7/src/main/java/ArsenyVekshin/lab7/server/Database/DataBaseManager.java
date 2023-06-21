@@ -29,6 +29,10 @@ public class DataBaseManager {
         this.userSet = userSet;
     }
 
+    public void setDatabasePass(String pass){
+        sqlManager.setDatabasePass(pass);
+    }
+
     public void setCollection(Vector<Product> collection) {
         this.collection = collection;
     }

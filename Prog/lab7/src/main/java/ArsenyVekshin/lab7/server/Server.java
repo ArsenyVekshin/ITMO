@@ -19,16 +19,17 @@ public class Server {
         try{
             AuthManager authManager = new AuthManager();
             DataBaseManager dataBaseManager = new DataBaseManager();
-            dataBaseManager.setUserSet(authManager.getUserSet());
-
-            Storage collection = new Storage(dataBaseManager);
-
             if(args.length==0){
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), SERVICE_PORT);
             }
             else{
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
+                if(args.length>1)
+                    dataBaseManager.setDatabasePass(args[1]);
             }
+
+            dataBaseManager.setUserSet(authManager.getUserSet());
+            Storage collection = new Storage(dataBaseManager);
 
             net = new UdpManager(serverAddress);
             dataBaseManager.updateAll();
