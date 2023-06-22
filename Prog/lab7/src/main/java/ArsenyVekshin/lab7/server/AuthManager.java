@@ -17,6 +17,7 @@ public class AuthManager {
 
     private void addDefaultUsers(){
         masterUser = new User("admin", "admin");
+        userSet.add(masterUser);
         userSet.add(new User("user1", "user1"));
         userSet.add(new User("user2", "user2"));
         userSet.add(new User("user3", "user3"));
@@ -24,6 +25,7 @@ public class AuthManager {
 
     public boolean isAuthorised(User user){
         //return userSet.contains(user);
+        if(user.equals(masterUser)) return true;
         for(User _user: userSet){
             if(_user.equals(user))
                 return true;
@@ -45,5 +47,9 @@ public class AuthManager {
 
     public Set<User> getUserSet() {
         return userSet;
+    }
+
+    public User getMasterUser() {
+        return masterUser;
     }
 }

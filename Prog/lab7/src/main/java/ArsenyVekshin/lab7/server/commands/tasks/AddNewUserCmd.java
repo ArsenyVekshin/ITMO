@@ -17,10 +17,10 @@ public class AddNewUserCmd extends Command{
     public boolean execute(CommandContainer cmd) {
         try {
             authManager.addUser(cmd.getUser(), (User) cmd.getReturns());
+            cmd.setReturns("success");
         } catch (AccessRightsException e) {
-            cmd.setReturns(e);
+            cmd.setErrors(e.getMessage());
         }
-
         return true;
     }
 

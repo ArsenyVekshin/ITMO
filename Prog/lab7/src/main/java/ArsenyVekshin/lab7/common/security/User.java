@@ -1,6 +1,7 @@
 package ArsenyVekshin.lab7.common.security;
 
 import ArsenyVekshin.lab7.common.collectionElems.data.Entity;
+import ArsenyVekshin.lab7.common.collectionElems.data.SQLTableElem;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.function.Supplier;
 
 import static ArsenyVekshin.lab7.common.security.Encoder.getSHAString;
 
-public class User extends Entity implements Serializable {
+public class User extends Entity implements Serializable, SQLTableElem {
     private String login; //также является уникальным ключом
     private String password; // закодированный пароль
 
@@ -71,5 +72,19 @@ public class User extends Entity implements Serializable {
     @Override
     public Supplier<Entity> getConstructorReference() {
         return User::new;
+    }
+
+    @Override
+    public String genValuesLine() {
+        String out = "(";
+        out += "login = \'" + login + "\'";
+        out += ", password = \'" + password + "\')";
+        return out;
+    }
+
+    @Override
+    public void parseValuesLine(HashMap<String, Object> values) {
+        login = (String)values.get("login");
+        password = (String)values.get("password");
     }
 }

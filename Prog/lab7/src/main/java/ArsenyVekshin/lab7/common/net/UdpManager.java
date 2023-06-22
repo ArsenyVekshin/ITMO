@@ -81,8 +81,6 @@ public class UdpManager implements Runnable{
         lock.lock();
 
         if(!(sendQueue.size() ==0)) {
-            //debugPrintln("commands num to send " + sendQueue.size());
-            //queuesStatus();
             ArrayList<CommandContainer> successfulSent = new ArrayList<>();
 
             for (CommandContainer cmd : sendQueue) {

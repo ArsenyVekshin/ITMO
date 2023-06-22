@@ -87,7 +87,9 @@ public class CommandManager implements Runnable{
                     debugPrintln("got " + cmd.toString());
                     debugPrintln("authorized = " + authManager.isAuthorised(cmd.getUser()));
                     if (commands.containsKey(cmd.getType())){
-                        if(authManager.isAuthorised(cmd.getUser()) || Objects.equals(cmd.getType(), "login")){
+                        if(authManager.isAuthorised(cmd.getUser())
+                                || Objects.equals(cmd.getType(), "login")
+                                || Objects.equals(cmd.getType(), "new_user")){
                             commands.get(cmd.getType()).execute(cmd);
                             debugPrintln("send " + cmd.toString());
                             udpManager.addCallBack(cmd);

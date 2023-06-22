@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DataBaseManager {
 
-    private final boolean ENABLE = false;
+    private final boolean ENABLE = true;
     private Set<User> userSet; // коллекция пользователей
     private  Vector<Product> collection;
     private ZonedDateTime lastUpdateTime;
@@ -48,14 +48,29 @@ public class DataBaseManager {
     public void loadCollectionFromBase(){
         if(!ENABLE) return;
         lock.lock();
-        ResultSet resultSet = sqlManager.getRaw("SELECT product.*, users.username FROM product JOIN users ON product.user_id = users.id ORDER BY name ASC;");
+        ResultSet resultSet = sqlManager.getRaw("SELECT * FROM product;");
         if (resultSet == null) return;
         collection.clear();
+
+        HashMap<String, Object> values = new HashMap<>();
+        values.put("id", null);
+        values.put("name", null);
+        values.put("creationDate", null);
+        values.put("coordinates_x", null);
+        values.put("coordinates_y", null);
+        values.put("price", null);
+        values.put("unitOfMeasure", null);
+        values.put("manufacturer_id", null);
+        values.put("manufacturer_name", null);
+        values.put("manufacturer_annualTurnover", null);
+        values.put("manufacturer_type", null);
+        values.put("manufacturer_street", null);
+        values.put("manufacturer_zipCode", null);
+        values.put("owner", null);
 
         try{
             while(resultSet.next()){
                 Product product = new Product();
-                HashMap<String, Object> values = product.getValues();
                 for(String key : values.keySet()){
                     values.put(key, resultSet.getString(key));
                 }
@@ -75,14 +90,21 @@ public class DataBaseManager {
     public void loadUsersListFromBase(){
         if(!ENABLE) return;
         lock.lock();
-        ResultSet resultSet = sqlManager.getRaw("SELECT username, password FROM users;");
+        ResultSet resultSet = sqlManager.getRaw("SELECT * FROM users;");
         if (resultSet == null) return;
         userSet.clear();
 
+        HashMap<String, Object> values = new HashMap<>();
+        values.put("login", null);
+        values.put("password", null);
+
         try{
             while(resultSet.next()){
-                userSet.add(new User(resultSet.getString("login"),
-                        resultSet.getString("password")));
+                User user = new User();
+                for(String key : values.keySet()){
+                    values.put(key, resultSet.getString(key));
+                }
+                userSet.add(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,7 +128,7 @@ public class DataBaseManager {
         if(!ENABLE) return;
         lock.lock();
         try{
-            String out ="INSERT INTO product values " + getElemValuesLine(product) + ";";
+            String out ="INSERT INTO product values " + product.genValuesLine() + ";";
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))
@@ -156,21 +178,11 @@ public class DataBaseManager {
         lock.unlock();
     }
 
-    private String getElemValuesLine(Entity elem){
-        String line = "(";
-        HashMap<String, Object> values = elem.getValues();
-        for(String key : values.keySet())
-            line += key + "=" + values.get(key) + ",";
-        line = line.substring(0, line.length()-1);
-        line += ")";
-        return line;
-    }
-
     public void addUser(User user){
         if(!ENABLE) return;
         lock.lock();
         try{
-            String out ="INSERT INTO users values " + getElemValuesLine(user) + ";";
+            String out ="INSERT INTO users values " + user.genValuesLine() + ";";
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))

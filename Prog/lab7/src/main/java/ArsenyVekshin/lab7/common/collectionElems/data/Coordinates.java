@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
 
 
-public class Coordinates extends Entity implements Cloneable, Comparable, CSVOperator, Serializable {
+public class Coordinates extends Entity implements Cloneable, Comparable, SQLTableElem, Serializable {
     private float x;
     private float y;
 
@@ -55,11 +55,6 @@ public class Coordinates extends Entity implements Cloneable, Comparable, CSVOpe
     }
 
     @Override
-    public String generateCSV() {
-        return x + ", " + y;
-    }
-
-    @Override
     public void init(HashMap<String, Object> values) {
         this.x = (float) values.get("x");
         this.y = (float) values.get("y");
@@ -87,5 +82,20 @@ public class Coordinates extends Entity implements Cloneable, Comparable, CSVOpe
         if (o == null || getClass() != o.getClass()) return 0;
         return compareFields(((Coordinates)o).getX(), getX()) +
                 compareFields(((Coordinates)o).getY(), getY());
+    }
+
+
+    @Override
+    public String genValuesLine() {
+        String out =
+                ", coordinates_x =" + x +
+                ", coordinates_y =" + y ;
+        return out;
+    }
+
+    @Override
+    public void parseValuesLine(HashMap<String, Object> values) {
+        x = Float.parseFloat((String) values.get("coordinates_x"));
+        y = Float.parseFloat((String) values.get("coordinates_y"));
     }
 }

@@ -1,5 +1,7 @@
 package ArsenyVekshin.lab7.server;
 
+import ArsenyVekshin.lab7.common.builder.ObjTree;
+import ArsenyVekshin.lab7.common.collectionElems.data.Product;
 import ArsenyVekshin.lab7.common.net.UdpManager;
 import ArsenyVekshin.lab7.common.security.Encoder;
 import ArsenyVekshin.lab7.server.Database.DataBaseManager;
@@ -18,6 +20,9 @@ public class Server {
 
     public static void main(String[] args){
         try{
+            System.out.println(Encoder.getSHAString("user1"));
+            System.out.println(Encoder.getSHAString("user2"));
+            System.out.println(Encoder.getSHAString("user3"));
             AuthManager authManager = new AuthManager();
             DataBaseManager dataBaseManager = new DataBaseManager();
             if(args.length==0){
@@ -30,9 +35,10 @@ public class Server {
             }
 
             dataBaseManager.setUserSet(authManager.getUserSet());
-            Storage collection = new Storage(dataBaseManager);
+            Storage collection = new Storage(dataBaseManager, authManager);
 
             net = new UdpManager(serverAddress);
+
             dataBaseManager.updateAll();
             CommandManager commandManager = new CommandManager(collection, net, authManager, dataBaseManager);
         } catch (Exception e) {

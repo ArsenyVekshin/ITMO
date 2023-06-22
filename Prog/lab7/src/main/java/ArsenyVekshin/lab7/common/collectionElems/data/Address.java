@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
 
 
-public class Address extends Entity implements Cloneable, Comparable, CSVOperator, Serializable {
+public class Address extends Entity implements Cloneable, Comparable, SQLTableElem, Serializable {
 
     @NotNull
     @StringNotNone
@@ -74,10 +74,6 @@ public class Address extends Entity implements Cloneable, Comparable, CSVOperato
                 ", zipCode=" + zipCode + ");";
     }
 
-    @Override
-    public String generateCSV() {
-        return street + ", " + zipCode ;
-    }
 
     @Override
     public void init(HashMap<String, Object> values) {
@@ -92,7 +88,6 @@ public class Address extends Entity implements Cloneable, Comparable, CSVOperato
         values.put("zipCode", zipCode);
         return values;
     }
-
 
     @Override
     public Supplier<Entity> getConstructorReference() {
@@ -112,4 +107,19 @@ public class Address extends Entity implements Cloneable, Comparable, CSVOperato
     }
 
 
+    @Override
+    public String genValuesLine() {
+        String out = "";
+        out += ", manufacturer_street =\'" + street + "\'";
+        if(zipCode!=null)
+            out += ", manufacturer_zipCode =\'" + zipCode + "\'";
+        return out;
+    }
+
+    @Override
+    public void parseValuesLine(HashMap<String, Object> values) {
+        street = (String) values.get("manufacturer_street");
+        if(values.containsKey("manufacturer_zipCode"))
+            street = (String) values.get("manufacturer_zipCode");
+    }
 }
