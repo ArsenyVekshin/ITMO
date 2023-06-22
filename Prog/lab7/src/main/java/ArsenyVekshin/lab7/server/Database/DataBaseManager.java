@@ -20,10 +20,12 @@ public class DataBaseManager {
     private Set<User> userSet; // коллекция пользователей
     private  Vector<Product> collection;
     private ZonedDateTime lastUpdateTime;
-    private SQLManager sqlManager = new SQLManager();
+    private SQLManager sqlManager;
     Lock lock = new ReentrantLock();
 
-    public DataBaseManager(){}
+    public DataBaseManager(String password){
+        sqlManager = new SQLManager(password);
+    }
 
     public DataBaseManager(Vector<Product> collection, Set<User> userSet) {
         this.collection = collection;

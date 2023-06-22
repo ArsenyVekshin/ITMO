@@ -73,33 +73,8 @@ public class Storage<T extends Object> implements CSVOperator {
      * Init collection save-path and automatically load
      */
     public void init() {
-        try {
-            collection = new Vector<>();
-            creationTime = ZonedDateTime.now();
-            if (path== null) {
-                path = new File(Server.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + File.separatorChar + "sysFiles" + File.separatorChar + "data.csv";
-                System.out.println("""
-                        ###########! WARNING !###########
-                        Directory for interaction-files is not set 
-                        They will be saved on default directory"""
-                        + "\n" + path +  "\n" +
-                        """
-                        #################################
-                        """);
-
-            }
-            else{
-                System.out.println("""
-                        #################################
-                        Directory for interaction-files set at"""
-                        + "\n" + path +  "\n" +
-                        """
-                        #################################
-                        """);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        collection = new Vector<>();
+        creationTime = ZonedDateTime.now();
     }
 
     /**
@@ -448,6 +423,7 @@ public class Storage<T extends Object> implements CSVOperator {
     }
 
     public void load(){
+        System.out.println();
         dataBaseManager.loadCollectionFromBase();
     }
 

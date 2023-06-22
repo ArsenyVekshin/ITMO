@@ -7,7 +7,9 @@ public class SQLManager {
     private final String user = "s367133";
     private String password = "default";
 
-    public SQLManager() {}
+    public SQLManager(String password) {
+        this.password = password;
+    }
 
     public void setDatabasePass(String pass){
         password = pass;
@@ -21,6 +23,7 @@ public class SQLManager {
             sql.executeUpdate();
             sql.getConnection().close();
         } catch(SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
         return true;
@@ -32,6 +35,7 @@ public class SQLManager {
             statement.executeUpdate(sql);
             connection.close();
         } catch(SQLException ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
         return true;
@@ -42,7 +46,9 @@ public class SQLManager {
         try {
             result = sql.executeQuery();
             sql.getConnection().close();
-        } catch (SQLException ex) {}
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
         return result;
     }
 
@@ -53,7 +59,9 @@ public class SQLManager {
             Statement statement = connection.createStatement();
             result = statement.executeQuery(sql);
             connection.close();
-        } catch (SQLException ex) {}
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
         return result;
     }
 }
