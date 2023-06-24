@@ -1,8 +1,11 @@
 package ArsenyVekshin.lab7.server.Database;
 
-import ArsenyVekshin.lab7.common.collectionElems.data.Entity;
+import ArsenyVekshin.lab7.common.builder.Builder;
+import ArsenyVekshin.lab7.common.builder.ObjTree;
 import ArsenyVekshin.lab7.common.collectionElems.data.Product;
 import ArsenyVekshin.lab7.common.security.User;
+import ArsenyVekshin.lab7.server.AuthManager;
+import ArsenyVekshin.lab7.server.collection.Storage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,18 +19,21 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DataBaseManager {
 
+    private ObjTree userTree = new ObjTree(User.class);
+    private ObjTree productTree = new ObjTree(Product.class);
     private final boolean ENABLE = true;
-    private Set<User> userSet; // коллекция пользователей
-    private  Vector<Product> collection;
+    private AuthManager userSet; // коллекция пользователей
+    private Storage collection;
     private ZonedDateTime lastUpdateTime;
     private SQLManager sqlManager;
     Lock lock = new ReentrantLock();
+
 
     public DataBaseManager(String password){
         sqlManager = new SQLManager(password);
     }
 
-    public DataBaseManager(Vector<Product> collection, Set<User> userSet) {
+    public DataBaseManager(Storage collection, AuthManager userSet) {
         this.collection = collection;
         this.userSet = userSet;
     }
@@ -36,11 +42,11 @@ public class DataBaseManager {
         sqlManager.setDatabasePass(pass);
     }
 
-    public void setCollection(Vector<Product> collection) {
+    public void setCollection(Storage collection) {
         this.collection = collection;
     }
 
-    public void setUserSet(Set<User> userSet) {
+    public void setUserSet(AuthManager userSet) {
         this.userSet = userSet;
     }
 
@@ -50,34 +56,13 @@ public class DataBaseManager {
     public void loadCollectionFromBase(){
         if(!ENABLE) return;
         lock.lock();
-        ResultSet resultSet = sqlManager.getRaw("SELECT * FROM product;");
+        ResultSet resultSet = sqlManager.getRaw("SELECT * FROM products;");
         if (resultSet == null) return;
         collection.clear();
 
-        HashMap<String, Object> values = new HashMap<>();
-        values.put("id", null);
-        values.put("name", null);
-        values.put("creationDate", null);
-        values.put("coordinates_x", null);
-        values.put("coordinates_y", null);
-        values.put("price", null);
-        values.put("unitOfMeasure", null);
-        values.put("manufacturer_id", null);
-        values.put("manufacturer_name", null);
-        values.put("manufacturer_annualTurnover", null);
-        values.put("manufacturer_type", null);
-        values.put("manufacturer_street", null);
-        values.put("manufacturer_zipCode", null);
-        values.put("owner", null);
-
         try{
             while(resultSet.next()){
-                Product product = new Product();
-                for(String key : values.keySet()){
-                    values.put(key, resultSet.getString(key));
-                }
-                product.init(values);
-                collection.add(product);
+                collection.add(Builder.buildBySQL(productTree, resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,17 +81,9 @@ public class DataBaseManager {
         if (resultSet == null) return;
         userSet.clear();
 
-        HashMap<String, Object> values = new HashMap<>();
-        values.put("login", null);
-        values.put("password", null);
-
         try{
             while(resultSet.next()){
-                User user = new User();
-                for(String key : values.keySet()){
-                    values.put(key, resultSet.getString(key));
-                }
-                userSet.add(user);
+                userSet.add(Builder.buildBySQL(userTree, resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -130,7 +107,9 @@ public class DataBaseManager {
         if(!ENABLE) return;
         lock.lock();
         try{
-            String out ="INSERT INTO product values " + product.genValuesLine() + ";";
+            String out ="INSERT INTO products(" +
+                    Builder.genObjTableHeader(productTree) + ") values (" +
+                    Builder.genObjTableLine(productTree, product) + ");";
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))
@@ -146,7 +125,7 @@ public class DataBaseManager {
         if(!ENABLE) return;
         lock.lock();
         try{
-            boolean result = sqlManager.sendRaw("DELETE FROM product WHERE id=" + product.getId() +";");
+            boolean result = sqlManager.sendRaw("DELETE FROM products WHERE id=" + product.getId() +";");
             if(!result)
                 throw new SQLExecuteErrorException("Не удалось удалить элемент");
         } catch (Exception e) {
@@ -159,7 +138,7 @@ public class DataBaseManager {
         if(!ENABLE) return;
         lock.lock();
         try{
-            boolean result = sqlManager.sendRaw("DELETE * FROM product;");
+            boolean result = sqlManager.sendRaw("truncate table products;");
             if(!result)
                 throw new SQLExecuteErrorException("Не удалось очистить коллекцию");
         } catch (Exception e) {
@@ -184,7 +163,10 @@ public class DataBaseManager {
         if(!ENABLE) return;
         lock.lock();
         try{
-            String out ="INSERT INTO users values " + user.genValuesLine() + ";";
+            String out ="INSERT INTO users(" +
+                    Builder.genObjTableHeader(userTree) + ") values (" +
+                    Builder.genObjTableLine(userTree, user) + ");";
+
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))

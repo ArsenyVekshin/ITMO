@@ -14,6 +14,7 @@ public class AddElementCmd extends DataCmd {
     @Override
     public boolean execute(CommandContainer cmd) {
         if(cmd.getReturns()!=null) collection.addNew((Product) cmd.getReturns());
+        System.out.println(collection.info());
         collection.sort();
         cmd.setReturns("done");
         return true;

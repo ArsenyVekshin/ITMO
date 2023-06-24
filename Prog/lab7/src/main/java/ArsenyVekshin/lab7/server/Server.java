@@ -24,7 +24,7 @@ public class Server {
             else
                 System.exit(0);
 
-            dataBaseManager.setUserSet(authManager.getUserSet());
+            dataBaseManager.setUserSet(authManager);
             Storage collection = new Storage(dataBaseManager, authManager);
 
             net = new UdpManager(serverAddress);

@@ -41,7 +41,6 @@ public class Storage<T extends Object> implements CSVOperator {
 
     public String fileName = "none"; //default value
     private volatile static Vector<Product> collection = new Vector<>();
-    public volatile static String path = null;
     private volatile static ZonedDateTime creationTime;
     private volatile static int usersCounter = 0;
 
@@ -63,7 +62,7 @@ public class Storage<T extends Object> implements CSVOperator {
     public Storage(DataBaseManager dataBaseManager, AuthManager authManager) {
         this.dataBaseManager = dataBaseManager;
         this.authManager = authManager;
-        dataBaseManager.setCollection(collection);
+        dataBaseManager.setCollection(this);
         init();
     }
 
@@ -112,16 +111,22 @@ public class Storage<T extends Object> implements CSVOperator {
     public static String info(){
         String out = "";
         out += "contains classes: " + Product.class.getName() + "\n";
-        out += "database path: " + path + "\n";
         out += "created at: " + creationTime.toString() + "\n";
         out += "positions num: " + usersCounter;
         return out;
     }
 
-    /**
-     * Generate string with collection elements
-     * @return
-     */
+/*    public static String show(){
+        if(collection.size() == 0 ) return "collection is empty";
+        StringBuilder out = new StringBuilder();
+        ObjTree tree = new ObjTree(Product.class);
+        out.append(Builder.genObjTableHeader(tree)).append("\n");
+        for (Product product : collection) {
+            out.append(Builder.genObjTableLine(tree, product)).append("\n");
+
+        }
+        return out.toString();
+    }*/
     public static String show(){
         if(collection.size() == 0 ) return "collection is empty";
         StringBuilder out = new StringBuilder();
@@ -140,6 +145,17 @@ public class Storage<T extends Object> implements CSVOperator {
         }
         return out.toString();
     }
+   /* public static String showPart(int num, int partSize){
+        if(num*partSize > collection.size()) return "";
+        ObjTree tree = new ObjTree(Product.class);
+        StringBuilder out = new StringBuilder();
+        out.append(Builder.genObjTableHeader(tree)).append("\n");
+        for(int i = num*partSize; i<(num+1)*partSize; i++){
+            if(i>=collection.size() || collection.get(i)==null) continue;
+            out.append(Builder.genObjTableLine(tree, collection.get(i))).append("\n");
+        }
+        return out.toString();
+    }*/
 
     /**
      * Find collection-index of entered id

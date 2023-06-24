@@ -38,7 +38,7 @@ public class CommandManager implements Runnable{
         this.udpManager = udpManager;
         this.authManager = authManager;
         this.dataBaseManager = dataBaseManager;
-        dataBaseManager.setUserSet(authManager.getUserSet());
+        dataBaseManager.setUserSet(authManager);
         init(collection);
         new Thread(this).start();
     }
@@ -92,7 +92,9 @@ public class CommandManager implements Runnable{
                                 || Objects.equals(cmd.getType(), "new_user")){
                             commands.get(cmd.getType()).execute(cmd);
                             debugPrintln("send " + cmd.toString());
-                            udpManager.addCallBack(cmd);
+
+                            if (cmd.isNeedToRecall() || !cmd.getReturns().equals("done"))
+                                udpManager.addCallBack(cmd);
                         }
                     }
                 }

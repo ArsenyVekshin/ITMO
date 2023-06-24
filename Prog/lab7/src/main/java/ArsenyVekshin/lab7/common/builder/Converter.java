@@ -22,6 +22,12 @@ public class Converter {
     }
 
 
+    /**
+     * Конвертировать строку в произвольный примитивный тип
+     * @param type целевой тип данных
+     * @param value строка для конвертации
+     * @return значение
+     */
     @SuppressWarnings("unchecked")
     public static <T> T convert(Class<T> type, String value) {
         if(value == null) {
@@ -37,7 +43,11 @@ public class Converter {
         return null;
     }
 
-
+    /**
+     * Получение null-значения для данного типа данных
+     * @param type тип данных
+     * @return значение
+     */
     @SuppressWarnings("unchecked")
     private static <T> T getNull(Class<T> type) {
         try {
@@ -57,7 +67,11 @@ public class Converter {
         return null;
     }
 
-
+    /**
+     * Проверка на примитивность поля
+     * @param type тип данных
+     * @return bool
+     */
     public static <T> boolean checkForPrimitive(Class<T> type) {
         return converters.containsKey(type.getName()) || type.isEnum() || type.isPrimitive();
     }

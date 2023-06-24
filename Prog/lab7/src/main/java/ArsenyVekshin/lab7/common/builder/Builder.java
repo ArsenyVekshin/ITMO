@@ -11,7 +11,11 @@ import ArsenyVekshin.lab7.common.ui.console.ConsoleOutputHandler;
 import ArsenyVekshin.lab7.common.ui.exeptions.StreamBrooked;
 import ArsenyVekshin.lab7.common.ui.file.FileInputHandler;
 
+import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.HashMap;
+
+import static ArsenyVekshin.lab7.common.tools.DebugPrints.debugPrintln;
 
 /**
  * Class for build entity-extends object
@@ -38,6 +42,121 @@ public class Builder {
         this.inputHandler = inputHandler;
         this.outputHandler = outputHandler;
     }
+
+    /**
+     * Генерация линии таблицы по объекту
+     * @param tree дерево объекта
+     * @param obj объект
+     * @return строка таблицы
+     */
+    public static String genObjTableLine(ObjTree tree, Entity obj){
+        String out = "";
+        for (ObjTree field : tree.getFields()) {
+            try {
+                if (!field.isPrimitive()) {
+                    if(obj == null)
+                        out += ", " + genObjTableLine(field, null);
+                    else if(obj.getValues().containsKey(field.getFieldName()))
+                        out += ", " + genObjTableLine(field, (Entity) obj.getValues().get(field.getFieldName()));
+                    else
+                        out += ", " + genObjTableLine(field, null);
+                }
+                else {
+                    if(obj == null)
+                        out += ", null";
+                    else if(obj.getValues().containsKey(field.getFieldName())) {
+                        if(field.getFieldType() == String.class
+                                || field.getFieldType() == LocalDate.class
+                                || field.isEnum())
+                            out += ", \'" + obj.getValues().get(field.getFieldName()) + "\'";
+                        else
+                            out += ", " + obj.getValues().get(field.getFieldName());
+                    }
+                    else
+                        out += ", null";
+                }
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return out.substring(2);
+    }
+
+    /**
+     * Генерация шапки таблицы по объекту
+     * @param tree дерево по объекту
+     * @return шапка таблицы
+     */
+    public static String genObjTableHeader(ObjTree tree){
+        return genObjTableHeader(tree, "");
+    }
+
+    /**
+     * Генерация шапки таблицы по объекту
+     * @param tree дерево по объекту
+     * @param sectorName имя объекта в который вложен искомый класс
+     * @return шапка таблицы
+     */
+    public static String genObjTableHeader(ObjTree tree, String sectorName){
+        String out = "";
+        for (ObjTree field : tree.getFields()) {
+            try {
+                 if (!field.isPrimitive()) {
+                    out += ", " + genObjTableHeader(field, field.getFieldName()+"_");
+                }
+                else {
+                    out += ", " + sectorName + field.getFieldName();
+                }
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return out.substring(2);
+    }
+
+    /**
+     * построение объекта по sql-набору
+     * @param tree дерево по объекту
+     * @param resultSet sql-набор
+     * @return сгенерированный объект
+     */
+    public static <T extends Entity> T buildBySQL(ObjTree tree, ResultSet resultSet){
+        return buildBySQL(tree, resultSet, "");
+    }
+
+    /**
+     * построение объекта по sql-набору
+     * @param tree дерево по объекту
+     * @param resultSet sql-набор
+     * @param sectorName имя объекта в который вложен искомый класс
+     * @return сгенерированный объект
+     */
+   public static <T extends Entity> T buildBySQL(ObjTree tree, ResultSet resultSet, String sectorName){
+       T obj = (T) tree.constructor.get();
+       HashMap<String, Object> values = new HashMap<>();
+
+       for (ObjTree field : tree.getFields()) {
+           try {
+               if (!field.isPrimitive()) {
+                   values.put(field.getFieldName(), buildBySQL(field, resultSet, field.getFieldName()+"_"));
+               }
+               else {
+                   //debugPrintln("Запрос значения по ключу \'"+sectorName + field.getFieldName()+"\'");
+                   values.put(field.getFieldName(), Converter.convert(field.getFieldType(),
+                                                    resultSet.getString(sectorName + field.getFieldName())));
+               }
+           }
+           catch (Exception e) {
+               System.out.println(e.getMessage());
+           }
+       }
+
+       obj.init(values);
+       return (T) obj;
+   }
+
 
     /**
      * create new object by user-dialogue
@@ -120,6 +239,7 @@ public class Builder {
         obj.init(values);
         return (T) obj;
     }
+
 
     /**
      * Build object by values string-map

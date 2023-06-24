@@ -52,4 +52,12 @@ public class AuthManager {
     public User getMasterUser() {
         return masterUser;
     }
+
+    public void clear(){
+        userSet.clear();
+    }
+
+    public void add(User user){
+        userSet.add(user);
+    }
 }

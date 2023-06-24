@@ -133,6 +133,7 @@ public class UdpManager implements Runnable{
                     receivedQueue.add(cmd);
                     groupReceiveProcessor();
                 }
+                sendCmd();
             }
 
         }catch (Exception e) {
