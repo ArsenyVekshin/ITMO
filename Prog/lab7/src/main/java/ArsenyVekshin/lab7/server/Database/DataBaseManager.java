@@ -11,9 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -77,6 +74,7 @@ public class DataBaseManager {
     public void loadUsersListFromBase(){
         if(!ENABLE) return;
         lock.lock();
+        System.out.print("Запрос к бд: ");
         ResultSet resultSet = sqlManager.getRaw("SELECT * FROM users;");
         if (resultSet == null) return;
         userSet.clear();
@@ -84,11 +82,15 @@ public class DataBaseManager {
         try{
             while(resultSet.next()){
                 userSet.add(Builder.buildBySQL(userTree, resultSet));
+                System.out.print(".");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         this.lastUpdateTime = ZonedDateTime.now();
+        System.out.println("-done");
+        System.out.println(collection.info());
+
         lock.unlock();
     }
 
@@ -110,6 +112,8 @@ public class DataBaseManager {
             String out ="INSERT INTO products(" +
                     Builder.genObjTableHeader(productTree) + ") values (" +
                     Builder.genObjTableLine(productTree, product) + ");";
+
+            System.out.println(out);
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))
@@ -173,6 +177,7 @@ public class DataBaseManager {
                 throw new SQLExecuteErrorException("Не удалось добавить элемент");
 
         } catch (Exception e) {
+            //e.printStackTrace();
             System.out.println(e.getMessage());
         }
         lock.unlock();

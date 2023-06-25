@@ -2,17 +2,21 @@ package ArsenyVekshin.lab7.server;
 
 import ArsenyVekshin.lab7.common.exceptions.AccessRightsException;
 import ArsenyVekshin.lab7.common.security.User;
+import ArsenyVekshin.lab7.server.Database.DataBaseManager;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class AuthManager {
 
+    DataBaseManager dataBaseManager;
     private User masterUser; // пользователь администратора
     private Set<User> userSet = new HashSet<>(); // коллекция пользователей
 
-    public AuthManager(){
-        addDefaultUsers();
+    public AuthManager(DataBaseManager dataBaseManager){
+        this.dataBaseManager = dataBaseManager;
+        masterUser = new User("admin", "admin");
+        userSet.add(masterUser);
     }
 
     private void addDefaultUsers(){
@@ -24,13 +28,16 @@ public class AuthManager {
     }
 
     public boolean isAuthorised(User user){
-        //return userSet.contains(user);
         if(user.equals(masterUser)) return true;
         for(User _user: userSet){
             if(_user.equals(user))
                 return true;
         }
         return false;
+    }
+
+    public void setDataBaseManager(DataBaseManager dataBaseManager) {
+        this.dataBaseManager = dataBaseManager;
     }
 
     /***
@@ -43,6 +50,7 @@ public class AuthManager {
         if(!this.masterUser.equals(masterUser))
             throw new AccessRightsException("добавление новых пользователей доступно только администраторам");
         userSet.add(newUser);
+        dataBaseManager.addUser(newUser);
     }
 
     public Set<User> getUserSet() {
@@ -59,5 +67,6 @@ public class AuthManager {
 
     public void add(User user){
         userSet.add(user);
+        dataBaseManager.addUser(user);
     }
 }

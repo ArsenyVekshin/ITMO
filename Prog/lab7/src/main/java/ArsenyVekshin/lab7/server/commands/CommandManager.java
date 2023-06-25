@@ -85,7 +85,7 @@ public class CommandManager implements Runnable{
                 cmd = udpManager.getCommand();
                 if (cmd != null) {
                     debugPrintln("got " + cmd.toString());
-                    debugPrintln("authorized = " + authManager.isAuthorised(cmd.getUser()));
+                    debugPrintln("authorized = "); //+ authManager.isAuthorised(cmd.getUser())
                     if (commands.containsKey(cmd.getType())){
                         if(authManager.isAuthorised(cmd.getUser())
                                 || Objects.equals(cmd.getType(), "login")
@@ -99,7 +99,8 @@ public class CommandManager implements Runnable{
                     }
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
+                //System.out.println(e.getMessage());
             }
         }
     }

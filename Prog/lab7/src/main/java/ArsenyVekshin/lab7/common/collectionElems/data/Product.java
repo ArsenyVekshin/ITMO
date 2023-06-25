@@ -218,6 +218,7 @@ public class Product extends Entity implements Cloneable, SQLTableElem, Serializ
 
     @Override
     public String genValuesLine() {
+        System.out.println(id);
         String out = "(";
         out += "id =" + id;
         out += ", name =\'" + name + "\'";

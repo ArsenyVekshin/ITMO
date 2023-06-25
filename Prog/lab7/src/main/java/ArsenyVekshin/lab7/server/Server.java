@@ -15,7 +15,7 @@ public class Server {
 
     public static void main(String[] args){
         try{
-            AuthManager authManager = new AuthManager();
+
 
             if(args.length>=2){
                 serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), Integer.parseInt(args[0]));
@@ -24,8 +24,13 @@ public class Server {
             else
                 System.exit(0);
 
-            dataBaseManager.setUserSet(authManager);
+            AuthManager authManager = new AuthManager(dataBaseManager);
             Storage collection = new Storage(dataBaseManager, authManager);
+
+            dataBaseManager.setUserSet(authManager);
+            dataBaseManager.setCollection(collection);
+
+
 
             net = new UdpManager(serverAddress);
 

@@ -40,7 +40,7 @@ public class User extends Entity implements Serializable, SQLTableElem {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj.getClass() != this.getClass()) return false;
+        if(obj==null || obj.getClass() != this.getClass()) return false;
         User u = (User) obj;
         return Objects.equals(getPassword(), u.getPassword()) &&
                 Objects.equals(getLogin(), u.getLogin());

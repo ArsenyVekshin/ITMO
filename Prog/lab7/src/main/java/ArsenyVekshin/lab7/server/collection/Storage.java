@@ -1,28 +1,15 @@
 package ArsenyVekshin.lab7.server.collection;
 
-import ArsenyVekshin.lab7.common.builder.Builder;
 import ArsenyVekshin.lab7.common.builder.ObjTree;
 import ArsenyVekshin.lab7.common.collectionElems.CSVOperator;
 import ArsenyVekshin.lab7.common.collectionElems.data.*;
-import ArsenyVekshin.lab7.common.collectionElems.exceptions.InvalidValueEntered;
-import ArsenyVekshin.lab7.common.collectionElems.exceptions.NoneValueFromCSV;
 import ArsenyVekshin.lab7.common.collectionElems.exceptions.WrongID;
 import ArsenyVekshin.lab7.common.exceptions.AccessRightsException;
-import ArsenyVekshin.lab7.common.ui.file.FileInputHandler;
-import ArsenyVekshin.lab7.common.ui.file.FileOutputHandler;
 import ArsenyVekshin.lab7.server.AuthManager;
 import ArsenyVekshin.lab7.server.Database.DataBaseManager;
-import ArsenyVekshin.lab7.server.Database.SQLManager;
-import ArsenyVekshin.lab7.server.Server;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Vector;
-import java.util.concurrent.locks.Condition;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -42,7 +29,7 @@ public class Storage<T extends Object> implements CSVOperator {
     public String fileName = "none"; //default value
     private volatile static Vector<Product> collection = new Vector<>();
     private volatile static ZonedDateTime creationTime;
-    private volatile static int usersCounter = 0;
+    private volatile static int nextId = 0;
 
     private static final String defaultFieldForComp = "id";
 
@@ -62,11 +49,8 @@ public class Storage<T extends Object> implements CSVOperator {
     public Storage(DataBaseManager dataBaseManager, AuthManager authManager) {
         this.dataBaseManager = dataBaseManager;
         this.authManager = authManager;
-        dataBaseManager.setCollection(this);
         init();
     }
-
-
 
     /**
      * Init collection save-path and automatically load
@@ -74,30 +58,14 @@ public class Storage<T extends Object> implements CSVOperator {
     public void init() {
         collection = new Vector<>();
         creationTime = ZonedDateTime.now();
+        nextId = findMaxId();
     }
 
-    /**
-     * append random-values to collection
-     * @throws InvalidValueEntered
-     */
-    public void fillRandom() throws InvalidValueEntered {
-        try {
-            addNew(new Product(0, "test", new Coordinates(1, 1), 55, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "test1", new Coordinates(2, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "1test", new Coordinates(12, 1), 3000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "3test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "t2est", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "434test", new Coordinates(1, 1), 7000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "56yhbftest", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "test1", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "ssgtest", new Coordinates(1, 1), 9000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, " test", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "test2", new Coordinates(1, 1), 800, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-            addNew(new Product(0, "test3", new Coordinates(1, 1), 1000, UnitOfMeasure.KILOGRAMS, new Organization(0, "testOrg", 1000, OrganizationType.DEFAULT, new Address("1111", "2222"))));
-        } catch (InvalidValueEntered e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
-        }
+    public static int findMaxId() {
+        return collection.stream()
+                .max(Comparator.comparing(Product::getId))
+                .map(Product::getId)
+                .orElse(0);
     }
 
     public Product getElemById(int id) throws WrongID {
@@ -112,7 +80,7 @@ public class Storage<T extends Object> implements CSVOperator {
         String out = "";
         out += "contains classes: " + Product.class.getName() + "\n";
         out += "created at: " + creationTime.toString() + "\n";
-        out += "positions num: " + usersCounter;
+        out += "positions num: " + collection.size();
         return out;
     }
 
@@ -193,9 +161,9 @@ public class Storage<T extends Object> implements CSVOperator {
     public static void addNew(Product product) {
         lock.lock();
         collection.add(product);
-        dataBaseManager.insert(product);
-        collection.lastElement().generateID(usersCounter);
-        usersCounter++;
+        collection.lastElement().generateID(nextId);
+        dataBaseManager.insert(collection.lastElement());
+        nextId++;
         lock.unlock();
     }
 
@@ -206,8 +174,8 @@ public class Storage<T extends Object> implements CSVOperator {
     public static void addNew(HashMap<String, Object> tree) {
         collection.add(new Product(tree));
         dataBaseManager.insert(new Product(tree));
-        collection.lastElement().generateID(usersCounter);
-        usersCounter++;
+        collection.lastElement().generateID(nextId);
+        nextId++;
 
     }
 
@@ -258,6 +226,7 @@ public class Storage<T extends Object> implements CSVOperator {
             throw new AccessRightsException("изменение объекта доступно лишь создателю");
         }
 
+        product.setId(collection.get(_idx).getId());
         collection.set(_idx, product);
         dataBaseManager.update(product);
 
@@ -290,7 +259,8 @@ public class Storage<T extends Object> implements CSVOperator {
     public static void clear() {
         lock.lock();
         collection.clear();
-        usersCounter = 1;
+        dataBaseManager.clear();
+        nextId = 1;
         lock.unlock();
     }
 
@@ -317,8 +287,8 @@ public class Storage<T extends Object> implements CSVOperator {
     public static void insertToPosition(int idx, Product product) throws WrongID, CloneNotSupportedException {
         lock.lock();
         if (idx < collection.size()) {
-            collection.add(product);
-            dataBaseManager.insert(product);
+            addNew(product);
+            dataBaseManager.insert(collection.lastElement());
             swapPosition(collection.size() - 1, idx);
         } else {
             collection.set(idx, product);
@@ -375,10 +345,9 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         try {
             if(max().compareTo(o) < 0) return;
-            add(o);
-            dataBaseManager.insert(o);
+            addNew(o);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            System.out.println(e.getMessage());//System.out.println(e.getMessage());//e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         lock.unlock();
     }
@@ -393,7 +362,6 @@ public class Storage<T extends Object> implements CSVOperator {
         lock.lock();
         Product _max = max();
         if(_max != null) {
-            dataBaseManager.delete(_max);
             remove(_max.getId(), redactor);
         }
         lock.unlock();
