@@ -55,7 +55,7 @@ public class DataBaseManager {
         lock.lock();
         ResultSet resultSet = sqlManager.getRaw("SELECT * FROM products;");
         if (resultSet == null) return;
-        collection.clear();
+        collection.clear("admin");
 
         try{
             while(resultSet.next()){
@@ -112,8 +112,6 @@ public class DataBaseManager {
             String out ="INSERT INTO products(" +
                     Builder.genObjTableHeader(productTree) + ") values (" +
                     Builder.genObjTableLine(productTree, product) + ");";
-
-            System.out.println(out);
 
             PreparedStatement sql = sqlManager.getConnection().prepareStatement(out);
             if(!sqlManager.send(sql))

@@ -11,7 +11,8 @@ import ArsenyVekshin.lab7.server.Database.DataBaseManager;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static ArsenyVekshin.lab7.common.tools.Comparators.compareFields;
 
@@ -43,7 +44,7 @@ public class Storage<T extends Object> implements CSVOperator {
         Storage.creationTime = creationTime;
     }
 
-    private static Lock lock = new ReentrantLock();
+    private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
 
     public Storage(DataBaseManager dataBaseManager, AuthManager authManager) {
@@ -159,12 +160,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param product Product-obj to add
      */
     public static void addNew(Product product) {
-        lock.lock();
+        lock.writeLock().lock();
         collection.add(product);
         collection.lastElement().generateID(nextId);
         dataBaseManager.insert(collection.lastElement());
         nextId++;
-        lock.unlock();
+        lock.writeLock().unlock();lock.writeLock().unlock();
     }
 
     /**
@@ -186,11 +187,14 @@ public class Storage<T extends Object> implements CSVOperator {
      * @return bool
      */
     public boolean checkOwnership(long id, String redactor){
+        lock.readLock().lock();
         try {
             if(authManager.getMasterUser().getLogin().equals(redactor)) return true;
             int _idx = findIdx((int)id);
+            lock.readLock().unlock();
             return collection.get(_idx).getOwner().equals(redactor);
         } catch (WrongID e) {
+            lock.readLock().unlock();
             return false;
         }
     }
@@ -218,11 +222,11 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws WrongID
      */
     public void update(long id, Product product, String redactor) throws WrongID, AccessRightsException {
-        lock.lock();
+        lock.writeLock().lock();
 
         int _idx = findIdx((int)id);
         if(!checkOwnership(collection.get(_idx), redactor)) {
-            lock.unlock();
+            lock.writeLock().unlock();
             throw new AccessRightsException("изменение объекта доступно лишь создателю");
         }
 
@@ -230,7 +234,7 @@ public class Storage<T extends Object> implements CSVOperator {
         collection.set(_idx, product);
         dataBaseManager.update(product);
 
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
@@ -239,29 +243,34 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws WrongID
      */
     public void remove(int id, String redactor) throws WrongID, AccessRightsException {
-        lock.lock();
+        lock.writeLock().lock();
 
         int _idx = findIdx(id);
         if(!checkOwnership(collection.get(_idx), redactor)) {
-            lock.unlock();
+            lock.writeLock().unlock();
             throw new AccessRightsException("изменение объекта доступно лишь создателю");
         }
 
         dataBaseManager.delete(collection.get(_idx));
         collection.remove(_idx);
 
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
      * clear collection
      */
-    public static void clear() {
-        lock.lock();
-        collection.clear();
-        dataBaseManager.clear();
-        nextId = 1;
-        lock.unlock();
+    public void clear(String redactor) {
+        lock.writeLock().lock();
+        for(Product product : collection){
+            if(checkOwnership(product, redactor)){
+                dataBaseManager.delete(product);
+                collection.remove(product);
+            }
+
+        }
+        nextId = findMaxId()+1;
+        lock.writeLock().unlock();
     }
 
     /**
@@ -271,10 +280,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws CloneNotSupportedException
      */
     private static void swapPosition(int idx1, int idx2) throws CloneNotSupportedException {
+        lock.writeLock().lock();
         if (Integer.max(idx1, idx2) >= collection.size()) collection.setSize(Integer.max(idx1, idx2));
         Product buff = collection.get(idx1).clone();
         collection.set(idx1, collection.get(idx2).clone());
         collection.set(idx2, buff);
+        lock.writeLock().unlock();
     }
 
     /**
@@ -285,7 +296,7 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws CloneNotSupportedException
      */
     public static void insertToPosition(int idx, Product product) throws WrongID, CloneNotSupportedException {
-        lock.lock();
+        lock.writeLock().lock();
         if (idx < collection.size()) {
             addNew(product);
             dataBaseManager.insert(collection.lastElement());
@@ -293,7 +304,7 @@ public class Storage<T extends Object> implements CSVOperator {
         } else {
             collection.set(idx, product);
         }
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
@@ -301,7 +312,7 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param field field to compare (id/name/price)
      */
     public void sortBy(String field) {
-        lock.lock();
+        lock.writeLock().lock();
         collection.sort((f1, f2) -> {
             try {
                 compareFields((T) f1.getClass().getDeclaredField(field).get(f1),
@@ -311,16 +322,16 @@ public class Storage<T extends Object> implements CSVOperator {
             }
             return 0;
         });
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
      * default collection sort-function
      */
     public void sort(){
-        lock.lock();
+        lock.writeLock().lock();
         collection.sort(Comparator.naturalOrder());
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
@@ -342,14 +353,14 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     public void addIfMax(Product o){
-        lock.lock();
+        lock.writeLock().lock();
         try {
             if(max().compareTo(o) < 0) return;
             addNew(o);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             System.out.println(e.getMessage());
         }
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
@@ -359,12 +370,12 @@ public class Storage<T extends Object> implements CSVOperator {
      * @throws IllegalAccessException
      */
     public void removeGreater(Product o, String redactor) throws NoSuchFieldException, IllegalAccessException, AccessRightsException, WrongID {
-        lock.lock();
+        lock.writeLock().lock();
         Product _max = max();
         if(_max != null) {
             remove(_max.getId(), redactor);
         }
-        lock.unlock();
+        lock.writeLock().unlock();
     }
 
     /**
@@ -372,7 +383,7 @@ public class Storage<T extends Object> implements CSVOperator {
      * @param unitOfMeasure
      */
     public void removeSameUnitOfMeasure(UnitOfMeasure unitOfMeasure, String redactor) throws AccessRightsException {
-        lock.lock();
+        lock.writeLock().lock();
         boolean accessErrorFlag = false;
         for (int i=0; i<collection.size(); i++){
             if(collection.get(i) == null || collection.get(i).getUnitOfMeasure() != unitOfMeasure) continue;
@@ -383,7 +394,7 @@ public class Storage<T extends Object> implements CSVOperator {
             dataBaseManager.delete(collection.get(i));
             collection.remove(i);
         }
-        lock.unlock();
+        lock.writeLock().unlock();
         if(accessErrorFlag)
             throw new AccessRightsException("изменение объекта доступно лишь создателю");
     }
@@ -407,8 +418,9 @@ public class Storage<T extends Object> implements CSVOperator {
     }
 
     public void load(){
-        System.out.println();
+        lock.writeLock().lock();
         dataBaseManager.loadCollectionFromBase();
+        lock.writeLock().unlock();
     }
 
     @Override

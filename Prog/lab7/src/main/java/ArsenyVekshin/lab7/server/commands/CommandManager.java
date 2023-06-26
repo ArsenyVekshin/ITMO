@@ -93,7 +93,7 @@ public class CommandManager implements Runnable{
                             commands.get(cmd.getType()).execute(cmd);
                             debugPrintln("send " + cmd.toString());
 
-                            if (cmd.isNeedToRecall() || !cmd.getReturns().equals("done"))
+                            if (cmd.isNeedToRecall() || (cmd.getReturns()==null || !cmd.getReturns().equals("done")))
                                 udpManager.addCallBack(cmd);
                         }
                     }
