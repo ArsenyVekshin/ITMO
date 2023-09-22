@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Л.Р. Веб ЛР1 Векшин А.И</title>
+    <style>
+        body {
+            color: white;
+            font-family: sans-serif;
+            background: linear-gradient(60deg, #ed193b, #c500ff, #f286e2, #681d7a);
+            background-size: 400% 400%;
+            animation: gradient 30s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .invisible {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            display: inline;
+        }
+
+        #results-table tr th {
+            position: sticky;
+            top: 0;
+
+        }
+    </style>
+    </head>
+        <body class="rainbow-bg-v">
+        <div id="container">
+            <table cellspacing="0">
+                <thead>
+                <tr>
+                    <th width="25%">
+                        <img src="assets/kitten1.gif" height="175px" />
+                    </th>
+                    <th width="50%">
+                        <h1 class="rainbow-text">Arseny Vekshin</h1>
+                        <h2 class="rainbow-text">p3216 / 2605</h2>
+                    </th>
+                    <th width="25%">
+                        <img src="assets/kitten1.gif" height="175px" />
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="col1">
+                        <h1 >point</h1>
+                        <form id="form">
+                            <br>
+                            <div class="x-input">
+                                <label id="x-label">X: </label>
+                                <input id="x-value" name="x" type="text" pattern='[\-\+]?([0-4].[0-9]+|[0-5])' required title="X must be in range (-5, 5)" maxlength="10">
+                            </div>
+                            <br>
+
+                            <label id="y-label"> Y: </label>
+                            <input class="invisible" id="y-value" name="y" type="text" value="">
+                            <div class="y-checkbox" >
+                                <input class="y" name="y" type="checkbox" id="y-5" value="-5" !checked /> <label>-5</label>
+                                <input class="y" name="y" type="checkbox" id="y-4" value="-4" !checked /> <label>-4</label>
+                                <input class="y" name="y" type="checkbox" id="y-3" value="-3" !checked /> <label>-3</label>
+                                <input class="y" name="y" type="checkbox" id="y-2" value="-2" !checked /> <label>-2</label>
+                                <input class="y" name="y" type="checkbox" id="y-1" value="-1" !checked /> <label>-1</label>
+                                <input class="y" name="y" type="checkbox" id="y0" value="0" !checked /> <label>0</label>
+                                <input class="y" name="y" type="checkbox" id="y1" value="1" !checked /> <label>1</label>
+                                <input class="y" name="y" type="checkbox" id="y2" value="2" !checked /> <label>2</label>
+                                <input class="y" name="y" type="checkbox" id="y3" value="3" !checked /> <label>3</label>
+                                <input class="y" name="y" type="checkbox" id="y4" value="4" !checked /> <label>4</label>
+                                <input class="y" name="y" type="checkbox" id="y5" value="5" !checked /> <label>5</label>
+                            </div>
+                            <br />
+
+                            <br>
+                            <label id="r-label">R: </label>
+                            <input class="invisible" id="r-value" type="text" value="">
+                            <div class="r-selector">
+                                <select id="r" class="r" name="r">
+                                    <option value="1">1</option>
+                                    <option value="1.5">1.5</option>
+                                    <option value="2">2</option>
+                                    <option value="2.5">2.5</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <br>
+
+
+                            <button type="submit" id="submit-button">Submit</button>
+                        </form>
+                    </td>
+                    <td id="col2">
+                        <center>
+                            <img src="assets/areas1.png" height="175px" />
+                        </center>
+
+                    </td>
+                    <td id="col3" >
+                        <div class = "result">
+                            <table id="results-table">
+                                <thead>
+                                <tr>
+                                    <th width="5%">X</th>
+                                    <th width="5%">Y</th>
+                                    <th width="5%">R</th>
+                                    <th width="40%">Current Time</th>
+                                    <th width="25%">Script Time(ms)</th>
+                                    <th width="20%">Result</th>
+                                </tr>
+                                </thead>
+                                <tbody id="results-content">
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="src/js/main.js" type="text/javascript"></script>
+    </body>
+</html>
