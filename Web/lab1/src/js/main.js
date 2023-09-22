@@ -1,5 +1,7 @@
 "use strict";
 
+const resultsDataKey = "results";
+
 class Application {
     components = {
         x: document.getElementById("x-value"),
@@ -56,7 +58,7 @@ class Application {
 
         this.components.r.value = "";
         selectedYCheckboxes.forEach(cbx =>
-            this.components.y.value += cbx.value
+            this.components.y.value = cbx.value
         );
         console.log("y=" + this.components.y.value);
     }
@@ -64,7 +66,7 @@ class Application {
     validateAndParse(x, y, r) {
         const xMin = -5.0;
         const xMax = 5.0;
-        const yValues = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+        const yValues = [-5, -4, -3, -2, -1, 0, 1, 2, 3];
         const rValues = [1, 1.5, 2, 2.5, 3];
 
         let parsedX, parsedY, parsedR;

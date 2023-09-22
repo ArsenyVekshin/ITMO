@@ -19,7 +19,7 @@ $y = $_GET["y"];
 $r = $_GET["r"];
 
 if ($x < -5 || $x > 5) abort(400, "X not in range!"); //len
-if ($y <= -5 || $y > 3) abort(400, "Y not in range!");
+if ($y < -5 || $y > 3) abort(400, "Y not in range!");
 if ($r < 1 || $r > 3) abort(400, "R not in range!");
 
 $hit = false;
