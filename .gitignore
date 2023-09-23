@@ -120,3 +120,12 @@ fabric.properties
 /**/target/*
 Prog/lab5/docs/ArsenyVekshin/lab5/commands/tasks/ClearCollectionCmd.html
 Prog/lab6/pom.xml
+
+llp/seminar/*
+*.sln
+*.vcxproj
+*.vcxproj.user
+llp/**/bin/*
+llp/**/obj/*
+
+
