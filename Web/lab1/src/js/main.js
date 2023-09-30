@@ -30,7 +30,7 @@ class Application {
     }
 
     initYValue(){
-        const selectedY = document.getElementById(`x${this.components.x.value}`);
+        const selectedY = document.getElementById(`y${this.components.y.value}`);
         if (selectedY) {
             selectedY.classList.add("choosen");
         } else {
@@ -54,9 +54,9 @@ class Application {
     }
 
     setYValue(e){
-        const selectedYCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const selectedYCheckboxes = document.querySelectorAll('input[class="y"]', 'input[type="checkbox"]:checked');
 
-        this.components.r.value = "";
+        this.components.y.value = "";
         selectedYCheckboxes.forEach(cbx =>
             this.components.y.value = cbx.value
         );
