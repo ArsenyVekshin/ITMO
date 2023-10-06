@@ -41,6 +41,12 @@
             background: lightcoral;
         }
 
+        button:disabled {
+            background-color: gray;
+            color: white;
+            cursor: not-allowed;
+        }
+
         .y {
             padding-right: 1px
         }
@@ -91,11 +97,10 @@
                             <br>
                             <div class="x-input">
                                 <label id="x-label">X: </label>
-                                <input id="x-value" name="x" type="text" pattern='[\-\+]?([0-4]?.[0-9]+|[0-5])' required title="X must be in range (-5, 5)" maxlength="10">
+                                <input id="x-value" name="x" type="text" pattern='[\-\+]?([0-4]?.[0-9]+)' required title="X must be in range (-5, 5)">
                             </div>
                             <br/>
 
-                            <input class="invisible" id="y-value" name="y" type="text" value="">
                             <div class="y-checkbox" >
                                 <label id="y-label"> Y: </label>
                                 <input class="y" name="y" type="checkbox" id="y-5" value="-5" !checked /> <label>-5</label>
@@ -122,7 +127,6 @@
                                 </select>
                             </div>
                             <br />
-
 
                             <button type="submit" id="submit-button">Submit</button>
                         </form>

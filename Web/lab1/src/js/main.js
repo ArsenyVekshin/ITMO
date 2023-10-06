@@ -5,41 +5,29 @@ const resultsDataKey = "results";
 class Application {
     components = {
         x: document.getElementById("x-value"),
-        y: document.getElementById("y-value"),
+        y: document.querySelectorAll('input[class="y"]'),
         r: document.getElementById("r-value"),
         submit: document.getElementById("submit-button")
     };
 
+
     resultsTable = document.getElementById("results-content");
     sessionStorage = window.sessionStorage;
-    gmt = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     constructor() {
-        this.initYValue();
-        this.initRValue();
         this.initTableResults();
-
-        const y_checkboxes = document.getElementsByClassName("y"),
-            form = document.getElementById("form");
-
-        Array.from(y_checkboxes).forEach(cbx =>
-            cbx.addEventListener("change", this.setYValue.bind(this))
-        );
-
+        this.components.x.addEventListener('focusout', this.checkEnteredX.bind(this));
+        const form = document.getElementById("form");
         form.addEventListener("submit", this.submitActions.bind(this));
     }
 
-    initYValue(){
-        const selectedY = document.getElementById(`y${this.components.y.value}`);
-        if (selectedY) {
-            selectedY.classList.add("choosen");
-        } else {
-            this.components.y.value = "";
-        }
+    resetYCheckboxes(e){
+        this.components.y.forEach( cbx => cbx.checked=false);
     }
 
+
+
     initRValue(){
-        //selectElement.options[selectElement.selectedIndex].value
         const selectedR = document.getElementById("r");
         var valueR = selectedR.value;
 
@@ -53,15 +41,36 @@ class Application {
         }
     }
 
-    setYValue(e){
-        const selectedYCheckboxes = document.querySelectorAll('input[class="y"]', 'input[type="checkbox"]:checked');
+    checkEnteredX(){
+        const xMin = -5.0;
+        const xMax = 5.0;
+        let x = this.components.x.value;
+        let parsedX;
 
-        this.components.y.value = "";
-        selectedYCheckboxes.forEach(cbx =>
-            this.components.y.value = cbx.value
-        );
-        console.log("y=" + this.components.y.value);
+        try{
+            if(isNaN(x.trim()) || !x.match('[\-\+]?([0-4]?.[0-9]+)')){
+                throw DOMException;
+            }
+            parsedX = parseFloat(x);
+            if (isNaN(parsedX) || xMin > parsedX || parsedX > xMax) {
+                throw DOMException;
+            }
+            this.components.submit.disabled = false;
+        }catch (e) {
+            this.components.submit.disabled = true;
+        }
     }
+
+    checkEnteredY(){
+        this.components.submit.disabled = true;
+        for (let cbx of this.components.y){
+            if(cbx.checked){
+                this.components.submit.disabled = false;
+                break;
+            }
+        }
+    }
+
 
     validateAndParse(x, y, r) {
         const xMin = -5.0;
@@ -79,7 +88,7 @@ class Application {
 
         parsedY = parseInt(y);
         if (isNaN(y.trim()) || isNaN(parsedY) || !yValues.includes(parsedY)) {
-            alert("Choose only one checkbox");
+            alert("Please input correct Y value");
             return [null,null,null];
         }
 
@@ -93,31 +102,37 @@ class Application {
 
     }
 
-    async submitActions(e){
+    async submitActions(e) {
         e.preventDefault();
         this.initRValue();
         this.components.submit.textContent = "Checking...";
-        this.components.submit.disabled = true
+        this.components.submit.disabled = true;
 
-        const [x, y, r] = this.validateAndParse(this.components.x.value, this.components.y.value, this.components.r.value);
-        if (x !== null && y !== null && r !== null) {
-            try {
-                console.log("pre sent");
-                const response = await fetch("src/php/process.php" + "?x=" + x + "&y=" + y + "&r=" + r);
-                console.log("response= ", response);
+        for (let cbx of this.components.y){
+            if(cbx.checked){
+                console.log("parsing point", this.components.x, cbx.value ,this.components.r)
+                const [x, y, r] = this.validateAndParse(this.components.x.value, cbx.value, this.components.r.value);
+                if (x !== null && y !== null && r !== null) {
+                    try {
+                        console.log("pre sent");
+                        const response = await fetch("src/php/process.php" + "?x=" + x + "&y=" + y + "&r=" + r);
+                        console.log("response= ", response);
 
-                const json = await response.json();
-                if (response.status === 200) {
-                    var data = [x, y, r, json.now, json.script_time, json.result];
-                    this.addTableResults(data);
-                } else {
-                    alert("Server error: " + json.message);
+                        const json = await response.json();
+                        if (response.status === 200) {
+                            var data = [x, y, r, json.now, json.script_time, json.result];
+                            this.addTableResults(data);
+                        } else {
+                            alert("Server error: " + json.message);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        alert("Server unreachable :(\nTry again later");
+                    }
                 }
-            } catch (error) {
-                console.log(error);
-                alert("Server unreachable :(\nTry again later");
             }
         }
+
         this.components.submit.disabled = false;
         this.components.submit.textContent = "Check";
     }
@@ -156,7 +171,6 @@ class Application {
         var lastData = this.sessionStorage.getItem(resultsDataKey);
         this.sessionStorage.setItem(resultsDataKey, rowData.toString() + (lastData ? ";" + lastData : ""));
     }
-
 }
 
 const app = new Application();
