@@ -17,6 +17,7 @@ class Application {
     constructor() {
         this.initTableResults();
         this.components.x.addEventListener('focusout', this.checkEnteredX.bind(this));
+        this.components.y.forEach( cbx=> cbx.addEventListener("focusout", this.checkEnteredY.bind(this)));        //this.comp
         const form = document.getElementById("form");
         form.addEventListener("submit", this.submitActions.bind(this));
     }
@@ -46,18 +47,18 @@ class Application {
         const xMax = 5.0;
         let x = this.components.x.value;
         let parsedX;
+        console.log("CHECK X", x)
 
-        try{
-            if(isNaN(x.trim()) || !x.match('[\-\+]?([0-4]?.[0-9]+)')){
-                throw DOMException;
-            }
-            parsedX = parseFloat(x);
-            if (isNaN(parsedX) || xMin > parsedX || parsedX > xMax) {
-                throw DOMException;
-            }
-            this.components.submit.disabled = false;
-        }catch (e) {
+        this.components.submit.disabled = false;
+        if(isNaN(x.trim()) || !x.match('[\-\+]?([0-4]?.[0-9]*)')){
             this.components.submit.disabled = true;
+            //console.log("locked-1", x, isNaN(x.trim()), !x.match('[\-\+]?([0-4]?.[0-9]*)'))
+            return;
+        }
+        parsedX = parseFloat(x);
+        if (isNaN(parsedX) || xMin > parsedX || parsedX > xMax) {
+            this.components.submit.disabled = true;
+            //console.log("locked-2", x)
         }
     }
 
