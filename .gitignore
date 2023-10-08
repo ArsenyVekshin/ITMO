@@ -121,11 +121,11 @@ fabric.properties
 Prog/lab5/docs/ArsenyVekshin/lab5/commands/tasks/ClearCollectionCmd.html
 Prog/lab6/pom.xml
 
-llp/seminar/*
+Programming Languages/seminar/*
 *.sln
 *.vcxproj
 *.vcxproj.user
-llp/**/bin/*
-llp/**/obj/*
+Programming Languages/**/obj/*
+/**/.vs/*
 
 
