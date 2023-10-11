@@ -17,7 +17,7 @@ global string_copy
  
 ; Принимает код возврата и завершает текущий процесс
 exit: 
-    xor rax, rax,
+    xor rax, rax
     ret 
 
 ; Принимает указатель на нуль-терминированную строку, возвращает её длину
@@ -26,17 +26,14 @@ exit:
 ; вывод:
 ;   rax - длинна строки
 string_length:
-    mov  rax, rdi   ; адрес с которого начали проверку
-  .counter:
-    cmp  byte [rdi], 0
-    je   .return
-    inc  rdi
-    jmp  .counter
-  .return:
-    sub  rdi, rax
-    mov  rax, rdi
+    xor rax, rax
+  .loop:
+    cmp byte [rdi+rax], 0
+    je .end
+    inc rax
+    jmp .loop
+  .end: 
     ret
-
 
 ; Печать N символов из памяти в stdout
 ; аргументы:
@@ -54,7 +51,6 @@ print_N_symb:
 ; аргументы:
 ;   rax - указатель на начало строки
 print_string:
-    mov  rdi, rax
     push rdi        ; сохраняем регистры перед вызовом функции
     call string_length
     pop rdi         ; востанавливаем состояние регистров
@@ -92,6 +88,7 @@ print_newline:
 ;   rdi - счетчик цикла
 ;   r12 - остаток от деления
 print_uint:
+    push r12
     mov r12, 10
     mov rax, rdi    
     mov rdi, rsp    
@@ -108,6 +105,7 @@ print_uint:
     jnz .loop
     call print_string
     add rsp, 24         ; Возврат стека в исходное состояние
+    pop r12
     ret
 
 
@@ -118,6 +116,7 @@ print_uint:
 ;   rdi - счетчик цикла
 ;   r12 - остаток от деления
 print_int:
+    push r12
     cmp rdi, 0      ; Определение знака числа
     jge .positive
     push rdi
@@ -127,6 +126,7 @@ print_int:
     neg rdi
 .positive:
     call print_uint ; Вывод беззнакового целого числа
+    pop r12
     ret
 
 
@@ -137,32 +137,16 @@ print_int:
 ;   rsi - указатель на начало 2й строки
 ; локально:
 ;   rcx - счетчик цикла
-;   d1 - буфер для символа
 ; вывод:
 ;   rax - 1 - да / 0 - нет
 string_equals:
-    xor rcx, rcx        ; обнуляем rcx
-    push rdi
-    push rsi
-    call string_length  ; вывод функции -> rax
-    pop rdi             ; rdi <-> rsi
-    pop rsi
-    push rdi
-    push rsi
-    push rax            ; сохраняем длинну 1й строки в стек
-    call string_length  ; вывод функции -> rax
-    pop rdx             ; длинна 1й строки -> rdx
-    pop rdi
-    
-    cmp rdx, rax        ; сравниваем длины строк
-    jne .false
-
+    cmp rcx, 0       ; обнуляем rcx
   .loop:
-    mov dl, byte[rdi + rcx] ; символ 1 -> буфер
-    cmp dl, byte[rsi + rcx] ; символ 1 == символ 2?
+    mov al, byte[rdi + rcx] ; символ 1 -> буфер
+    cmp al, byte[rsi + rcx] ; символ 1 == символ 2?
     jne .false
     inc rcx
-    cmp dl, 0               ; символ == конец строки?
+    cmp al, 0               ; символ == конец строки?
     jne .loop
     mov rax, 1              ; возвращаем 1
     ret
@@ -174,8 +158,8 @@ string_equals:
 
 ; Читает один символ из stdin и возвращает его. Возвращает 0 если достигнут конец потока
 read_char:
-    xor rax, rax    ; флаг syscall "чтение"
-    xor rdi, rdi    ; флаг syscall "stdin"
+    mov rax, 0      ; флаг syscall "чтение"
+    mov rdi, 0      ; флаг syscall "stdin"
     push 0          ; буфер в стеке
     mov rsi, rsp    ; адрес символа в стеке -> указатель syscall "адрес начала строки"
     mov rdx, 1      ; аргумент syscall "длинна строки"
@@ -196,49 +180,61 @@ read_char:
 ;   rsi - размер буфера
 ;   [input_rax, input_rax + input_rsi] - буфер
 ; локально:
-;   rcx - счетчик цикла
+;   rdx - счетчик цикла
 ; вывод:
 ;   rax - адрес начала строки
 ;   rdx - длинна строки
 read_word:
-    xor rcx, rcx    ; обнуляем rcx
-  .loop:
+    mov rax, 0      ; обнуляем rax
+    mov rdx, 0      ; обнуляем rdx
+    push rdi
+
+  .space:
     push rdi        ; сохраняем регистры перед вызовом функции
     push rsi
-    push rcx
+    push rdx
     call read_char  ; вывод функции -> rax
-    pop rcx         ; востанавливаем состояние регистров
+    pop rdx         ; востанавливаем состояние регистров
     pop rsi
     pop rdi
 
-    cmp rax, 0x20   ; проверки на "пробельные символы"
+    cmp al, 0x20   ; проверки на "пробельные символы"
     je .space
-    cmp rax, 0x9
+    cmp al, 0x9
     je .space
-    cmp rax, 0xA
+    cmp al, 0xA
     je .space
-    cmp rax, 0x0
+    cmp al, 0x0
     je .return
-
-    mov [rdi + rcx], rax    ; считанный символ -> буфер
-    inc rcx
-    cmp rsi, rcx    ; проверка на переполнение буфера
-    jg .err
+  .loop:
+    cmp rsi, rdx    ; проверка на переполнение буфера
+    je .err
+    cmp al, 0x20   ; проверки на "пробельные символы"
+    je .return
+    cmp al, 0x9
+    je .return
+    cmp al, 0xA
+    je .return
+    cmp al, 0x0
+    je .return
+    mov byte[rdi + rdx], al    ; считанный символ -> буфер
+    inc rdx         ; 
+    push rdi        ; сохраняем регистры перед вызовом функции
+    push rsi
+    push rdx
+    call read_char  ; вывод функции -> rax
+    pop rdx         ; востанавливаем состояние регистров
+    pop rsi
+    pop rdi 
     jmp .loop
   .err:
-    xor rax, rax    ; обнуляем rax
-    xor rdx, rdx    ; обнуляем rdx
-    ret  
+    pop rax
+    xor rax, rax
+    ret
 
-  .space:
-    cmp rcx, 0
-    je .loop        
-    jmp .return
   .return:
-    xor rax, rax            ; обнуляем rax
-    mov [rdi + rcx], rax    ; считанный символ -> буфер
-    mov rax, rdi            ; адрес 
-    mov rdx, rcx            ; длинна строки
+    mov byte[rdi + rdx], 0
+    pop rax           ; длинна строки
     ret
  
 
@@ -249,39 +245,35 @@ read_word:
 ; аргументы:
 ;   rdi - указатель на начало строки
 ; локально:
-;   r12 - обрабатываемый символ
-;   rcx - счетчик цикла
+;   rcx - обрабатываемый символ
+;   rdx - счетчик цикла
 ; вывод:
 ;   rax - число
 ;   rdx - длинна строки
 parse_uint:
-    push rbx            ; сохраняем регистры в стеке       
-    push r12   
-    mov rbx, 10         ; буфер для упрощения деления на разряды
-    xor rcx, rcx        ; обнуляем rcx
-    xor rax, rax        ; обнуляем rax
-
-  .loop:
-    mov r12, [rdi+rcx]  ; считываем символ
-    and r12, 0xff       ; применяем маску
-    cmp r12b, 0         ; символ == окончание строки?
+    mov rax, 0          ; обнуляем rax
+    mov rdx, 0          ; обнуляем rdx
+    mov rcx, 0          ; обнуляем rcx
+    cmp byte [rdi], 0   ; строка пустая?
     je .return
-    cmp r12b, 0x39      ; символ == число?    
-    ja .return 
-    cmp r12b, 0x30
-    jb .return 
-    
-    mul rbx             ; умножаем на rax 10
-    sub r12b, 0x30      ; получаем цифру
-    add rax, r12        ; rax + цифра
-    inc rcx
+  .loop:
+    movzx rcx, byte [rdi + rdx] ; считываем символ в буфер
+    cmp rcx, '0'                ; символ == число?
+    jb .return
+    cmp rcx, '9'
+    ja .return
+
+    push rdx
+    imul rax, rax, 10
+    pop rdx
+
+    sub rcx, '0'
+    add rax, rcx
+
+    inc rdx
     jmp .loop
   .return:
-    mov rdx, rcx
-    pop r12             ; востанавливаем состояние регистров
-    pop rbx
     ret
-
 
 ; Принимает указатель на строку, пытается
 ; прочитать из её начала знаковое число.
@@ -291,30 +283,24 @@ parse_uint:
 ; аргументы:
 ;   rdi - указатель на начало строки
 ; локально:
-;   r12 - обрабатываемый символ
-;   rdi - счетчик цикла
+;   rdi - обрабатываемый символ
+;   rdx - счетчик цикла
 ; вывод:
 ;   rax - число
 ;   rdx - длинна строки
 parse_int:
-    movzx r12, byte[rdi]; считываем символ
-    cmp r12b, '-'       ; число отрицательное?
-    je .negative
-    push 0              ; флаг N=0 -> стек
+    mov rdx, 0          ; обнуляем rdx
+    cmp byte [rdi], '-' ; проверка на знак перед числом
+    jne .positive
 
   .negative:
-    push 1              ; флаг N=1  -> стек
-    inc rdi
-  .parse:
+    inc rdi         ; учитываем знак в длинне
     call parse_uint
-    pop r12             ; считываем значение N из стека
-    cmp r12, 0
-    je .return
-    neg rax             ; если число отрцательное, инвертируем число
+    neg rax         ;инвертируем полученное число
     inc rdx
-  .return:
     ret
-
+  .positive:
+    jmp parse_uint
 
 ; Принимает указатель на строку, указатель на буфер и длину буфера
 ; Копирует строку в буфер
@@ -329,15 +315,21 @@ parse_int:
 ; вывод:
 ;   rax - длинна строки
 string_copy:
-    push r12                ; сохраняем регистр в стеке  
+    push r12                ; сохраняем регистры в стеке  
+    push rdi
+    push rsi
+    push rdx
     call string_length      ; вывод функции -> rax
     inc rax
+    pop rdx
+    pop rsi
+    pop rdi
     cmp rax, rdx            ; длинна строки > длинна буфера ? 
     jg .err
     xor rcx, rcx            ; обнуляем rcx 
     xor r12, r12            ; обнуляем r12 
 .loop:
-    mov r12, [rdi+rcx]      ; копируем символ
+    mov r12b, [rdi+rcx]      ; копируем символ
     mov [rsi+rcx], r12
     inc rcx
     cmp byte[rdi+rcx], 0    ; символ == конец строки?
