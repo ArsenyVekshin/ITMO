@@ -1,0 +1,68 @@
+body {
+    color: white;
+    font-family: sans-serif;
+    background: linear-gradient(60deg, #ed193b, #c500ff, #f286e2, #681d7a);
+    background-size: 400% 400%;
+    animation: gradient 30s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.mainTable {
+    font-family: Consolas;
+    margin-top: auto;
+}
+
+tbody{
+    vertical-align: top;
+}
+
+button {
+    border: none;
+    border-radius: 3px;
+}
+
+button:hover{
+    background: lightcoral;
+}
+
+button:disabled {
+    background-color: gray;
+    color: white;
+    cursor: not-allowed;
+}
+
+.y {
+    padding-right: 1px
+}
+
+.header {
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    font-style: italic;
+}
+
+.invisible {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    display: inline;
+}
+
+#results-table tr th {
+    position: sticky;
+    top: 0;
+}
