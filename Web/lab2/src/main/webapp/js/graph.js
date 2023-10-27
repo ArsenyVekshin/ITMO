@@ -8,8 +8,6 @@ const height = graphCanvas.height;
 
 
 $(document).ready(function () {
-    $('#r_select').on('change', );
-
     $('#submit-button').click(function (event) {
         var x = document.querySelectorAll('input[type="checkbox"]:checked');
         var y = document.getElementById('y_text');

@@ -12,6 +12,8 @@ var choosen = {
 
 
 
+
+
 components.x.forEach(cbx => cbx.addEventListener("change", checkEnteredX));
 function checkEnteredX(){
     this.choosen.x = [];
@@ -79,22 +81,16 @@ function submitActions() {
 }
 
 $('#submit-button').click(function (event) {
-    choosen.x.forEach()
-    for(let _x in this.choosen.x) {
-        console.log("parsing point", this.choosen.x[_x], this.choosen.y, this.choosen.r)
-        this.checkEnteredPoint(this.choosen.x[_x], this.choosen.y, this.choosen.r);
-    }
-
-
-
-    let [x, y, r] = validate_values(choosen.x, choosen.y, choosen.r)
-    var result = validate_values(x, y, r);
-    var alrt = document.getElementById('alert');
-    if (result !== "") {
-        alrt.innerHTML = "<strong>" + result + "</strong>";
-    } else {
-        x.forEach(function (xNumber) {
-            sendForm(board, pointsByRadius, xNumber.value, y.value.replace(",", "."), r.value);
-        });
-    }
+    choosen.x.forEach(_x =>{
+        let [x, y, r] = validate_values(_x, choosen.y, choosen.r)
+        var result = validate_values(x, y, r);
+        var alrt = document.getElementById('alert');
+        if (result !== "") {
+            alrt.innerHTML = "<strong>" + result + "</strong>";
+        } else {
+            x.forEach(function (xNumber) {
+                sendForm(board, pointsByRadius, xNumber.value, y.value.replace(",", "."), r.value);
+            });
+        }
+    });
 });

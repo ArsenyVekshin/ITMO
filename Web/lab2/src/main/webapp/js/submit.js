@@ -23,8 +23,3 @@ function sendForm(board, points, x, y, r) {
 	});
 }
 
-function check_r() {
-	var r = document.querySelector('option:checked');
-	if (parseFloat(r.value)) return true;
-	return false;
-}
