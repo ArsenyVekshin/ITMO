@@ -4,47 +4,54 @@ var components = {
     r: document.querySelectorAll('input[class="r"]'),
     submit: document.getElementById("submit-button")
 };
+
 var choosen = {
     x: [],
     y: null,
     r: null
 };
 
+// массив попавших точек для каждого радиуса
+var pointsContainer = [];
+var resultsTable = document.getElementById("results-content");
 
 
-
+$(document).ready(function () {
+    initialize_table(pointsContainer);
+    redrawGraph(choosen.r);
+});
 
 components.x.forEach(cbx => cbx.addEventListener("change", checkEnteredX));
 function checkEnteredX(){
-    this.choosen.x = [];
-    for (let cbx of this.components.x){
+    choosen.x = [];
+    for (let cbx of components.x){
         if(cbx.checked) {
-            this.choosen.x.push(cbx.value);
+            choosen.x.push(cbx.value);
         }
     }
-    this.updateSubmitLock();
-    this.drawGraph();
+    updateSubmitLock();
+    redrawGraph(choosen.r);
 }
 
 components.y.onblur = function checkEnteredY(){
     const yMin = -3.0;
     const yMax = 5.0;
-    let y = this.components.y.value;
+    let y = components.y.value;
     let parsedY;
-    this.choosen.y = null;
+    choosen.y = null;
     console.log("CHECK Y", y)
 
     if(isNaN(y.trim()) || !y.match('[\-\+]?([0-5]?.[0-9]*)')){
-        this.updateSubmitLock();
+        updateSubmitLock();
         return;
     }
     parsedY = parseFloat(y);
     if (isNaN(parsedY) || yMin > parsedY || parsedY > yMax) {
-        this.updateSubmitLock();
+        updateSubmitLock();
         return;
     }
-    this.choosen.y = y;
-    this.updateSubmitLock();
+    choosen.y = y;
+    updateSubmitLock();
 }
 
 components.r.forEach(rd => rd.addEventListener("change", checkEnteredR));
@@ -55,42 +62,54 @@ function checkEnteredR(){
             choosen.r = rd.value;
         }
     }
-    console.log("r=", this.choosen.r);
+    console.log("r=", choosen.r);
     updateSubmitLock();
     redrawGraph(choosen.r);
 }
 
-
-function submitActions() {
-    components.submit.textContent = "Checking...";
-    components.submit.disabled = true;
-
-    for(let _x in this.choosen.x) {
-        let [x, y, r] = validate_values(_x, choosen.y, choosen.r)
-        var result = validate_values(x, y, r);
-        var alrt = document.getElementById('alert');
-        if (result !== "") {
-            alrt.innerHTML = "<strong>" + result + "</strong>";
-        } else {
-            sendForm(board, pointsByRadius, _x, y.value.replace(",", "."), r.value);
-        }
-    }
-
-    components.submit.disabled = false;
-    components.submit.textContent = "Check";
-}
-
-$('#submit-button').click(function (event) {
+$('#submit-button').click(function() {
     choosen.x.forEach(_x =>{
-        let [x, y, r] = validate_values(_x, choosen.y, choosen.r)
-        var result = validate_values(x, y, r);
-        var alrt = document.getElementById('alert');
+        let [x, y, r] = validateAndParse(_x, choosen.y, choosen.r)
+        let result = validate_values(x, y, r);
         if (result !== "") {
-            alrt.innerHTML = "<strong>" + result + "</strong>";
+            alert("Server error: " + result);
         } else {
             x.forEach(function (xNumber) {
-                sendForm(board, pointsByRadius, xNumber.value, y.value.replace(",", "."), r.value);
+                sendForm(pointsContainer, xNumber.value, y.value.replace(",", "."), r.value);
             });
         }
     });
 });
+
+$('#clear-button').click(function (event) {
+    clean_table();
+    redrawGraph(choosen.r);
+});
+
+
+document.addEventListener('click', (ev)=>this.handleClick(ev));
+function handleClick(event) {
+    // Получаем координаты точки, куда нажал пользователь
+    let x = event.clientX;
+    let y = event.clientY;
+    let one = 30;
+
+    if (x > canvasRect.left && x < canvasRect.right &&
+        y < canvasRect.bottom && y > canvasRect.top) {
+
+        //пересчитываем значения в локальные координаты
+        x = (x - canvasRect.left - (canvasRect.width/2))/one;
+        y = ((canvasRect.height/2) - y + canvasRect.top)/one;
+
+        console.log("click point = ", x, y);
+
+        if(choosen.r !== null){
+            sendForm(pointsContainer, x.toString(), y.toString(), choosen.r);
+        }
+
+    }
+}
+
+function updateSubmitLock(){
+    components.submit.disabled = choosen.x.length == 0 || choosen.y == null || choosen.r == null;
+}

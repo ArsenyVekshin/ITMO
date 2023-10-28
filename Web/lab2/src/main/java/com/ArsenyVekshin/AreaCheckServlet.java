@@ -1,4 +1,7 @@
+package com.ArsenyVekshin;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,12 +11,11 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import org.json.JSONArray;
+import com.ArsenyVekshin.table.Table;
+import com.ArsenyVekshin.table.TableRow;
 import org.json.JSONObject;
-import table.TableRow;
-import table.Table;
 
-
+@WebServlet(name="AreaCheckServlet", value="/areaCheck/*")
 public class AreaCheckServlet extends HttpServlet {
     private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

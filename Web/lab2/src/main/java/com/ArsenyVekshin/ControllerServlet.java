@@ -1,8 +1,11 @@
+package com.ArsenyVekshin;
+
+import com.ArsenyVekshin.table.Table;
+import com.ArsenyVekshin.table.TableRow;
 import org.json.JSONArray;
-import table.Table;
-import table.TableRow;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+@WebServlet(name="ControllerServlet", value="/controller/*")
 public class ControllerServlet extends HttpServlet {
 
     @Override
@@ -24,7 +28,7 @@ public class ControllerServlet extends HttpServlet {
             out.close();
             response.setStatus(HttpServletResponse.SC_OK);
         } else if (checkArgumentExists(request)) {
-            getServletContext().getRequestDispatcher("/AreaCheckServlet").forward(request, response);
+            getServletContext().getRequestDispatcher("com/ArsenyVekshin/AreaCheckServlet").forward(request, response);
         }
     }
 

@@ -1,7 +1,6 @@
-package table;
+package com.ArsenyVekshin.table;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public final class TableRow implements Serializable {
     private float x;

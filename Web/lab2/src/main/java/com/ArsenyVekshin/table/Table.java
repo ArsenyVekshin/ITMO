@@ -1,4 +1,4 @@
-package table;
+package com.ArsenyVekshin.table;
 
 import java.io.Serializable;
 import java.util.ArrayList;

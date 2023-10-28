@@ -1,70 +1,29 @@
 const graphCanvas = document.getElementById("graph_canvas");
-const canvasRect = this.graphCanvas.getBoundingClientRect();
-const ctx = this.graphCanvas.getContext('2d');
+const canvasRect = graphCanvas.getBoundingClientRect();
+const ctx = graphCanvas.getContext('2d');
 
 const one = 30;
 const width = graphCanvas.width;
 const height = graphCanvas.height;
 
-
-$(document).ready(function () {
-    $('#submit-button').click(function (event) {
-        var x = document.querySelectorAll('input[type="checkbox"]:checked');
-        var y = document.getElementById('y_text');
-        var r = document.querySelector('option:checked');
-        var result = validate_values(x, y, r);
-        var alrt = document.getElementById('alert');
-        if (result !== "") {
-            alrt.innerHTML = "<strong>" + result + "</strong>";
-        } else {
-            x.forEach(function (xNumber) {
-                sendForm(board, pointsByRadius, xNumber.value, y.value.replace(",", "."), r.value);
-            });
-        }
-    });
-
-    $('#clear-button').click(function (event) {
-        clean_table();
-        redrawGraph(choosen.r);
-    });
-
-    $('#btnClean').click(function (event) {
-        r_selector.each(function () {
-            let idxRadius = $(this).val();
-            board.removeObject(pointsByRadius[idxRadius]);
-            pointsByRadius[idxRadius] = [];
-        });
-        clean_table();
-    });
-
-    board.on("down", function (event) {
-        if (event.button === 2 || event.target.className === 'JXG_navigation_button') {
-            return;
-        }
-        if (check_r()) {
-            let coords = board.getUsrCoordsOfMouse(event);
-            sendForm(board, pointsByRadius, coords[0], coords[1], document.querySelector('option:checked').value);
-        } else {
-            var alrt = document.getElementById('alert');
-            alrt.innerHTML = "<strong>You should choose R</strong>"
-        }
-    });
-});
-
 function redrawGraph(r) {
     ctx.beginPath();
-    ctx.clearRect(0, 0, this.graphCanvas.width, this.graphCanvas.height);
+    ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
 
     //рисуем основные элементы графика
     drawFunction(r);
     drawAxis();
 
+    //рисуем точки из истории с этим радиусом
+    drawPreviousPoints(r);
+
     //рисуем все точки выбранные на панели
-    for(let _x in this.choosen.x) {
-        if(this.choosen.y != null){
-            drawPoint(this.choosen.x[_x], this.choosen.y, 0, 0, 0);
+    for(let _x in choosen.x) {
+        if(choosen.y != null){
+            drawPoint(choosen.x[_x], choosen.y, 0, 0, 0);
         }
     }
+
 }
 
 function drawAxis(){
@@ -108,7 +67,7 @@ function drawFunction(r){
         ctx.strokeStyle = 'rgb(233,197,255)';
         ctx.fillStyle = 'rgb(233,197,255)';
         ctx.beginPath();
-        let r = this.choosen.r * one;
+        let r = choosen.r * one;
         // Прямоугольник
         ctx.fillRect(width / 2, height / 2, r, -1*r/2);
 
@@ -134,4 +93,14 @@ function drawPoint(x, y, r, g, b){
     ctx.arc((width / 2) + x, (height / 2) - y, 2, 0, 2 * Math.PI);
     ctx.fill();
     ctx.closePath();
+}
+
+function drawPreviousPoints(r){
+    console.log(pointsContainer);
+    if(r==null || pointsContainer.length === 0) return;
+    pointsContainer.forEach(point =>{
+        if(point[2]==r){
+            drawPoint(point[0], point[1], 0, 153, 0);
+        }
+    });
 }

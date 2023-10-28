@@ -1,7 +1,7 @@
-function sendForm(board, points, x, y, r) {
+function sendForm(points, x, y, r) {
 
 	$.ajax({
-		url: 'ControllerServlet',
+		url: '/controller/checking',
 		type: 'GET',
 		data: {
 			'x': x,
@@ -11,10 +11,9 @@ function sendForm(board, points, x, y, r) {
 		},
 		success: function(data) {
 			console.log(data);
-			let x = data.x, y = data.y, r = data.r, hit = data.hit;
-			let point = createPoint(board, x, y, hit);
-			point.showElement();
-			points[r].push(point);
+			if(data.hit === "true"){
+				points.push([data.x, data.y, data.r]);
+			}
 			addInTable(convertToHtmlTable(data));
 		},
 		error: function(data) {
