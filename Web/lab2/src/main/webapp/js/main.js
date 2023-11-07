@@ -71,12 +71,8 @@ $('#submit-button').click(function() {
     choosen.x.forEach(_x =>{
         let [x, y, r] = validateAndParse(_x, choosen.y, choosen.r)
         let result = validate_values(x, y, r);
-        if (result !== "") {
-            alert("Server error: " + result);
-        } else {
-            x.forEach(function (xNumber) {
-                sendForm(pointsContainer, xNumber.value, y.value.replace(",", "."), r.value);
-            });
+        if (result) {
+            sendForm(pointsContainer, x, y, r);
         }
     });
 });

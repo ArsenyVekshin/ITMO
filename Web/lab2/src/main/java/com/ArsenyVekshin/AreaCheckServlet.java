@@ -15,7 +15,7 @@ import com.ArsenyVekshin.table.Table;
 import com.ArsenyVekshin.table.TableRow;
 import org.json.JSONObject;
 
-@WebServlet(name="AreaCheckServlet", value="/areaCheck/*")
+@WebServlet(name="AreaCheckServlet", value="/AreaCheckServlet")
 public class AreaCheckServlet extends HttpServlet {
     private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

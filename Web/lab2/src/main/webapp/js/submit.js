@@ -1,7 +1,7 @@
 function sendForm(points, x, y, r) {
 
 	$.ajax({
-		url: '/controller/checking',
+		url: 'ControllerServlet',
 		type: 'GET',
 		data: {
 			'x': x,

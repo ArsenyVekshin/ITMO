@@ -14,12 +14,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name="ControllerServlet", value="/controller/*")
+@WebServlet(name="ControllerServlet", value="/ControllerServlet")
 public class ControllerServlet extends HttpServlet {
-
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!req.getDispatcherType().name().equals("FORWARD")) {
+            resp.sendError(403, "You are not welcome!");
+            return;
+        }
+        super.service(req, resp);
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
+        log(request.toString());
         PrintWriter out = response.getWriter();
         if (checkGetTableRequest(request)) {
             Table table = (Table) request.getSession().getAttribute("table");
@@ -28,7 +36,7 @@ public class ControllerServlet extends HttpServlet {
             out.close();
             response.setStatus(HttpServletResponse.SC_OK);
         } else if (checkArgumentExists(request)) {
-            getServletContext().getRequestDispatcher("com/ArsenyVekshin/AreaCheckServlet").forward(request, response);
+            getServletContext().getRequestDispatcher("/AreaCheckServlet").forward(request, response);
         }
     }
 

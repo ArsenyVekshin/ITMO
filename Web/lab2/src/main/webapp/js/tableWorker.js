@@ -11,7 +11,7 @@ function initialize_table(points) {
 function clean_table() {
     $.ajax({
         type: "POST",
-        url: "controller/",
+        url: "ControllerServlet",
         data: {"clean": 'true'},
         success: function (response) {
             resultsTable.innerHTML = '';
