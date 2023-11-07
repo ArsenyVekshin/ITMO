@@ -4,7 +4,7 @@ function initialize_table(points) {
         var y = parseFloat(row.cells.item(1).innerText);
         var r = parseInt(row.cells.item(2).innerText);
         var hit = row.cells.item(5).innerText === 'true';
-        points[r].push([x,y,r]);
+        points.push([x,y,r]);
     }
 }
 
@@ -24,8 +24,17 @@ function clean_table() {
 }
 
 function addInTable(data) {
-    resultsTable.append(data);
+    let row = resultsTable.insertRow(0);
+    row.insertCell().innerHTML = data.x;
+    row.insertCell().innerHTML = data.y;
+    row.insertCell().innerHTML = data.r;
+    row.insertCell().innerHTML = data.clientDate;
+    row.insertCell().innerHTML = data.scriptWorkingTime;
+    row.insertCell().innerHTML = data.hit;
 }
+// function addInTable(data) {
+//     resultsTable.append(data);
+// }
 
 function convertToHtmlTable(data) {
     return "<tr>" +

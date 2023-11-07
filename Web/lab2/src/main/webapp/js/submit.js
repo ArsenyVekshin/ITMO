@@ -14,7 +14,7 @@ function sendForm(points, x, y, r) {
 			if(data.hit === "true"){
 				points.push([data.x, data.y, data.r]);
 			}
-			addInTable(convertToHtmlTable(data));
+			addInTable(data);
 		},
 		error: function(data) {
 			alert(data);

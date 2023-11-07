@@ -30,17 +30,17 @@
         <table>
             <thead height="200px">
             <tr>
-                <th width="25%">
+                <th width="350px">
                     <img src="assets/kitten1.gif" height="175px" />
                 </th>
-                <th width="400px">
+                <th min-width="400px">
                     <h1 class="header">Arseny Vekshin</h1>
                     <h2 class="header">p3216 / 23152</h2>
                     <a href="https://github.com/ArsenyVekshin/ITMO/tree/master/Web/lab2" data-title="https://github.com/ArsenyVekshin/ITMO/tree/master/Web/lab2">
                         github
                     </a>
                 </th>
-                <th width="25%">
+                <th>
                     <img src="assets/kitten1.gif" height="175px" />
                 </th>
             </tr>
@@ -98,8 +98,8 @@
                                 <th width="5%">X</th>
                                 <th width="5%">Y</th>
                                 <th width="5%">R</th>
-                                <th width="40%">Current Time</th>
-                                <th width="25%">Script Time(ms)</th>
+                                <th width="45%">Current Time</th>
+                                <th width="20%">Script Time(ms)</th>
                                 <th width="20%">Result</th>
                             </tr>
                             </thead>

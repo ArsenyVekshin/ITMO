@@ -97,9 +97,11 @@ function drawPoint(x, y, r, g, b){
 
 function drawPreviousPoints(r){
     console.log(pointsContainer);
-    if(r==null || pointsContainer.length === 0) return;
+    if(r === null) return;
     pointsContainer.forEach(point =>{
-        if(point[2]==r){
+        console.log("DRAWING: ", point);
+        if(point[2] === r){
+            console.log("DRAWING2: ", point);
             drawPoint(point[0], point[1], 0, 153, 0);
         }
     });

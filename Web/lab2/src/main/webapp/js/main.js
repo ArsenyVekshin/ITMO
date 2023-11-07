@@ -85,9 +85,10 @@ $('#clear-button').click(function (event) {
 
 document.addEventListener('click', (ev)=>this.handleClick(ev));
 function handleClick(event) {
+
     // Получаем координаты точки, куда нажал пользователь
-    let x = event.clientX;
-    let y = event.clientY;
+    let x = event.clientX.toFixed(3);
+    let y = event.clientY.toFixed(3);
     let one = 30;
 
     if (x > canvasRect.left && x < canvasRect.right &&
@@ -97,10 +98,8 @@ function handleClick(event) {
         x = (x - canvasRect.left - (canvasRect.width/2))/one;
         y = ((canvasRect.height/2) - y + canvasRect.top)/one;
 
-        console.log("click point = ", x, y);
-
         if(choosen.r !== null){
-            sendForm(pointsContainer, x.toString(), y.toString(), choosen.r);
+            sendForm(x.toFixed(3).toString(), y.toFixed(3).toString(), choosen.r);
         }
 
     }
