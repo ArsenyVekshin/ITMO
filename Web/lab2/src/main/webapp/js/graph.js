@@ -99,7 +99,7 @@ function drawPreviousPoints(r){
     console.log(pointsContainer);
     if(r==null || pointsContainer.length === 0) return;
     pointsContainer.forEach(point =>{
-        if(point[2]==r){
+        if(point[2]===r){
             drawPoint(point[0], point[1], 0, 153, 0);
         }
     });

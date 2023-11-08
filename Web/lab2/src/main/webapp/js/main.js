@@ -97,10 +97,9 @@ function handleClick(event) {
         x = (x - canvasRect.left - (canvasRect.width/2))/one;
         y = ((canvasRect.height/2) - y + canvasRect.top)/one;
 
-        console.log("click point = ", x, y);
-
+        //console.log("click point = ", x, y);
         if(choosen.r !== null){
-            sendForm(pointsContainer, x.toString(), y.toString(), choosen.r);
+            sendForm(pointsContainer, x.toFixed(3).toString(), y.toFixed(3).toString(), choosen.r);
         }
 
     }

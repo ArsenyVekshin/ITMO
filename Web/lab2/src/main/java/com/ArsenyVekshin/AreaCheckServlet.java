@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 import com.ArsenyVekshin.table.Table;
 import com.ArsenyVekshin.table.TableRow;
@@ -13,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 @WebServlet(name="AreaCheckServlet", urlPatterns="/AreaCheckServlet")
@@ -38,12 +40,18 @@ public class AreaCheckServlet extends HttpServlet {
             float y = Float.parseFloat(request.getParameter("y"));
             float r = Float.parseFloat(request.getParameter("r"));
             long offset = -Long.parseLong(request.getParameter("offset"));
-            Instant clientTime = Instant.now().plus(offset, ChronoUnit.MINUTES);
+            Instant clientTime = Instant.now().plus(offset, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.MILLIS);
             boolean result = checkArea(x,y,r);
 
             double scriptWorkingTime = System.currentTimeMillis() - currentTime;
+            HttpSession session = request.getSession();
 
             TableRow newRow = new TableRow(x, y, r, result, clientTime.toString(), scriptWorkingTime);
+
+            if (session.getAttribute("table") == null){
+                session.setAttribute("table", new Table());
+            }
+
             Table sessionTable = (Table) request.getSession().getAttribute("table");
             sessionTable.getTableRows().add(newRow);
 
