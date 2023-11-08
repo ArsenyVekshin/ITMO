@@ -1,4 +1,4 @@
-function sendForm(points, x, y, r) {
+function sendForm(x, y, r) {
 
 	$.ajax({
 		url: 'ControllerServlet',
@@ -10,15 +10,33 @@ function sendForm(points, x, y, r) {
 			'offset': new Date().getTimezoneOffset()
 		},
 		success: function(data) {
-			console.log(data);
-			if(data.hit === "true"){
-				points.push([data.x, data.y, data.r]);
-			}
+			pointsContainer.push([data.x, data.y, data.r, data.hit]);
 			addInTable(data);
+			redrawGraph();
 		},
 		error: function(data) {
 			alert(data);
 		}
 	});
 }
+function clean_table() {
+	$.ajax({
+		type: "POST",
+		url: "ControllerServlet",
+		data: {"clean": 'true'},
+		success: function (response) {
+			resultsTable.innerHTML = '';
+			pointsContainer=[];
+			redrawGraph();
+		},
+		error: function (response) {
+			console.log("ERROR:" ,response);
+			resultsTable.innerHTML = '';
+			pointsContainer=[];
+			alert(response);
+		}
+	});
+
+}
+
 

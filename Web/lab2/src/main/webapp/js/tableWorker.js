@@ -8,20 +8,7 @@ function initialize_table(points) {
     }
 }
 
-function clean_table() {
-    $.ajax({
-        type: "POST",
-        url: "ControllerServlet",
-        data: {"clean": 'true'},
-        success: function (response) {
-            resultsTable.innerHTML = '';
-        },
-        error: function (response) {
-            alert(response);
-        }
-    });
-    pointsContainer=[];
-}
+
 
 function addInTable(data) {
     let row = resultsTable.insertRow(0);

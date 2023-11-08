@@ -64,7 +64,7 @@ function checkEnteredR(){
     }
     console.log("r=", choosen.r);
     updateSubmitLock();
-    redrawGraph(choosen.r);
+    redrawGraph();
 }
 
 $('#submit-button').click(function() {
@@ -99,7 +99,7 @@ function handleClick(event) {
 
         //console.log("click point = ", x, y);
         if(choosen.r !== null){
-            sendForm(pointsContainer, x.toFixed(3).toString(), y.toFixed(3).toString(), choosen.r);
+            sendForm(x.toFixed(3).toString(), y.toFixed(3).toString(), choosen.r);
         }
 
     }
