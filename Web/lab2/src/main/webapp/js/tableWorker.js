@@ -4,7 +4,7 @@ function initialize_table(points) {
         var y = parseFloat(row.cells.item(1).innerText);
         var r = parseInt(row.cells.item(2).innerText);
         var hit = row.cells.item(5).innerText === 'true';
-        points.push([x,y,r]);
+        points.push([x,y,r, hit]);
     }
 }
 

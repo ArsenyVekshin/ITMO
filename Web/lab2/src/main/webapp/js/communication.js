@@ -2,7 +2,7 @@ function sendForm(x, y, r) {
 
 	$.ajax({
 		url: 'ControllerServlet',
-		type: 'GET',
+		type: 'POST',
 		data: {
 			'x': x,
 			'y': y,
@@ -19,9 +19,10 @@ function sendForm(x, y, r) {
 		}
 	});
 }
+
 function clean_table() {
 	$.ajax({
-		type: "POST",
+		type: "DELETE",
 		url: "ControllerServlet",
 		data: {"clean": 'true'},
 		success: function (response) {
@@ -30,9 +31,6 @@ function clean_table() {
 			redrawGraph();
 		},
 		error: function (response) {
-			console.log("ERROR:" ,response);
-			resultsTable.innerHTML = '';
-			pointsContainer=[];
 			alert(response);
 		}
 	});

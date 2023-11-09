@@ -101,7 +101,7 @@ function drawPreviousPoints(){
     pointsContainer.forEach(point =>{
         if(Number(point[2]) === Number(choosen.r)){
             console.log("draw", point[0], point[1], point[2], "type=", point[3]);
-            if(point[3] === "true"){
+            if(point[3] === true){
                 drawPoint(point[0], point[1], 0, 153, 0);
             }
             else{

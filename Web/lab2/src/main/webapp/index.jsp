@@ -11,6 +11,7 @@
                 "</tr>";
     }
 %>
+
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.ArsenyVekshin.table.TableRow" %>
 <%@ page import="com.ArsenyVekshin.table.Table" %>

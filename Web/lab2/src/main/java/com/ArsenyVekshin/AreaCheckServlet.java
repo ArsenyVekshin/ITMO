@@ -32,6 +32,15 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        checkPoint(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        checkPoint(request, response);
+    }
+
+    private void checkPoint(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         long currentTime = System.currentTimeMillis();
 
