@@ -8,8 +8,6 @@ function initialize_table(points) {
     }
 }
 
-
-
 function addInTable(data) {
     let row = resultsTable.insertRow(0);
     row.insertCell().innerHTML = data.x;

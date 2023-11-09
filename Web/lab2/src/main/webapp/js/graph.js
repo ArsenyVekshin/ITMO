@@ -86,7 +86,6 @@ function drawFunction(r){
 }
 
 function drawPoint(x, y, r, g, b){
-    console.log("DRAW2", x, y);
     x *= one;
     y *= one;
     ctx.beginPath();
@@ -97,10 +96,8 @@ function drawPoint(x, y, r, g, b){
 }
 
 function drawPreviousPoints(){
-    console.log(pointsContainer);
     pointsContainer.forEach(point =>{
         if(Number(point[2]) === Number(choosen.r)){
-            console.log("draw", point[0], point[1], point[2], "type=", point[3]);
             if(point[3] === true){
                 drawPoint(point[0], point[1], 0, 153, 0);
             }

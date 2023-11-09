@@ -106,12 +106,6 @@
                             </tr>
                             </thead>
                             <tbody id="results-content">
-                            <%
-                                ArrayList<TableRow> tableRows = table.getTableRows();
-                                for (TableRow tableRow: tableRows) {
-                                    out.print(tableRowToHtml(tableRow));
-                                }
-                            %>
                             </tbody>
                         </table>
                     </div>

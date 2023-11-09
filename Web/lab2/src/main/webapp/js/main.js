@@ -17,6 +17,7 @@ var resultsTable = document.getElementById("results-content");
 
 
 $(document).ready(function () {
+    getTableBySession();
     initialize_table(pointsContainer);
     redrawGraph(choosen.r);
 });
@@ -78,7 +79,10 @@ $('#submit-button').click(function() {
 });
 
 $('#clear-button').click(function (event) {
+    console.log("send request to clear");
     clean_table();
+    console.log("FUCK");
+    getTableBySession();
     redrawGraph(choosen.r);
 });
 
