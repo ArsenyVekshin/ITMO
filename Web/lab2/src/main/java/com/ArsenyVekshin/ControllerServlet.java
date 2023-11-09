@@ -12,6 +12,7 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name="ControllerServlet", urlPatterns="/ControllerServlet")
@@ -22,25 +23,43 @@ public class ControllerServlet extends HttpServlet {
         log(request.toString());
         PrintWriter out = response.getWriter();
         if (checkGetTableRequest(request)) {
-            Table table = (Table) request.getSession().getAttribute("table");
+            HttpSession session = request.getSession();
+            if (session.getAttribute("table") == null){
+                session.setAttribute("table", new Table());
+            }
+            Table table = (Table) session.getAttribute("table");
             List<TableRow> rows = table.getTableRows();
             out.print(new JSONArray(rows));
             out.close();
             response.setStatus(HttpServletResponse.SC_OK);
-        } else if (checkArgumentExists(request)) {
-            getServletContext().getRequestDispatcher("/AreaCheckServlet").forward(request, response);
+        } else{
+            response.sendError(400, "Bad Request (get only for get Table from session)");
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (checkCleanRequest(request)) {
-            cleanTable(request);
-            response.setStatus(HttpServletResponse.SC_OK);
+        if (checkArgumentExists(request)) {
+            getServletContext().getRequestDispatcher("/AreaCheckServlet").forward(request, response);
         } else {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.sendError(400, "Bad Request");
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(checkCleanRequest(request)){
+            PrintWriter out = response.getWriter();
+            request.getSession().setAttribute("table", new Table());
+            out.print("Success");
+            out.close();
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.sendError(400, "Bad Request");
+        }
+
+    }
+
 
     private boolean checkCleanRequest(HttpServletRequest req) {
         return "true".equals(req.getParameter("clean"));

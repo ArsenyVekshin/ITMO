@@ -17,6 +17,7 @@ var resultsTable = document.getElementById("results-content");
 
 
 $(document).ready(function () {
+    getTableBySession();
     initialize_table(pointsContainer);
     redrawGraph(choosen.r);
 });
@@ -64,7 +65,7 @@ function checkEnteredR(){
     }
     console.log("r=", choosen.r);
     updateSubmitLock();
-    redrawGraph(choosen.r);
+    redrawGraph();
 }
 
 $('#submit-button').click(function() {
@@ -78,17 +79,19 @@ $('#submit-button').click(function() {
 });
 
 $('#clear-button').click(function (event) {
+    console.log("send request to clear");
     clean_table();
+    console.log("FUCK");
+    getTableBySession();
     redrawGraph(choosen.r);
 });
 
 
 document.addEventListener('click', (ev)=>this.handleClick(ev));
 function handleClick(event) {
-
     // Получаем координаты точки, куда нажал пользователь
-    let x = event.clientX.toFixed(3);
-    let y = event.clientY.toFixed(3);
+    let x = event.clientX;
+    let y = event.clientY;
     let one = 30;
 
     if (x > canvasRect.left && x < canvasRect.right &&
@@ -98,6 +101,7 @@ function handleClick(event) {
         x = (x - canvasRect.left - (canvasRect.width/2))/one;
         y = ((canvasRect.height/2) - y + canvasRect.top)/one;
 
+        //console.log("click point = ", x, y);
         if(choosen.r !== null){
             sendForm(x.toFixed(3).toString(), y.toFixed(3).toString(), choosen.r);
         }

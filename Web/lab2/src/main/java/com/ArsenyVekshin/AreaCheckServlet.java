@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 import com.ArsenyVekshin.table.Table;
 import com.ArsenyVekshin.table.TableRow;
@@ -13,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 @WebServlet(name="AreaCheckServlet", urlPatterns="/AreaCheckServlet")
@@ -30,6 +32,15 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        checkPoint(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        checkPoint(request, response);
+    }
+
+    private void checkPoint(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         long currentTime = System.currentTimeMillis();
 
@@ -38,12 +49,19 @@ public class AreaCheckServlet extends HttpServlet {
             float y = Float.parseFloat(request.getParameter("y"));
             float r = Float.parseFloat(request.getParameter("r"));
             long offset = -Long.parseLong(request.getParameter("offset"));
+            
             Instant clientTime = Instant.now().truncatedTo(ChronoUnit.MILLIS).plus(offset, ChronoUnit.MINUTES);
             boolean result = checkArea(x,y,r);
 
             double scriptWorkingTime = System.currentTimeMillis() - currentTime;
+            HttpSession session = request.getSession();
 
             TableRow newRow = new TableRow(x, y, r, result, clientTime.toString(), scriptWorkingTime);
+
+            if (session.getAttribute("table") == null){
+                session.setAttribute("table", new Table());
+            }
+
             Table sessionTable = (Table) request.getSession().getAttribute("table");
             sessionTable.getTableRows().add(newRow);
 
@@ -63,10 +81,10 @@ public class AreaCheckServlet extends HttpServlet {
             if (x<=r && y<=r/2) return true;
         }
         else if (x<=0 && y>=0){
-            if (y < (x/2 + 0.5)) return true;
+            if (y < (x/2 + 0.5*r)) return true;
         }
         else if (x<=0 && y<=0){
-            if ((x*x + y*y) < r) return true;
+            if ((x*x + y*y) < r*r) return true;
         }
         return false;
     }

@@ -11,8 +11,10 @@
                 "</tr>";
     }
 %>
+
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.ArsenyVekshin.table.TableRow" %>
+<%@ page import="com.ArsenyVekshin.table.Table" %>
 <jsp:useBean id="table" scope="session" beanName="com.ArsenyVekshin.table.Table" type="com.ArsenyVekshin.table.Table"/>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -104,12 +106,6 @@
                             </tr>
                             </thead>
                             <tbody id="results-content">
-                            <%
-                                ArrayList<TableRow> tableRows = table.getTableRows();
-                                for (TableRow tableRow: tableRows) {
-                                    out.print(tableRowToHtml(tableRow));
-                                }
-                            %>
                             </tbody>
                         </table>
                     </div>
@@ -121,7 +117,7 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/graph.js"></script>
-    <script src="js/submit.js"></script>
+    <script src="js/communication.js"></script>
     <script src="js/validator.js"></script>
     <script src="js/tableWorker.js"></script>
 

@@ -6,16 +6,16 @@ const one = 30;
 const width = graphCanvas.width;
 const height = graphCanvas.height;
 
-function redrawGraph(r) {
+function redrawGraph() {
     ctx.beginPath();
     ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
 
     //рисуем основные элементы графика
-    drawFunction(r);
+    drawFunction(choosen.r);
     drawAxis();
 
     //рисуем точки из истории с этим радиусом
-    drawPreviousPoints(r);
+    drawPreviousPoints();
 
     //рисуем все точки выбранные на панели
     for(let _x in choosen.x) {
@@ -95,14 +95,16 @@ function drawPoint(x, y, r, g, b){
     ctx.closePath();
 }
 
-function drawPreviousPoints(r){
-    console.log(pointsContainer);
-    if(r === null) return;
+function drawPreviousPoints(){
     pointsContainer.forEach(point =>{
-        console.log("DRAWING: ", point);
-        if(point[2] === r){
-            console.log("DRAWING2: ", point);
-            drawPoint(point[0], point[1], 0, 153, 0);
+        if(Number(point[2]) === Number(choosen.r)){
+            if(point[3] === true){
+                drawPoint(point[0], point[1], 0, 153, 0);
+            }
+            else{
+                drawPoint(point[0], point[1], 153, 0, 0);
+            }
+
         }
     });
 }
