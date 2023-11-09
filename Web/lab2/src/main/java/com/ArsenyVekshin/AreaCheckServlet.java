@@ -49,7 +49,8 @@ public class AreaCheckServlet extends HttpServlet {
             float y = Float.parseFloat(request.getParameter("y"));
             float r = Float.parseFloat(request.getParameter("r"));
             long offset = -Long.parseLong(request.getParameter("offset"));
-            Instant clientTime = Instant.now().plus(offset, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.MILLIS);
+            
+            Instant clientTime = Instant.now().truncatedTo(ChronoUnit.MILLIS).plus(offset, ChronoUnit.MINUTES);
             boolean result = checkArea(x,y,r);
 
             double scriptWorkingTime = System.currentTimeMillis() - currentTime;
