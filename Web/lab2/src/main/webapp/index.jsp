@@ -32,10 +32,10 @@
         <table>
             <thead height="200px">
             <tr>
-                <th width="350px">
+                <th max-width="400px">
                     <img src="assets/kitten1.gif" height="175px" />
                 </th>
-                <th min-width="400px">
+                <th min-width="400px" max-width="400px">
                     <h1 class="header">Arseny Vekshin</h1>
                     <h2 class="header">p3216 / 23152</h2>
                     <a href="https://github.com/ArsenyVekshin/ITMO/tree/master/Web/lab2" data-title="https://github.com/ArsenyVekshin/ITMO/tree/master/Web/lab2">
