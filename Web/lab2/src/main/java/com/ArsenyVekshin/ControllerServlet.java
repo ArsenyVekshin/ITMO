@@ -50,7 +50,7 @@ public class ControllerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if(checkCleanRequest(request)){
             PrintWriter out = response.getWriter();
-            request.getSession().setAttribute("table", new Table());
+            request.getSession().invalidate();
             out.print("Success");
             out.close();
             response.setStatus(HttpServletResponse.SC_OK);

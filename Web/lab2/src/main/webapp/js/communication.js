@@ -4,6 +4,8 @@ function getTableBySession(){
 		url: 'ControllerServlet',
 		data: {'getTable' : 'true'},
 		success: function(data) {
+			console.log("got from server:");
+			console.log(data);
 			initSessionTable(data);
 		},
 		error: function(data) {
@@ -28,28 +30,41 @@ function sendForm(x, y, r) {
 			redrawGraph();
 		},
 		error: function(data) {
-			alert(data);
+			console.log("KURWA post req")
 		}
 	});
 }
 
 function clean_table() {
-	$.ajax({
+	/*$.ajax({
 		type: "DELETE",
-		url: "ControllerServlet",
-		data: {"clean": 'true'},
+		url: "ControllerServlet?clean=true",
+		data: null,
 		success: function (response) {
 			resultsTable.innerHTML = '';
 			pointsContainer=[];
-			location.reload();
+			//location.reload();
 			redrawGraph();
 		},
 		error: function (response) {
 			alert(response);
 		}
-	});
-
+	});*/
+	fetch('http://localhost:8080/web_lab_2-1.0-SNAPSHOT/ControllerServlet?clean=true', {method:"DELETE"})
+		.then(data => {
+			console.log(data);
+			resultsTable.innerHTML = '';
+			pointsContainer=[];
+			//location.reload();
+			redrawGraph();
+		})
+		.catch(error => {
+			// Handle any errors
+			console.error(error);
+		});
 }
+
+
 
 function initSessionTable(data){
 	if(data === null || data.length === null){
@@ -58,4 +73,5 @@ function initSessionTable(data){
 	data.forEach(point => {
 		addInTable(point);
 	});
+	initialize_table(pointsContainer);
 }
