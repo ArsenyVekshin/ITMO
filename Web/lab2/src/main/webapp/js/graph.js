@@ -85,9 +85,9 @@ function drawFunction(r){
     }
 }
 
-function drawPoint(x, y, r, g, b){
-    x *= one;
-    y *= one;
+function drawPoint(x, y, R, r, g, b){
+    x *= one * choosen.r/R;
+    y *= one * choosen.r/R;
     ctx.beginPath();
     ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
     ctx.arc((width / 2) + x, (height / 2) - y, 2, 0, 2 * Math.PI);
@@ -97,14 +97,13 @@ function drawPoint(x, y, r, g, b){
 
 function drawPreviousPoints(){
     pointsContainer.forEach(point =>{
-        if(Number(point[2]) === Number(choosen.r)){
             if(point[3] === true){
-                drawPoint(point[0], point[1], 0, 153, 0);
+                drawPoint(point[0], point[1], point[2], 0, 153, 0);
             }
             else{
-                drawPoint(point[0], point[1], 153, 0, 0);
+                drawPoint(point[0], point[1], point[2], 153, 0, 0);
             }
 
         }
-    });
+    );
 }

@@ -17,7 +17,9 @@ var resultsTable = document.getElementById("results-content");
 
 
 $(document).ready(function () {
+    console.log("get table by session")
     getTableBySession();
+
     initialize_table(pointsContainer);
     redrawGraph(choosen.r);
 });
@@ -73,7 +75,7 @@ $('#submit-button').click(function() {
         let [x, y, r] = validateAndParse(_x, choosen.y, choosen.r)
         let result = validate_values(x, y, r);
         if (result) {
-            sendForm(pointsContainer, x, y, r);
+            sendForm(x, y, r);
         }
     });
 });
