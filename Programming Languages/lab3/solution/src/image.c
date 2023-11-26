@@ -1,4 +1,3 @@
-#include <malloc.h>
 #include "image.h"
 
 struct image create_image(uint32_t width, uint32_t height){

@@ -1,15 +1,14 @@
-#include <stdlib.h>
 #include "error_handler.h"
-#include "reader.h"
 #include "operator.h"
+#include "reader.h"
 #include "writer.h"
+
+#include <stdlib.h>
 
 #define REQUIRED_ARGUMENTS_NUM 4
 #define ARG_INPUT_FILE 1
 #define ARG_OUTPUT_FILE 2
 #define ARG_ANGLE 3
-
-
 
 int main( int argc, char** argv ) {
     if(argc != REQUIRED_ARGUMENTS_NUM)

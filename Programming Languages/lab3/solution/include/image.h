@@ -1,3 +1,6 @@
+#pragma once
+
+#include <malloc.h>
 #include <stdint.h>
 
 #pragma pack(push, 1)

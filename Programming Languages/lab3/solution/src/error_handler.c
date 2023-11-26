@@ -1,5 +1,3 @@
-
-#include <stdlib.h>
 #include "error_handler.h"
 
 void error_prints(enum status error){

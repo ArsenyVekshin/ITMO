@@ -1,3 +1,5 @@
+#pragma once
+
 enum status {
     OK = 0,
     FILE_OPEN_ERROR,

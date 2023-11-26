@@ -1,7 +1,4 @@
-#include "enums.h"
 #include "bmp.h"
-#include "image.h"
-#include "utils.h"
 
 enum status validate_bmp_header(const struct bmp_header *header) {
     if(header->biSize != HEADER_SIZE)

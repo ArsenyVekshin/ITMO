@@ -1,5 +1,10 @@
-#include <stdint.h>
+#pragma once
+
+#include "enums.h"
 #include "image.h"
+#include "utils.h"
+
+#include <stdint.h>
 
 #define BMP_HEADER 0x4D42
 #define HEADER_SIZE 54

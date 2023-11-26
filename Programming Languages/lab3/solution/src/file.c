@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "enums.h"
+#include "file.h"
 enum status open_file(const char* path, FILE **file, enum open_mode mode){
     switch(mode){
         case OPEN_READ:

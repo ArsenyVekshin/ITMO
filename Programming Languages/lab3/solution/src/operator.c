@@ -37,8 +37,7 @@ struct image rotate270(struct image img){
 void rotate_image(struct image *img, int32_t angle){
     angle = prepare_angle(-1*angle);
     if(angle % 90 != 0){
-        fprintf(stderr, "error while rotating, code %d", ANGLE_INVALID);
-        return ANGLE_INVALID;
+        error_actions(ANGLE_INVALID, img, NULL);
     }
 
     struct image new_image;
@@ -56,8 +55,6 @@ void rotate_image(struct image *img, int32_t angle){
         case 270:
             new_image = rotate270(*img);
             break;
-        default:
-            error_actions(ANGLE_INVALID, img, NULL);
     }
 
     clear_image(img);
