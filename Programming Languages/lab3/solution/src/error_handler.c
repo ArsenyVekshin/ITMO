@@ -56,8 +56,10 @@ void error_actions(enum status error, struct image *img, FILE *file){
     if(error == OK)
         return;
     error_prints(error);
+
     if(img!=NULL)
         clear_image(img);
+
     if(file!=NULL)
         close_file(file);
     exit(error);

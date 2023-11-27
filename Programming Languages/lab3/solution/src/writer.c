@@ -45,4 +45,5 @@ void write_bmp_image(const char *path, struct image *img) {
     if(file_status != OK){
         error_actions(file_status, img, file);
     }
+    clear_image(img);
 }

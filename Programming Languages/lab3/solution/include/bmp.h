@@ -6,6 +6,8 @@
 
 #include <stdint.h>
 
+#define __attribute__(x)
+
 #define BMP_HEADER 0x4D42
 #define HEADER_SIZE 54
 #define BMP_HEADER_SIZE 40
@@ -16,7 +18,7 @@
 #define BMP_COLORS_UNUSED 0
 
 #pragma pack(push, 1)
-struct bmp_header
+struct __attribute__((packed))  bmp_header
 {
     // FILE HEADER (14 bytes)
     uint16_t bfType; //Signature

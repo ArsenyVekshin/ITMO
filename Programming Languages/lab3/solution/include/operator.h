@@ -1,5 +1,6 @@
 #pragma once
 
+#include "debug.h"
 #include "enums.h"
 #include "error_handler.h"
 #include "image.h"

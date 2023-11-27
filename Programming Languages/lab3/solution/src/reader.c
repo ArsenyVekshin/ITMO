@@ -11,6 +11,9 @@ enum status parse_bmp(FILE *file, struct image *img){
     if(fseek(file, header.bOffBits, SEEK_SET)!=0)
         return READ_INVALID_BITS;
 
+    img->height = header.biHeight;
+    img->width = header.biWidth;
+
     uint32_t height = img->height;
     uint32_t width = img->width;
     uint32_t padding = calc_padding(width);
@@ -30,7 +33,7 @@ void read_bmp_image(const char *path, struct image *img) {
     FILE *file = NULL;
     enum status read_status;
 
-    read_status = open_file(path, &file, OPEN_APPEND_BINARY);
+    read_status = open_file(path, &file, OPEN_READ_BINARY);
     if(read_status != OK){
         error_actions(read_status, img, file);
     }

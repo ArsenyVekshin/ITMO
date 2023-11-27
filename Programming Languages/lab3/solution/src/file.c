@@ -19,7 +19,6 @@ enum status open_file(const char* path, FILE **file, enum open_mode mode){
         case OPEN_APPEND_BINARY:
             *file = fopen(path, "ab");
             break;
-
         case OPEN_WRITE_READ:
             *file = fopen(path, "r+");
             break;
