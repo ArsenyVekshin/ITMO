@@ -1,0 +1,27 @@
+h1, h2 {
+    margin: 1%
+}
+
+#welcome-page {
+    width: 100%;
+    min-height: 86vh;
+    padding: 20px;
+    margin: 0;
+    text-align: center;
+}
+
+.start-button {
+    border-radius: 40px;
+    width: 150px;
+    height: 50px;
+    white-space: nowrap;
+    margin: 0;
+    padding: 3px 3px 3px 3px;
+    font-size: 18px;
+
+}
+
+.clock {
+    border-radius: 40px;
+    background: none;
+}

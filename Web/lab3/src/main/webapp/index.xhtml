@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<!--suppress CheckTagEmptyBody -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="styles/welcome.css" />
+    <link rel="stylesheet" href="styles/body.css" />
+    <link rel="stylesheet" href="styles/other.css" />
+</h:head>
+<h:body>
+    <h:panelGrid id="welcome-page">
+        <div class="header">
+            <div class="header">
+                <h1>Векшин Арсений</h1>
+                <h3>P3216 / 312313</h3>
+            </div>
+        </div>
+        <h:link outcome="goToMain">
+            <h:commandButton id="start" styleClass="start-button action-button" value="Go To App"/>
+        </h:link>
+        <div class="time-wrapper">
+            <!--<h:outputText value="#{now}" styleClass="date">
+                <f:convertDateTime pattern="hh:mm:ss  dd.MM.yyyy" type="date" />
+            </h:outputText>-->
+            <p:clock pattern="hh:mm:ss  dd.MM.yyyy" syncInterval="5000"/>
+        </div>
+    </h:panelGrid>
+</h:body>
+</html>
