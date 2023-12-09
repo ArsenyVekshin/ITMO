@@ -2,7 +2,7 @@
 %include "words.inc"
 
 extern exit
-extern read_word
+extern read_string
 extern find_word
 extern print_string
 extern print_newline
@@ -10,7 +10,7 @@ extern print_newline
 section .rodata
 long_word_err_mes: db 'Max word length is 256 symb', 10, 0
 not_found_err_mes: db 'There is no such word in dictionary', 10, 0
-
+%define BUF_SIZE 256
 
 section .text
 global _start
@@ -35,7 +35,7 @@ _start:
 	call print_string
 	call print_newline	
 
-	mov rdi, 0
+	xor rdi, rdi
 	jmp exit
 
 ; Поиск ключа по словарю
@@ -47,7 +47,7 @@ find_key:
 	mov rsi, pointer	; адрес начала словаря -> аргумент 
 	call find_word
 
-	cmp rax, 0			; возникла ли ошибка в функции? 
+	test rax, rax		; возникла ли ошибка в функции? 
 	je not_found_err
 	ret
 
@@ -57,11 +57,11 @@ find_key:
 ;	rax - указатель на буфер
 ;	rdx - длинна полученного ключа
 read_key:
-	mov rsi, 256	; 256 -> аргумент "размер буфера"
+	mov rsi, BUF_SIZE	; 256 -> аргумент "размер буфера"
 	mov rdi, rsp	
 	sub rdi, rsp	; rdi-rsp -> аргумент "указатель на начало буфера"
 
-	call read_word
+	call read_string
 
 	cmp rax, 0		; возникла ли ошибка в функции?
 	je long_word_err
@@ -77,5 +77,5 @@ long_word_err:
 
 print_error:
 	call print_string
-	mov rdi, 0
+	mov rdi, 1
 	jmp exit
