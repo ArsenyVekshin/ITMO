@@ -1,6 +1,6 @@
 #include "error_handler.h"
 
-void error_prints(enum status error){
+static void error_prints(enum status error){
     switch (error) {
         case OK:
             break;
@@ -48,6 +48,12 @@ void error_prints(enum status error){
             break;
         case WRONG_ARGUMENTS_NUMBER:
             fprintf(stderr, "error: wrong arguments number (must be 4)");
+            break;
+        case NOT_ENOUGH_MEMORY_IN_HEAP:
+            fprintf(stderr, "error: your image cannot be saved in the heap - not enough memory");
+            break;
+        case IMAGE_STRUCT_BROKEN:
+            fprintf(stderr, "error: image container was damaged");
             break;
     }
 }

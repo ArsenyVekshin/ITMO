@@ -17,7 +17,10 @@ enum status parse_bmp(FILE *file, struct image *img){
     uint32_t height = img->height;
     uint32_t width = img->width;
     uint32_t padding = calc_padding(width);
+
     *img = create_image(width, height);
+    enum status img_status = check_image(img);
+    if (img_status != OK) return img_status;
 
     for (uint32_t h=0; h<height; h++){
         if(fread(calc_image_line_pointer(img->data, width, h),

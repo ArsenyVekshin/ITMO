@@ -13,3 +13,10 @@ void clear_image(struct image *img){
     img->data = NULL;
 }
 
+enum status check_image(const struct image *img){
+    if(img->height * img->width == 0)
+        return IMAGE_STRUCT_BROKEN;
+    else if(img->data == NULL)
+        return NOT_ENOUGH_MEMORY_IN_HEAP;
+    return OK;
+}

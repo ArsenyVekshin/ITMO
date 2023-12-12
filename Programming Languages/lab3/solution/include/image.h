@@ -1,5 +1,7 @@
 #pragma once
 
+#include "enums.h"
+
 #include <malloc.h>
 #include <stdint.h>
 
@@ -16,3 +18,4 @@ struct image {
 
 struct image create_image(uint32_t width, uint32_t height);
 void clear_image(struct image *img);
+enum status check_image(const struct image *img);

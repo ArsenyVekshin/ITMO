@@ -18,7 +18,7 @@ enum status validate_bmp_header(const struct bmp_header *header) {
     return OK;
 }
 
-uint32_t img_size(const struct image *img){
+static uint32_t img_size(const struct image *img){
     return img->height * (img->width* (uint32_t)(sizeof(struct pixel)) + calc_padding(img->width));
 }
 

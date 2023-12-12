@@ -17,14 +17,8 @@ enum status {
     ANGLE_ROTATE_ERROR,
     BMP_INVALID_HEADER,
     WRONG_ARGUMENTS_NUMBER,
-};
-
-enum angles {
-    SPIN_ZERO = 0,
-    SPIN_QUARTER = 90,
-    SPIN_HALF = 180,
-    SPIN_THREE_QUATER = 270,
-    SPIN_FULL = 360,
+    NOT_ENOUGH_MEMORY_IN_HEAP,
+    IMAGE_STRUCT_BROKEN,
 };
 
 enum open_mode{
