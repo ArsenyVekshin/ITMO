@@ -1,0 +1,9 @@
+body {
+  background-color: #202023;
+  color: white;
+  font-family: monospace;
+}
+
+::selection {
+  background-color: #4b61cf;
+}

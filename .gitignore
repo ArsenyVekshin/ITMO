@@ -128,5 +128,5 @@ Programming Languages/seminar/*
 Programming Languages/**/obj/*
 /**/.vs/*
 
-
+/**/node_modules/*
 Programming Languages/lab2/src/.gitlab-ci.yml
