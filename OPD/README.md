@@ -4,32 +4,16 @@
 
 ---
 
-### ЛР №1
-[скрипт + отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab1)   
-Вариант: 1603
+### 1 семестр
+[ЛР №1 (1603) - unix](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab1)   
+[ЛР №2 (1624) - БЭВМ](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab2)   
+
 ---
 
-### ЛР №2
-[отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab2)   
-Вариант: 1624
----
+### 2 семестр
+[ЛР №3 (1443) - БЭВМ-цикл](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab3)   
+[ЛР №4 (1413) - БЭВМ-подпрограммы](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab4)   
+[ЛР №5 (1413) - БЭВМ-asm-ВУ](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab5)   
+[ЛР №6 (1413) - БЭВМ-asm_ВУч2](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab6)   
 
-### ЛР №3
-[отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab3)   
-Вариант: 1443
----
-
-### ЛР №4
-[отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab4)   
-Вариант: 1413
----
-
-### ЛР №5
-[отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab5)   
-Вариант: 1413
----
-
-### ЛР №6
-[отчет](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD/lab6)   
-Вариант: 1413
 ---
