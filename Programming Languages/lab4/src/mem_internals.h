@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _MEM_INTERNALS_
 #define _MEM_INTERNALS_
 
@@ -6,6 +7,7 @@
 #include <stddef.h>
 
 #define REGION_MIN_SIZE (2 * 4096)
+#define BLOCK_MIN_CAPACITY 24
 
 struct region {
     void *addr;
@@ -19,6 +21,7 @@ inline bool region_is_invalid(const struct region *r) { return r->addr == NULL; 
 typedef struct {
     size_t bytes;
 } block_capacity;
+
 typedef struct {
     size_t bytes;
 } block_size;

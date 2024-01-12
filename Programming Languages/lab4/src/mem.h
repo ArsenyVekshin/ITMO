@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _MEM_H_
 #define _MEM_H_
 
@@ -9,10 +10,6 @@
 #include <sys/mman.h>
 
 #define HEAP_START ((void*)0x04040000)
-
-#ifndef MAP_FIXED_NOREPLACE
-#define MAP_FIXED_NOREPLACE 0x100000
-#endif
 
 void *_malloc(size_t query);
 
@@ -27,8 +24,5 @@ void heap_term(void);
 void debug_struct_info(FILE *f, void const *address);
 
 void debug_heap(FILE *f, void const *ptr);
-
-struct block_header *block_get_header(void *contents);
-
 
 #endif

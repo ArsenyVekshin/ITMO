@@ -38,7 +38,8 @@ DEFINE_TEST(term) {
     fprintf(stderr, "Intial maps:\n%s\n", (char *)maps_before);
 
     current_mmap_impl = MMAP_IMPL(success);
-    assert(heap_init(0));
+    struct block_header *init = heap_init(0);
+    assert(init);
     assert(_malloc(REGION_MIN_SIZE - 2 * offsetof(struct block_header, contents) - BLOCK_MIN_CAPACITY - 8 + (offsetof(struct block_header, contents) & 7)));
     current_mmap_impl = MMAP_IMPL(fail_fixed);
     assert(_malloc(REGION_MIN_SIZE - offsetof(struct block_header, contents)));

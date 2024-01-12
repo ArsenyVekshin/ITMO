@@ -33,12 +33,11 @@ void debug_block(struct block_header *b, const char *fmt, ...) {
     va_list args;
     va_start (args, fmt);
     vfprintf(stderr, fmt, args);
-    debug_struct_info( stderr, b );
+    debug_struct_info(stderr, b);
     va_end (args);
 
 #else
-    (void) b;
-    (void) fmt;
+    (void) b; (void) fmt;
 #endif
 }
 
