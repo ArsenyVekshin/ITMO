@@ -17,7 +17,8 @@
 ---
 
 ### 3 семестр
-[Теорвер](https://github.com/ArsenyVekshin/ITMO/tree/master/%D0%A2%D0%B5%D0%BE%D1%80%D0%B2%D0%B5%D1%80)  
 [Веб-программирование](https://github.com/ArsenyVekshin/ITMO/tree/master/Web)  
-[Языки программирования](https://github.com/ArsenyVekshin/ITMO/tree/master/Programming%20Languages)
+[Языки программирования](https://github.com/ArsenyVekshin/ITMO/tree/master/Programming%20Languages)  
+[Теорвер](https://github.com/ArsenyVekshin/ITMO/tree/master/%D0%A2%D0%B5%D0%BE%D1%80%D0%B2%D0%B5%D1%80)  
+[Физика](https://github.com/ArsenyVekshin/ITMO/tree/master/Физика)
 ---
