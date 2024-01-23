@@ -9,7 +9,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
 import {addHit, changeR} from "../../store/userSlice";
-import {addHitRequest} from "../../service/Service";
+import {checkPoint} from "../../service/Service";
 import {showError} from "../../store/errorSlice";
 
 import "../../resources/UserInput.css"
@@ -35,7 +35,7 @@ const UserInput = () => {
     const handleSubmit = async () => {
         setLoading(true);
 
-        const response = await addHitRequest(point, userInfo.token);
+        const response = await checkPoint(point);
 
         if (response.message) {
             dispatch(showError({ detail: response.message }))

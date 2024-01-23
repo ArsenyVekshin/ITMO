@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 
 import {Button} from "primereact/button";
-import {clearHitsRequest} from "../../service/Service";
+import {clearPointsTable} from "../../service/Service";
 import {clearHits} from "../../store/userSlice";
 import {showError} from "../../store/errorSlice";
 
@@ -18,14 +18,14 @@ function HitsTable() {
                 <td>{hit.x}</td>
                 <td>{hit.y}</td>
                 <td>{hit.r}</td>
-                <td>{hit.creationTime}</td>
-                <td style={{ color: hit.result ?"greenyellow" : "red" }}>{hit.result ? "Area" : "Miss"}</td>
+                <td>{hit.time}</td>
+                <td style={{ color: hit.hit ?"greenyellow" : "red" }}>{hit.hit ? "Area" : "Miss"}</td>
             </tr>
         );
     };
 
     const handleClear = async () => {
-        const response = await clearHitsRequest(userInfo.token);
+        const response = await clearPointsTable();
 
         if (response.message) {
             dispatch(showError({ detail: response.message }))

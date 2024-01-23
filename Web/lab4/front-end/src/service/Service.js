@@ -3,10 +3,8 @@ const USER_URL = API_URL + 'user'
 const HIT_URL = API_URL + 'point'
 
 export async function authorizeRequest(userState) {
-    const userInfo = { username: userState.username, password: userState.password }
-
     const response = await fetch(USER_URL + "/auth"
-                                            + "?login=" + userState.login
+                                            + "?login=" + userState.username
                                             + "&password=" + userState.password,
 {
         method: 'GET',
@@ -24,7 +22,7 @@ export async function authorizeRequest(userState) {
 }
 
 export async function logoutRequest() {
-    let token = "ABOBA"; //TODO: значение токена из браузера
+    let token = localStorage.getItem('userToken');
 
     const response = await fetch(USER_URL + "/logout",  {
         method: 'GET',
@@ -46,8 +44,8 @@ export async function logoutRequest() {
 
 export async function registerRequest(userState) {
     const response = await fetch(USER_URL + "/reg"
-                                            + "?login=" + userState.login+"&password="
-                                            + userState.password,
+                                            + "?login=" + userState.username
+                                            +"&password=" + userState.password,
 {
         method: 'POST',
         headers: {
@@ -67,7 +65,7 @@ export async function registerRequest(userState) {
 
 
 export async function getPointsTable() {
-    let token = "ABOBA"; //TODO: значение токена из браузера
+    let token = localStorage.getItem('userToken'); 
 
     const response = await fetch(HIT_URL,  {
         method: 'GET',
@@ -88,9 +86,9 @@ export async function getPointsTable() {
 }
 
 export async function checkPoint(point) {
-    let token = "ABOBA"; //TODO: значение токена из браузера
+    let token = localStorage.getItem('userToken');
 
-    const response = await fetch(HIT_URL + "?x=" + point.x + "&y=" + point.y + "&y=" + point.r,  {
+    const response = await fetch(HIT_URL + "?x=" + point.x + "&y=" + point.y + "&r=" + point.r,  {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -100,7 +98,8 @@ export async function checkPoint(point) {
 
     const text = await response.text();
     try{
-        return JSON.parse(text); //TODO: JSON точки с сервера
+        console.log(JSON.parse(text));
+        return JSON.parse(text); //TODO: JSON точки с сервера ||табличка + отрисовка
     } catch (error) {
         console.log(error.message);
 
@@ -109,7 +108,7 @@ export async function checkPoint(point) {
 }
 
 export async function clearPointsTable() {
-    let token = "ABOBA"; //TODO: значение токена из браузера
+    let token = localStorage.getItem('userToken');
 
     const response = await fetch(HIT_URL,  {
         method: 'DELETE',

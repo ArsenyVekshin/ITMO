@@ -3,7 +3,7 @@ import UserInput from "../components/UserInput";
 import Graph from "../components/Graph";
 import HitsTable from "../components/HitsTable";
 import {useDispatch, useSelector} from "react-redux";
-import {getHitsRequest} from "../../service/Service";
+import {getPointsTable} from "../../service/Service";
 import {setHits} from "../../store/userSlice";
 import ErrorMessage from "../components/ErrorMessage";
 import {Navigate} from "react-router-dom";
@@ -18,7 +18,7 @@ const MainPage = () => {
 
     console.log("Get all hits")
 
-    getHitsRequest(token).then( res => {
+    getPointsTable(token).then( res => {
         if (Array.isArray(res)) dispatch(setHits(res));
     })
 

@@ -10,10 +10,10 @@ import {showError} from "../../store/errorSlice";
 
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
-import {authorizeRequest} from "../../service/Service";
+import {authorizeRequest, registerRequest} from "../../service/Service";
 
 const MIN_USERNAME_LENGTH = 4;
-const MIN_PASSWORD_LENGTH = 6;
+const MIN_PASSWORD_LENGTH = 8;
 
 const Auth = (props) => {
     const dispatch = useDispatch();
@@ -83,7 +83,11 @@ const Auth = (props) => {
             return showErrorMessage('Incorrect input!');
 
         console.log("Make request")
-        const response = await authorizeRequest(user);
+
+        let response;
+        if (!user.login)
+            response = await registerRequest(user);
+        response = await authorizeRequest(user);
 
         console.log("Get request data: " + response);
 
@@ -92,6 +96,8 @@ const Auth = (props) => {
 
         // Set token and auth state
         dispatch(authorize(response.token));
+
+        localStorage.setItem('userToken', response.token);
 
         setUser({ ...user, isAuthorized: true });
         setLoading(false);

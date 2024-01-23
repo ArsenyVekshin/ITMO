@@ -2,7 +2,7 @@ import JXGBoard from 'jsxgraph-react-js'
 import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 
-import {addHitRequest} from "../../service/Service";
+import {checkPoint} from "../../service/Service";
 
 import "../../resources/Graph.css"
 import {addHit} from "../../store/userSlice";
@@ -65,8 +65,8 @@ const Graph = () => {
     const createRectangle = (R) => {
         let p1 = createPoint(0, 0);
         let p2 = createPoint(R, 0);
-        let p3 = createPoint(R, R);
-        let p4 = createPoint(0, R);
+        let p3 = createPoint(R, -R);
+        let p4 = createPoint(0, -R);
         let rectangle = board.create('polygon', [p1, p2, p3, p4], figuresProperties);
         setVerticesInvisible(rectangle);
 
@@ -76,8 +76,8 @@ const Graph = () => {
 
     const createCircle = (R) => {
         let p1 = createPoint(0, 0, false);
-        let p2 = createPoint(0, -R, false);
-        let p3 = createPoint(-R, 0, false);
+        let p2 = createPoint(-R, 0, false);
+        let p3 = createPoint(0, -R, false);
         let circle = board.create('sector', [p1, p2, p3], figuresProperties);
 
         drawnObjects.push(circle);
@@ -90,7 +90,7 @@ const Graph = () => {
         userInfo.hits.forEach(point => {
             if (parseFloat(R) === point.r) {
                 drawnObjects.push(
-                    createPoint(point.x, point.y, true, point.result)
+                    createPoint(point.x, point.y, true, point.hit)
                 );
             }
         })
@@ -116,7 +116,7 @@ const Graph = () => {
         const coords = board.getUsrCoordsOfMouse(e);
         const hit = {x: wrapCoordinate(coords[0]), y: wrapCoordinate(coords[1]), r: userInfo.r}
 
-        const response = await addHitRequest(hit, userInfo.token);
+        const response = await checkPoint(hit);
 
         if (response.message) {
             dispatch(showError({ detail: response.message }))

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {getHitsRequest} from "../service/Service";
 
 const storageToken = localStorage.getItem("token");
 
