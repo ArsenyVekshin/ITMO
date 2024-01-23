@@ -33,7 +33,7 @@ public class GraphController {
         if (token.isExpired())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonMessage("auth token expired"));
 
-        return ResponseEntity.ok(gson.toJson(pointRepository.findByUserId(token.getId())));
+        return ResponseEntity.ok(gson.toJson(pointRepository.findByUserId(token.getUser().getId())));
     }
 
     @PostMapping (value = "/point", produces = "application/json")
@@ -57,6 +57,19 @@ public class GraphController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonMessage("entered point incorrect"));
         }
 
+    }
+
+    @DeleteMapping(value = "/point", produces = "application/json")
+    public ResponseEntity<String> clearPointsTable(HttpServletRequest request) {
+        AuthToken token = authTokenRepository.findByToken(request.getHeader("auth-token"));
+
+        if (token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonMessage("wrong auth token"));
+        if (token.isExpired())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonMessage("auth token expired"));
+
+        pointRepository.clearByUserId(token.getUser().getId());
+        return ResponseEntity.ok(jsonMessage("User points clear - successful"));
     }
 
 }

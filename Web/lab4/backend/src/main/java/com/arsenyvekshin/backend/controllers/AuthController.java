@@ -22,8 +22,9 @@ public class AuthController {
     @Autowired
     private AuthTokenRepository authTokenRepository;
 
-    @GetMapping(value = "/user-auth", produces = "application/json")
+    @GetMapping(value = "/user/auth", produces = "application/json")
     public String authUser(@RequestParam String login, @RequestParam String password) {
+
         User user = userRepository.findByLogin(login);
 
         if (user == null) return authError("User not found");
@@ -37,8 +38,8 @@ public class AuthController {
         return jsonfield("token", newToken);
     }
 
-    @GetMapping(value = "/user-logout", produces = "application/json")
-    public String authUser(@RequestParam String userToken) {
+    @GetMapping(value = "/user/logout", produces = "application/json")
+    public String logoutUser(@RequestParam String userToken) {
         AuthToken token = authTokenRepository.findByToken(userToken);
         if(token == null)
             return authError(" wrong token");
@@ -53,7 +54,7 @@ public class AuthController {
         return jsonMessage("token is correct");
     }*/
 
-    @PostMapping(value = "/user-reg", produces = "application/json")
+    @PostMapping(value = "/user/reg", produces = "application/json")
     public String createUser(@RequestParam String login, @RequestParam String password) {
         if(login.length() < MIN_LOGIN_LEN)
             return jsonMessage("Incorrect login (must be at least"+ MIN_LOGIN_LEN +")");
