@@ -17,6 +17,7 @@ import com.arsenyvekshin.backend.entities.Point;
 import com.arsenyvekshin.backend.exceptions.OutOfBoundException;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class GraphController {
     @Autowired
     private AuthTokenRepository authTokenRepository;

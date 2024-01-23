@@ -13,6 +13,7 @@ import static com.arsenyvekshin.backend.utils.JsonUtil.*;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthController {
     private static final int MIN_LOGIN_LEN = 4;
     private static final int MIN_PASS_LEN = 8;
