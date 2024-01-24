@@ -6,8 +6,9 @@
 }
 
 .controller {
-    width: 400px;
-    border: 2px dashed green;
+    min-width: 400px;
+    max-width: 450px;
+    border: 2px solid #026496;
     border-radius: 20px;
     padding: 1% 2% 2% 2%;
     margin-right: 3%;

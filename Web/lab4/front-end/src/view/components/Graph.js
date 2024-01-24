@@ -88,11 +88,9 @@ const Graph = () => {
         console.log("Draw by r: " + R);
 
         userInfo.hits.forEach(point => {
-            if (parseFloat(R) === point.r) {
-                drawnObjects.push(
-                    createPoint(point.x, point.y, true, point.hit)
-                );
-            }
+            drawnObjects.push(
+                createPoint(point.x * parseFloat(R)/point.r, point.y * parseFloat(R)/point.r, true, point.hit)
+            );
         })
     }
 
