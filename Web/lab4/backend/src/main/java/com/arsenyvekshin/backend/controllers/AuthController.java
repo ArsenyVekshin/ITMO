@@ -1,5 +1,6 @@
 package com.arsenyvekshin.backend.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class AuthController {
     private UserRepository userRepository;
     @Autowired
     private AuthTokenRepository authTokenRepository;
+    
 
     @GetMapping(value = "/user/auth", produces = "application/json")
     public String authUser(@RequestParam String login, @RequestParam String password) {
@@ -40,11 +42,12 @@ public class AuthController {
     }
 
     @GetMapping(value = "/user/logout", produces = "application/json")
-    public String logoutUser(@RequestParam String userToken) {
-        AuthToken token = authTokenRepository.findByToken(userToken);
+    public String logoutUser(HttpServletRequest request) {
+        AuthToken token = authTokenRepository.findByToken(request.getHeader("auth-token"));
         if(token == null)
             return authError(" wrong token");
         authTokenRepository.deleteByUserId(token.getUser().getId());
+        //System.out.println("logout user with id=" + token.getUser().getId());
         return jsonMessage("User logout successfully");
     }
 

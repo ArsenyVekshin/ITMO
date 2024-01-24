@@ -38,7 +38,8 @@ const UserInput = () => {
         const response = await checkPoint(point);
 
         if (response.message) {
-            dispatch(showError({ detail: response.message }))
+            dispatch(showError({ detail: response.message }));
+            setLoading(false);
             return;
         }
 
@@ -66,7 +67,7 @@ const UserInput = () => {
             </div>
             <div className="coordinateInput">
                 <label className="coordinateName">R</label>
-                <Slider value={point.r} min={0.5} max={3} step={0.5} onChange={handleRChange}/>
+                <Slider value={point.r} min={-5} max={3} step={0.5} onChange={handleRChange}/>
                 <span className="coordinateValue">{point.r}</span>
             </div>
 

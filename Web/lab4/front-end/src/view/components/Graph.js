@@ -52,9 +52,9 @@ const Graph = () => {
     }
 
     const createTriangle = (R) => {
-        let p1 = createPoint(0, 0);
-        let p2 = createPoint(0, R);
-        let p3 = createPoint(R, 0);
+        let p1 = createPoint(0, 0, false);
+        let p2 = createPoint(0, R, false);
+        let p3 = createPoint(R, 0, false);
         let triangle = board.create('polygon', [p1, p2, p3], figuresProperties);
         setVerticesInvisible(triangle);
 
@@ -63,10 +63,10 @@ const Graph = () => {
     }
 
     const createRectangle = (R) => {
-        let p1 = createPoint(0, 0);
-        let p2 = createPoint(R, 0);
-        let p3 = createPoint(R, -R);
-        let p4 = createPoint(0, -R);
+        let p1 = createPoint(0, 0, false);
+        let p2 = createPoint(R, 0, false);
+        let p3 = createPoint(R, -R, false);
+        let p4 = createPoint(0, -R, false);
         let rectangle = board.create('polygon', [p1, p2, p3, p4], figuresProperties);
         setVerticesInvisible(rectangle);
 

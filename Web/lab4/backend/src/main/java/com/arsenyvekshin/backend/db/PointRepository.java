@@ -1,7 +1,7 @@
 package com.arsenyvekshin.backend.db;
 
-
 import com.arsenyvekshin.backend.entities.Point;
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

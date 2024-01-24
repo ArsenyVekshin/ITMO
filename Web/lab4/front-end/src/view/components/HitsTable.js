@@ -27,7 +27,7 @@ function HitsTable() {
     const handleClear = async () => {
         const response = await clearPointsTable();
 
-        if (response.message) {
+        if (response.error) {
             dispatch(showError({ detail: response.message }))
             return;
         }

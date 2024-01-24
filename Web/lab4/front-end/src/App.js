@@ -9,14 +9,17 @@ import PageNotFound from "./view/pages/PageNotFound";
 import "./resources/index.css"
 
 import {logOut} from "./store/userSlice";
+import { logoutRequest } from "./service/Service";
 
 const App = () => {
   const userAuthorized = useSelector((state) => state.user.auth);
   const dispatch = useDispatch();
 
-  const logOutCallback = useCallback(() => {
-    dispatch(logOut());
-  }, [dispatch]);
+  const logOutCallback = async (e) => {
+    let response = await logoutRequest();
+    if (response) dispatch(logOut());
+    else console.log("Log out error");
+  };
 
   return (
       <Router>
