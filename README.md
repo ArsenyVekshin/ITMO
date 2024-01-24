@@ -11,7 +11,7 @@
 ---
 
 ### 2 семестр
-[Базы данных](https://github.com/ArsenyVekshin/ITMO/tree/master/Inf)  
+[Базы данных](https://github.com/ArsenyVekshin/ITMO/tree/master/DB)  
 [Программирование](https://github.com/ArsenyVekshin/ITMO/tree/master/Prog)  
 [ОПД](https://github.com/ArsenyVekshin/ITMO/tree/master/OPD)
 ---
