@@ -130,3 +130,4 @@ Programming Languages/**/obj/*
 
 /**/node_modules/*
 Programming Languages/lab2/src/.gitlab-ci.yml
+*.pyc
