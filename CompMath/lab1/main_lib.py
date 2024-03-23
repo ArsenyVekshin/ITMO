@@ -15,7 +15,7 @@ else:
         matrix = [list(map(float, line.strip().split())) for line in lines]
         for i in range(len(matrix)):
             free_v.append(matrix[i][-1])
-            matrix.pop(-1)
+            matrix[i].pop(-1)
 
 # Определение матрицы коэффициентов A и вектора свободных членов b
 A = np.array(matrix)

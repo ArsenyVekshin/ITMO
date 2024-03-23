@@ -42,8 +42,60 @@ def calc_error_rate(matrix, result):
         deltas.append(buff - matrix[i][-1])
     return deltas
 
-def calc_triangle_det(matrix):
+def calc_triangle_det(matrix, k):
     out = 1
     for i in range(len(matrix)):
         out *= matrix[i][i]
-    return out
+    return out * pow(-1, k)
+
+def is_matrix_correct(matrix):
+    out_flag =0
+    #Проверим на квадратность
+    for i in range(len(matrix)):
+        if(len(matrix[i]) != len(matrix)+1):
+            print("некоректный размер матрицы")
+            return False
+
+    #проверка на нулевые строки
+    for i in range(len(matrix)):
+        flag = True
+        for j in range(len(matrix[i])-1):
+            if(matrix[i][j]!=0.0):
+                flag = False
+                break
+        if flag:
+            print("обнаружены нулевые строки")
+            return False
+
+    # проверка на нулевые столбцы
+    for i in range(len(matrix)):
+        flag = True
+        for j in range(len(matrix)):
+            if (matrix[i][j] != 0.0):
+                flag = False
+                break
+        if flag:
+            print("обнаружены нулевые столбы")
+            return False
+
+    for i in range(len(matrix)):
+        if(matrix[i][i]) == 0:
+            print("На диагонали обнаружены нулевые элементы")
+            return False
+
+    return True
+
+
+def calc_move_num(matrix1, matrix2):
+    out = 0
+    for i, j in matrix1, matrix2:
+        if i != j: out += 1
+    return out//2
+
+def default_matrix_to_numpy(matrix):
+    new_matrix = matrix.copy()
+    free_v =[]
+    for i in range(len(matrix)):
+        free_v.append(matrix[i][-1])
+        new_matrix[i].pop(-1)
+    return new_matrix, free_v

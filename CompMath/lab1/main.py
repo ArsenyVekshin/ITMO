@@ -1,7 +1,11 @@
 import sys
+
+import numpy as np
+
 from utils.matrix_tools import *
 
 matrix = []
+movements_num = 0
 
 filename = input("Введите путь до файла или нажмите Enter: ")
 if filename == '':
@@ -13,11 +17,27 @@ else:
         lines = file.readlines()
         matrix = [list(map(float, line.strip().split())) for line in lines]
 
-entered_matrix = matrix.copy()
+entered_matrix = [row.copy() for row in matrix]
 
-#matrix = sort_matrix(matrix)
+print("Введенная матрица:")
 print_matrix(matrix)
 print()
+
+
+if(not is_matrix_correct(matrix)):
+    print("Обнаруженна ошибка в исходных данных")
+
+    print("Попытка исправить ошибку сортировкой...")
+    matrix = sort_matrix(matrix)
+    print_matrix(matrix)
+
+    if (not is_matrix_correct(matrix)):
+        print("Введенная матрица содержит ошибку, проверьте корректность ввода")
+        sys.exit(1)
+
+    movements_num = calc_move_num(matrix, entered_matrix)
+    print("Количество перестановок:", movements_num)
+
 
 print("Прямой ход: ")
 for i in range(len(matrix)):
@@ -35,6 +55,13 @@ for i in range(len(matrix)):
 
 print("\nРезультат прямого хода:")
 print_matrix(matrix)
+
+
+print("Определитель:", calc_triangle_det(matrix, movements_num))
+
+left, right = default_matrix_to_numpy([row.copy() for row in matrix])
+print("Определитель от библиотеки:", np.linalg.det(np.array(left)))
+
 if not is_triangle(matrix):
     print("Матрицу невозможно привести к треугольному виду - вычисления окончены")
     sys.exit(1)
@@ -58,3 +85,4 @@ result.reverse()
 
 print("Вектор решений:", result)
 print("Вектор несвязок:", calc_error_rate(entered_matrix, result))
+
