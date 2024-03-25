@@ -1,10 +1,10 @@
 from tools import *
 
 
-def solve(f, a, b, accuracy):
+def solve(f, a, b, accuracy, max_iter):
     iter = 0
     print_table_header(["#", "a", "b", "f(x1)", "f(x2)", "|a-b|"])
-    while(abs(a-b) > 2*accuracy):
+    while(abs(a-b) > 2*accuracy and iter<max_iter):
         iter += 1
         x1 = mid(a, b-accuracy)
         x2 = mid(a, b+accuracy)

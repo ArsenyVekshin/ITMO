@@ -2,7 +2,7 @@ import sys
 from tools import *
 
 
-def solve(f, deriv, deriv2, start, accuracy):
+def solve(f, deriv, deriv2, start, accuracy, max_iter):
     def find_x():
         return x - deriv(x) / deriv2(x)
 
@@ -11,7 +11,7 @@ def solve(f, deriv, deriv2, start, accuracy):
     x = find_x()
     print_table_header(["#", "x_i", "f(x)", "f'(x)", "x_{i+1}"])
     print_table_row([iter, prev_x, f(x), deriv(x), x])
-    while (abs(deriv(x)) > accuracy):
+    while (abs(deriv(x)) > accuracy  and iter<max_iter):
         iter += 1
         prev_x = x
         x = find_x()

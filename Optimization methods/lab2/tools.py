@@ -1,7 +1,8 @@
-COLOUMN_SIZE = 7
+COLOUMN_SIZE = 12
+ROUND_K = 10
 def print_table_row(row):
     for i in row:
-        print(str(round(i, 4)).ljust(COLOUMN_SIZE), end=' | ')
+        print(str(round(i, ROUND_K)).ljust(COLOUMN_SIZE), end=' | ')
     print()
 
 
@@ -17,8 +18,3 @@ def mid(a, b):
 def is_dif_sign(a, b):
     return (a>0 and b<0) or (a<0 and b>0)
 
-def add_vertical_line(x, arr):
-    arr[0].append(x)
-    arr[1].append(0)
-    arr[0].append(x)
-    arr[1].append(1)
