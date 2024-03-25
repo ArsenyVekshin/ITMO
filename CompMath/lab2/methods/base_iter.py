@@ -15,19 +15,19 @@ def get_lambda(f, a, b, accuracy):
     return -1 / l * sign, x_max
 
 
-def simple_iteration(f, fp, a, b, accuracy):
+def solve(f, deriv, a, b, accuracy):
     x = a
     prev_x = x - 2 * accuracy
     iter = 1
-    lambd, x0 = get_lambda(fp, a, b, accuracy)
-    q = abs(1 + lambd * fp(x0))
-    print(1 + lambd * fp(a), 1 + lambd * fp(b))
+    lambd, x0 = get_lambda(deriv, a, b, accuracy)
+    q = abs(1 + lambd * deriv(x0))
+    print(1 + lambd * deriv(a), 1 + lambd * deriv(b))
     if q > 1:
         print('Достаточное условие сходимости не выполняется!')
     elif q > 0.5:
         accuracy = (1 - q) / q * accuracy
-    print_table_header(["#", "x_i", "x_{i+1}", "f(x_i)", "x_i-x_{i-1}"])
-    print('№\tx_i\tx_{i-1}\tf(x_i)\t|x_i-x_{i-1}|')
+
+    print_table_header(["#", "x_i", "x_{i+1}", "f(x_i)", "delta_x"])
     while abs(f(x)) > accuracy and iter < 10000:
         if (q >= 1 and iter > 3):
             break

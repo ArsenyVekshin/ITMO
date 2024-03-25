@@ -8,14 +8,14 @@ def solve(f, deriv, a, b, start, accuracy):
 
     iter = 0
     x, prev_x = start, 0
-    while (abs(f(x)/deriv(f(x))) > accuracy and abs(x - prev_x) > accuracy and abs(f(x)) >= accuracy):
+    print_table_header(["#", "x_i", "f(x)", "f'(x)", "x_{i+1}", "delta_x"])
+    while (abs(f(x)/deriv(f(x))) > accuracy
+           and abs(x - prev_x) > accuracy and abs(f(x)) >= accuracy):
         iter += 1
+        prev_x = x
         x = find_x()
         print_table_row([iter, prev_x, f(x), deriv(x), x, abs(x - prev_x)])
-        prev_x = x
 
-    if(abs(f(x)) < accuracy): return x, f(x)
-    else:
-        print("Поиск относительно", start, "- ошибка")
-        return None
+    return x
+
 
