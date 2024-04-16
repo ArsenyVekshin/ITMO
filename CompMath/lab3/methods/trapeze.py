@@ -10,7 +10,7 @@ def solve(f, a, b, k):
         area += S
         print_table_row([i+1, x, x+dx, S])
         x += dx
-    return area
+    return area*dx
 
 
 

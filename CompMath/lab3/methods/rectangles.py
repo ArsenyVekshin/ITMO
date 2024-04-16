@@ -6,7 +6,7 @@ def solve(f, a, b, k, type):
     dx = (b-a)/k
     if (type == "left"):    x = a
     if (type == "right"):   x = a + dx
-    if (type == "midle"):   x = a + dx/2
+    if (type == "middle"):   x = a + dx/2
 
     for i in range(k):
         S = f(x) * dx
