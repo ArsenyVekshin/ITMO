@@ -18,6 +18,7 @@ def solve(functions, x0, y0, accuracy):
 
 def is_possible(deriv_functions, x0, y0):
     for df in deriv_functions:
+        print(df(x0, y0))
         if (df(x0, y0)>1):
             print("ERROR: условие сходимости не выполняется в окресности заданной точки")
             sys.exit(1)

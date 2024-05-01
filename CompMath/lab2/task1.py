@@ -28,7 +28,7 @@ if input("Показать график? Y/N : ") == "Y": show_plot()
 def solve_by_id(method_id):
     if method_id == 0:      x = half_div.solve(f, a, b, accuracy)
     elif method_id == 1:    x = chord.solve(f, a, b, accuracy)
-    elif method_id == 2:    x = newton.solve(f, deriv, a, b, b, accuracy)
+    elif method_id == 2:    x = newton.solve(f, deriv, a, b, a, accuracy)
     elif method_id == 3:    x = secant.solve(f, a, b, accuracy)
     elif method_id == 4:    x = base_iter.solve(f, deriv, a, b, accuracy)
     else:
@@ -62,4 +62,8 @@ for _ in range(3):
             print("Метод решения: ", method_idx)
             print("Границы отрезка: ", a, b)
             print("Точность: ", accuracy)
+
+    if(a<-5 or b>3):
+        print("ERROR: границы введенного отрезка слишком далеко от корней - поиск прерван")
+        sys.exit(0)
     solve_by_id(method_idx)

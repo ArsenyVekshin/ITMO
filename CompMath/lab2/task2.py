@@ -54,6 +54,7 @@ if filename == '':
             """)
     equation_idx = int(input("Номер системы: "))
     show_plot()
+    print("АХТУНГ: при вводе приближения на большом удалении точность не гарантируется!")
     a, b = map(float, input("Введите изначальное приближение: ").split())
     accuracy = float(input("Введите точность: "))
 
@@ -70,9 +71,10 @@ else:
         print("Точность: ", accuracy)
         show_plot()
 
-base_iter_system.is_possible(deriv_system, a, b)
-x, y = base_iter_system.solve(system, a, b, accuracy)
-print("Найдено решение x =", x, "y =", y, '\n')
+base_iter_system.is_possible(deriv_system[equation_idx], a, b)
+x, y = base_iter_system.solve(system[equation_idx], a, b, accuracy)
+print("Найдено решение x =", x, "y =", y)
+print("Дельты: delta_x = ", x - system[equation_idx][0](x,y), "delta_y = ", y - system[equation_idx][1](x,y), '\n')
 
 
 
