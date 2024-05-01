@@ -22,3 +22,6 @@ def add_vertical_line(x, arr):
     arr[1].append(0)
     arr[0].append(x)
     arr[1].append(1)
+
+
+

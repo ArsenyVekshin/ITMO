@@ -26,12 +26,12 @@ def aproximate(points, degree):
     # print("B = ", B)
     _koofs = solve_slau(A, B)
 
-    out_f = lambda x: 0
-    for i in range(len(_koofs)):
-        out_f = lambda x :
+    return _koofs
 
-    return out_f, _koofs
-
+def func(x, koofs):
+    out = 0
+    for i in range(len(koofs)):
+        out += koofs[i]* x**i
 def tostr(koofs):
     out = "y = "
     for i in range(len(koofs)):

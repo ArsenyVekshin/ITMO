@@ -77,7 +77,7 @@ def solve_by_id(method_id):
         sys.exit(-1)
 
     print("Расчет точности:")
-    S, eps, R2 = check_accuracy(f, points)
+    S, eps, R2 = check_accuracy(f, points, koofs)
     show_plot()
 
 

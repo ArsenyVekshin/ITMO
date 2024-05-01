@@ -2,6 +2,8 @@ import math as m
 import sys
 
 import numpy as np
+from methods import polynomial
+
 
 ROUND_LVL = 4
 COLOUMN_SIZE = 7
@@ -65,11 +67,12 @@ def find_R2(f, points):
         S2 += (p[1] - mid_f) ** 2
     return 1 - S1/S2
 
-def check_accuracy(f, points):
+def check_accuracy(f, points, koofs):
     print("Расчитаем отклонение: ")
     delta, eps, R2 = 0, 0, 0
     print_table_header(["#", "x", "y", "P(x)", "eps"])
     for i in range(len(points)):
+        if(type(f(0)) == None and koofs != None): _y = polynomial.func(points[i][0], koofs)
         _y = f(points[i][0])
         delta += (_y - points[i][1])**2
         print_table_row([i + 1, points[i][0], points[i][1], _y, _y - points[i][1]])
