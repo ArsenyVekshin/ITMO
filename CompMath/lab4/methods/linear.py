@@ -1,5 +1,5 @@
 from tools import *
-
+from function import *
 
 def aproximate(points):
     SX, SXX, SY, SXY = 0, 0, 0, 0
@@ -11,9 +11,4 @@ def aproximate(points):
 
     a = (SXY * len(points) - SX*SY) / (SXX * len(points) - SX*SX)
     b = (SXX * SY - SX * SXY) / (SXX * len(points) - SX*SX)
-    f = lambda x: a*x + b
-    return f, [a, b]
-
-def tostr(koofs):
-    return "y = " + str(round(koofs[0], ROUND_LVL)) + " x + " + str(round(koofs[1], ROUND_LVL))
-
+    return Function([a, b], FunctionType.linear)

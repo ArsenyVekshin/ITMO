@@ -1,5 +1,5 @@
 import sys
-
+from function import *
 from tools import *
 
 def aproximate(points, degree):
@@ -13,27 +13,17 @@ def aproximate(points, degree):
     A[0][0] = len(points)
     for i in range(1, degree*2+1):
         _val = 0
-        for p in points: _val += p[0]**i
-        fill_rev_diag(A, _val, i)
+        for p in points:
+            _val += p[0]**i
+        fill_rev_diag(list(A), _val, i)
+        # fill_rev_diag(A, _val, i)
 
     for i in range(degree+1):
         _val = 0
         for p in points: _val += (p[0] ** i) * p[1]
         B.append(_val)
 
-    # for row in A:
-    #     print(row)
-    # print("B = ", B)
     _koofs = solve_slau(A, B)
 
-    return _koofs
+    return Function(_koofs, FunctionType.polynomial)
 
-def func(x, koofs):
-    out = 0
-    for i in range(len(koofs)):
-        out += koofs[i]* x**i
-def tostr(koofs):
-    out = "y = "
-    for i in range(len(koofs)):
-        out += str(round(koofs[len(koofs)-i -1], ROUND_LVL)) + " x^" + str(len(koofs) - i -1) + " + "
-    return out
