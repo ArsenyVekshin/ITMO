@@ -30,7 +30,7 @@ def show_plot():
     x_arr = np.linspace(a, b, 1000)
     if(f != None):
         y_arr = [f.calc(x) for x in x_arr]
-        plt.plot(x_arr, y_arr, '--r')
+        plt.plot(x_arr, y_arr, '--r', label=f.tostr())
 
     for p in points:
         plt.scatter(p[0], p[1])
@@ -39,6 +39,8 @@ def show_plot():
     plt.axhline(0, color='black', linewidth=1)
     plt.axvline(0, color='black', linewidth=1)
 
+    plt.title(f.get_str_type())
+    plt.legend()
     plt.show()
 
 def solve_by_id(method_id):
