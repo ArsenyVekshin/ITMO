@@ -10,7 +10,7 @@ class Newton_Polynomial(Polynomial):
     tree = []
     def __init__(self, points):
 
-        super().__init__(points, list(np.zeros(len(points))))
+        super().__init__(points, list(np.zeros(len(points))), "newton")
 
         # Соберем таблицу по слоям
         self.tree.append([])
@@ -49,5 +49,7 @@ class Newton_Polynomial(Polynomial):
             out+=buff
         return out
 
-
+    def print_tree(self):
+        for line in self.tree:
+            print(line)
 

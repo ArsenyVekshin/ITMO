@@ -4,7 +4,7 @@ from tools import *
 
 class Lagrange_Polynomial(Polynomial):
     def __init__(self, points):
-        super().__init__(points, list(np.zeros(len(points))))
+        super().__init__(points, list(np.zeros(len(points))), "lagrange")
 
         for i in range(len(points)):
             numerator = []

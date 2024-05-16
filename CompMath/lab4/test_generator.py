@@ -1,10 +1,12 @@
-a, b = -2, 0
-h = 0.2
-f = lambda x: 4*x / (x**4 +3)
+import math as m
+a, b = 0.2, 4
+h = 0.1
+f = lambda x: 2 * m.log(x,m.e) +1
 
 x = a
 out = []
 while(x<=b):
+    print(round(x, 4), round(f(x), 4))
     out.append([x, f(x)])
     x += h
-print(out)
+# print(out)
