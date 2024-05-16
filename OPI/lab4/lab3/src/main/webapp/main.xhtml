@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<!--suppress CheckTagEmptyBody -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <title>goyda</title>
+    <link rel="stylesheet" type="text/css" href="styles/body.css" />
+    <link rel="stylesheet" type="text/css" href="styles/header.css" />
+    <link rel="stylesheet" type="text/css" href="styles/user_input.css" />
+    <link rel="stylesheet" type="text/css" href="styles/table.css" />
+    <link rel="stylesheet" type="text/css" href="styles/other.css" />
+    <link rel="stylesheet" type="text/css" href="styles/jsx.css" />
+</h:head>
+<h:body>
+<div id="error-message-block" style="display: none;">
+    <span id="error-message"></span>
+    <button class="action-button" id="close-error-button" onclick="app.hideErrorMessage();">Close</button>
+</div>
+<div class="header">
+    <h1>Векшин Арсений</h1>
+    <h3>P3216 / 312313</h3>
+</div>
+<div class="controller">
+    <!--
+        Coordinates: X, Y, R
+    -->
+    <label id="controller-title">Control pane</label>
+    <h:form id="user-request">
+        <p:remoteCommand name="makeUserRequest" action="#{client.makeUserRequest}" update="results-table script"/>
+        <p:remoteCommand name="makeRemoteRequest" action="#{client.makeRemoteRequest}" update="results-table script"/>
+
+        <div class="x-input">
+            <p:outputLabel styleClass="x-label" value="X" style="font-size: 22px;"/>
+            <p:spinner id="x-value" styleClass="x-value" value="#{client.coordinates.x}" buttons="horizontal-after"
+                       upButtonStyleClass="ui-button-success" downButtonStyleClass="ui-button-danger"
+                       stepFactor="0.1" min="-5.0" max="5.0" required="true"
+                       style="position: relative; left: 150px; top: 23px; width: 130px;"/>
+            <br/>
+        </div>
+        <div class="y-input">
+            <p:outputLabel styleClass="y-label" value="Y" style="font-size: 22px;"/>
+            <p:inputText id="y-value" styleClass="y-value" value="#{client.coordinates.y}" required="true"/>
+        </div>
+        <br/>
+        <div class="r-checkbox">
+            <h:outputText styleClass="r-label" value="R" />
+            <!--<p:inputText id="r-value" value="#{client.coordinates.r}" required="true" style="display: none;"/>-->
+            <div class="r-checkbox-block">
+                <h:selectOneMenu id="r-value" value = "#{client.coordinates.r}" onchange="onChangeRValue()">
+                    <f:selectItem itemValue = "1" itemLabel = "1" />
+                    <f:selectItem itemValue = "1.5" itemLabel = "1.5" />
+                    <f:selectItem itemValue = "2" itemLabel = "2" />
+                    <f:selectItem itemValue = "2.5" itemLabel = "2.5" />
+                    <f:selectItem itemValue = "3" itemLabel = "3" />
+                </h:selectOneMenu>
+            </div>
+        </div>
+        <br/>
+        <div class="submit-button-block">
+            <p:commandButton styleClass="action-button submit-button" type="submit" id="submit-button" onclick="app.processRequest();" title="Check"/>
+        </div>
+    </h:form>
+</div>
+<div id="jxgbox" class="graph" style="height: 400px; width: 400px; float:left; margin: 0 5% 8% 5%;"></div>
+<div class="results">
+    <!--
+        Table with previous hits
+    -->
+    <h:dataTable id="results-table" value="#{client.currentHits}" var="hit" columnClasses="x-column,y-column,r-column,time-column,res-column">
+        <h:column>
+            <f:facet name="header">X</f:facet>
+            <h:outputText value="#{hit.x}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Y</f:facet>
+            <h:outputText value="#{hit.y}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">R</f:facet>
+            <h:outputText value="#{hit.r}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Current Time</f:facet>
+            <h:outputText value="#{hit.currentTime}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Result</f:facet>
+            <h:outputText value="#{hit.result ? 'area' : 'miss'}" styleClass="#{hit.result ? 'text-green' : 'text-red'}"/>
+        </h:column>
+    </h:dataTable>
+    <div id="clear-button-block">
+        <p:commandButton id="clear-button" styleClass="action-button" action="#{client.clearHits()}" title="Clear" update="results-table script"/>
+    <br/>
+    <h:link outcome="goToIndex">
+        <h:commandButton id="toIndex" styleClass="action-button" value="Go To index"/>
+    </h:link>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-3.6.0.js"></script>
+<script type="text/javascript" src="js/jsxgraphcore.js"></script>
+<script type="text/javascript" src="js/graph.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<h:panelGroup id="script">
+    <h:outputScript>
+        function updatePoints() {
+            // Update points
+            if (board !== undefined) {
+                points = [
+                    <ui:repeat value="#{client.currentHits}" var="hit">
+                        {x: #{hit.x}, y: #{hit.y}, r: #{hit.r}, result: #{hit.result}},
+                    </ui:repeat>
+                ];
+                console.log(points);
+                onChangeRValue();
+            }
+            console.log("Points updated")
+        }
+        updatePoints();
+    </h:outputScript>
+</h:panelGroup>
+</h:body>
+</html>

@@ -1,0 +1,117 @@
+.controller {
+    left: 0;
+    width: 30%;
+    height: 333px;
+    float:left;
+    border: 2px dashed purple;
+    border-radius: 20px;
+    padding-bottom: 5%;
+    padding-top: 1%;
+}
+
+#controller-title {
+    font-size: 24px;
+    margin-left: 5%;
+}
+
+input[type="checkbox"] {
+    filter: invert(10%) hue-rotate(14deg) brightness(1.2);
+}
+
+.invisible {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    left: 15%;
+    top: 35%;
+    display: inline;
+}
+
+/* X buttons */
+
+.x-label {
+    position: relative;
+    top: 28px;
+    left: 40px;
+}
+
+/* X input field */
+
+.y-input {
+    position: relative;
+    top: 40px;
+}
+.y-label {
+    position: relative;
+    top: 8px;
+    left: 40px;
+    font-size: 24px;
+}
+.y-value {
+    position: relative;
+    top: 5px;
+    left: 150px;
+    width: 130px;
+    border: none;
+    border-radius: 5px;
+    color: gold;
+}
+
+/* R checkboxes */
+
+.r {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+    border-radius: 2px;
+    border: 2px dashed yellow;
+}
+
+.r-checkbox {
+    position: relative;
+    top: 60px;
+    left: 40px;
+
+}
+
+.r-label {
+    position: relative;
+    font-size: 24px;
+    top: 5px;
+    float: left;
+}
+
+.r-checkbox-block {
+    position: relative;
+    left: 130px;
+}
+
+.r-chexbox-column-edge, .r-chexbox-column-center {
+    float: left;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-left: 10px;
+}
+.r-chexbox-column-center { padding-top: 10px; }
+
+/* Submit button */
+
+.submit-button-block {
+    position: relative;
+    top: 120px;
+    left: -50px;
+    width: fit-content;
+    margin: auto;
+    display: flex;
+}
+
+.submit-button {
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.submit-button:disabled {
+    background: gray;
+}
