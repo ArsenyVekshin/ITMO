@@ -49,7 +49,13 @@ class Newton_Polynomial(Polynomial):
             out+=buff
         return out
 
+
     def print_tree(self):
-        for line in self.tree:
-            print(line)
+        print()
+        print_table_header(["x\\y"] + list(range(len(self.tree))))
+        for x_i in range(len(self.tree)):
+            buff = [x_i]
+            for j in range(len(self.tree) - x_i):
+                buff.append(self.tree[j][x_i])
+            print_table_row(buff)
 

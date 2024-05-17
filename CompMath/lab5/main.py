@@ -1,5 +1,6 @@
 from methods.lagrange import *
 from methods.newton import *
+from methods.newton_stable import *
 from abstaract_poly import Polynomial
 import matplotlib.pyplot as plt
 from tools import *
@@ -36,9 +37,12 @@ else:
             points.append(list(map(float, line.strip().split())))
     print("Чтение из файла успешно")
 
+points = sorted(points, key=lambda x: x[0])
+print(points)
+
 functions.append(Lagrange_Polynomial(points))
 
-functions.append(Newton_Polynomial(points))
+#functions.append(Newton_Polynomial(points))
 
 for f in functions:
     print()
@@ -48,5 +52,7 @@ for f in functions:
 
 show_plot()
 
-
+newton_stable = Newton_Stable_Polynomial(points)
+print(newton_stable.calc_straight(2.5))
+newton_stable.print_tree()
 
