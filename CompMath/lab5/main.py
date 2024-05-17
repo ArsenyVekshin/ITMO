@@ -10,6 +10,12 @@ clc_x = 0
 points =[]
 functions =[]
 
+def is_stable(points):
+    delta = round(points[1][0] - points[0][0], 5)
+    for i in range(len(points)-1):
+        if(round(points[i+1][0] - points[i][0],5) != delta): return False
+    return True
+
 def show_plot():
     x_arr = np.linspace(min(points, key=lambda x: x[0])[0], max(points, key=lambda x: x[0])[0], 1000)
     for f in functions:
@@ -42,17 +48,30 @@ print(points)
 
 functions.append(Lagrange_Polynomial(points))
 
-#functions.append(Newton_Polynomial(points))
+
+functions.append(Newton_Polynomial(points))
+x_check = float(input("Введите X точки для расчета: "))
 
 for f in functions:
     print()
     print(f.getName())
     print("function:", f.tostr())
-    print("f(", clc_x, ") =", f.calc(clc_x))
+    print("f(", x_check, ") =", f.calc(x_check))
 
+
+functions[-1].print_tree()
 show_plot()
 
-newton_stable = Newton_Stable_Polynomial(points)
-print(newton_stable.calc_straight(2.5))
-newton_stable.print_tree()
+
+if(is_stable(points)):
+    print("\nnewton_stable")
+    newton_stable = Newton_Stable_Polynomial(points)
+    newton_stable.print_tree()
+
+    if(x_check <= (points[-1][0]-points[0][0])/2):
+        print("front: ", newton_stable.calc_straight(x_check))
+    else:
+        print("back: ", newton_stable.calc_back(x_check))
+else:
+    print("точки не расвностоящие :(")
 

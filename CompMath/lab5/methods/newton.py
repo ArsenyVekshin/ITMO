@@ -49,6 +49,8 @@ class Newton_Polynomial(Polynomial):
             out+=buff
         return out
 
+    def calc(self, x):
+        return self.calc_by_tree(x)
 
     def print_tree(self):
         print()

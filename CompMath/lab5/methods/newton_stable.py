@@ -11,12 +11,16 @@ class Newton_Stable_Polynomial(Polynomial):
 
     h = 0
     tree = []
+
+
     def __init__(self, points):
 
         super().__init__(points, list(np.zeros(len(points))), "newton_stable")
-        self.h = points[0][0] - points[1][0]
+        self.h = points[1][0] - points[0][0]
+
 
         # Соберем таблицу по слоям
+        self.tree.append([y for x,y in points])
         self.tree.append([])
 
         for i in range(1, len(points)): # собираем первый слой
@@ -27,8 +31,6 @@ class Newton_Stable_Polynomial(Polynomial):
             for i in range(1, len(self.tree[-2])):
                 # print(self.tree[-2][i], self.tree[-2][i-1],"/", points[right][0], points[left][0] )
                 self.tree[-1].append(self.tree[-2][i] - self.tree[-2][i-1])
-
-
 
 
     def calc_straight(self, x):
@@ -43,10 +45,12 @@ class Newton_Stable_Polynomial(Polynomial):
         t = (x - self.points[t_idx][0]) / self.h
         for i in range(len(self.tree) - t_idx): # собираем слагаемые
             buff = self.tree[i][t_idx]
-            for j in range(i): buff *= t-i
+            for j in range(i):
+                buff *= t-j
             buff /= math.factorial(i)
 
             out+=buff
+        return out
 
 
     def calc_back(self, x):
@@ -59,12 +63,15 @@ class Newton_Stable_Polynomial(Polynomial):
 
         out = 0
         t = (x - self.points[t_idx][0]) / self.h
-        for i in range(len(self.tree) - t_idx):  # собираем слагаемые
-            buff = self.tree[i][t_idx]
-            for j in range(i): buff *= t + j
+        for i in range(len(self.tree)):  # собираем слагаемые
+            if(t_idx-i<0): break
+            buff = self.tree[i][t_idx-i]
+            for j in range(0,i):
+                buff *= t + j
             buff /= math.factorial(i)
-
             out += buff
+
+        return out
 
 
 
@@ -88,10 +95,6 @@ class Newton_Stable_Polynomial(Polynomial):
             for j in range(len(self.tree) - x_i):
                 buff.append(self.tree[j][x_i])
             print_table_row(buff)
-
-
-
-
 
     def getPoints(self):
         return self.points
