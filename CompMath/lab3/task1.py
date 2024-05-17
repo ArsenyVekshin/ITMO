@@ -45,15 +45,7 @@ if input("Показать график? Y/N : ") == "Y": show_plot()
 filename = input("Введите путь до файла или нажмите Enter: ")
 
 if filename == '':
-    print(""" Выберите метод решения:
-                0)  Метод прямоугольников (слева)
-                1)  Метод прямоугольников (посередине)
-                2)  Метод прямоугольников (справа)
-                3)  метод трапеции
-                4)  метод Симпсона
-                """)
 
-    method_idx = int(input("Номер метода: "))
     a, b = map(float, input("Введите границы отрезка: ").split())
     k = int(input("Введите количество отрезков: "))
     accuracy = float(input("Введите необходимую точность: "))
@@ -70,23 +62,43 @@ else:
         print("Количество отрезков: ", k)
         print("Необходимая точность: ", accuracy)
 
-pS = solve_by_id(method_idx)
-print("k =", k,"\t-> S =", pS)
-k*=2
-S = solve_by_id(method_idx)
-print("k =", k,"\t-> S =", S)
 
-error = find_accuracy(pS, S, k)
-print("Start err =", error)
-while(error > accuracy):
-    pS = S
+
+names = ["Метод прямоугольников (слева)",
+         "Метод прямоугольников (посередине)",
+         "Метод прямоугольников (справа)",
+         "метод трапеции",
+         "метод Симпсона"]
+
+default_k = k
+accuracy_k = 2
+for method_idx in range(5):
+    accuracy_k = 2
+    if (method_idx <=1): accuracy_k = 1
+    if(method_idx == 4): accuracy_k =4
+    error = 1000
+    k = default_k
+    print("\n" + names[method_idx] + "-" * 100)
+
+    if(method_idx==4 and k<4): k = 4
+
+    pS = solve_by_id(method_idx)
+    print("k =", k, "\t-> S =", pS)
     k *= 2
     S = solve_by_id(method_idx)
-    error = find_accuracy(pS, S, 2)
-    print("k =", k,"\t-> S =", S, " \terr =", error)
+    print("k =", k, "\t-> S =", S)
 
-print("Ответ: S =", S)
-print("Библиотека: ", quad(f, a, b))
+    error = find_accuracy(pS, S, accuracy_k)
+    print("Start err =", error)
+    while (error > accuracy):
+        pS = S
+        k *= 2
+        S = solve_by_id(method_idx)
+        error = find_accuracy(pS, S, accuracy_k)
+        print("k =", k, "\t-> S =", S, " \terr =", error)
+
+    print("Ответ: S =", S)
+    print("Библиотека: ", quad(f, a, b))
 # for i in range(5):
 #     print("\n", i, "--"*14)
 #     solve_by_id(i)

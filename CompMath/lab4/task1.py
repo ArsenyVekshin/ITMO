@@ -97,7 +97,7 @@ else:
 
 
 approxes = []
-for i in range(10):
+for i in range(10): #6 если до 3й степени, 6 + N-3 порядки выше
     try:
         f = solve_by_id(i)
         S, eps, R2 = check_accuracy(f, points)
@@ -107,9 +107,9 @@ for i in range(10):
         pass
 
 approxes = sorted(approxes, key=lambda x: x[-2])
-print_table_header(["method", "S", "𝜹", "R2"])
+print_table_header(["method", "S", "𝜹", "R2", "f"])
 for f, S, eps, R2 in approxes:
-    print_table_row([f.get_str_type(), S, eps, R2])
+    print_table_row([f.get_str_type(), S, eps, R2, f.tostr()])
 
 
 print()
