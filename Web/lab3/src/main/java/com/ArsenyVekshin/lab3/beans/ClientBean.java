@@ -1,9 +1,12 @@
 package com.ArsenyVekshin.lab3.beans;
 
 import com.ArsenyVekshin.lab3.db.HitResult;
+import com.ArsenyVekshin.lab3.statistic.MBeanRegistry;
+import com.ArsenyVekshin.lab3.statistic.PointStatisticMBean;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 
 import javax.faces.annotation.ManagedProperty;
 import javax.enterprise.context.SessionScoped;
@@ -13,12 +16,13 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.function.Function;
 
+
 @Getter
 @Setter
 @ToString
 @Named("client")
 @SessionScoped
-public class ClientBean implements Serializable {
+public class ClientBean implements Serializable, PointStatisticMBean {
     private final String sessionId;
     private final LinkedList<HitResult> currentHits;
 
@@ -30,6 +34,21 @@ public class ClientBean implements Serializable {
     public ClientBean() {
         this.sessionId = FacesContext.getCurrentInstance().getExternalContext().getSessionId(true);
         this.currentHits = service.getUserHits(sessionId);
+    }
+
+    @Override
+    public int getDotsCounter() {
+        return currentHits.size();
+    }
+
+    @Override
+    public int getMissCounter() {
+        return (int) currentHits.stream().filter(HitResult::isResult).count();
+    }
+
+    @Override
+    public float getHitsPercent() {
+        return 1 - (float)(getMissCounter() / getDotsCounter());
     }
 
     public void makeUserRequest() {
@@ -44,6 +63,7 @@ public class ClientBean implements Serializable {
         try {
             Coordinates coordinates = new Coordinates(getParam.apply("x"), getParam.apply("y"), getParam.apply("r"));
             makeRequest(coordinates);
+
         } catch (NullPointerException | NumberFormatException exception) {
             System.out.println("Can't parse values from request params");
         }
@@ -63,4 +83,6 @@ public class ClientBean implements Serializable {
 
         System.out.println("Current hits: " + currentHits);
     }
+
+
 }
