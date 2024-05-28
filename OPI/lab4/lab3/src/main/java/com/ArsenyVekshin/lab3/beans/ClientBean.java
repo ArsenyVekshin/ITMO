@@ -1,32 +1,33 @@
 package com.ArsenyVekshin.lab3.beans;
 
 import com.ArsenyVekshin.lab3.db.HitResult;
-import com.ArsenyVekshin.lab3.statistic.MBeanRegistry;
-import com.ArsenyVekshin.lab3.statistic.PointStatisticMBean;
+import com.ArsenyVekshin.lab3.statistic.PointAmountTracker;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Destroyed;
-import javax.enterprise.event.Observes;
+
 import javax.faces.annotation.ManagedProperty;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.InterruptedIOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.function.Function;
+
 
 @Getter
 @Setter
 @ToString
 @Named("client")
 @SessionScoped
-public class ClientBean implements Serializable, PointStatisticMBean {
+public class ClientBean implements Serializable {
     private final String sessionId;
     private final LinkedList<HitResult> currentHits;
+
+    @Inject
+    PointAmountTracker pointAmountTracker;
 
     @ManagedProperty(value = "#{coordinates}")
     private Coordinates coordinates = new Coordinates();
@@ -36,13 +37,9 @@ public class ClientBean implements Serializable, PointStatisticMBean {
     public ClientBean() {
         this.sessionId = FacesContext.getCurrentInstance().getExternalContext().getSessionId(true);
         this.currentHits = service.getUserHits(sessionId);
-        MBeanRegistry.registerBean(this, "main");
     }
 
-    public void destroy(@Observes @Destroyed(ApplicationScoped.class) Object unused) {
-        MBeanRegistry.unregisterBean(this);
-    }
-
+/*
     @Override
     public int getDotsCounter() {
         return currentHits.size();
@@ -57,6 +54,7 @@ public class ClientBean implements Serializable, PointStatisticMBean {
     public float getHitsPercent() {
         return 1 - (float)(getMissCounter() / getDotsCounter());
     }
+*/
 
     public void makeUserRequest() {
         makeRequest(this.coordinates);
@@ -80,13 +78,11 @@ public class ClientBean implements Serializable, PointStatisticMBean {
         System.out.println("Make request: " + coordinates.toString());
         HitResult result = service.processRequest(this.sessionId, coordinates);
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (result != null)
+        if (result != null){
             this.currentHits.addFirst(result);
+            pointAmountTracker.click(result.isResult());
+        }
+
     }
 
     public void clearHits() {

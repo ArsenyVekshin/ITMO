@@ -132,3 +132,4 @@ Programming Languages/**/obj/*
 Programming Languages/lab2/src/.gitlab-ci.yml
 *.pyc
 CompMath/lab4/test_generator.py
+OPI/lab4/*
