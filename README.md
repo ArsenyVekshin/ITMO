@@ -28,7 +28,7 @@
 ---
 ## 4 семестр
 [Вычислительная математика](https://github.com/ArsenyVekshin/ITMO/tree/master/CompMath)   
-[Математическая статистика](https://github.com/ArsenyVekshin/ITMO/tree/master/StatisticMath)   
+[Математическая статистика](https://github.com/ArsenyVekshin/ITMO/tree/master/MathStatistic)   
 [Методы оптимизации](https://github.com/ArsenyVekshin/ITMO/tree/master/Optimization%20methods)   
 [Основы програмной инженерии](https://github.com/ArsenyVekshin/ITMO/tree/master/OPI)  
 [Архитектура компьютера (лр3)](https://github.com/ArsenyVekshin/csa-lab3) - отдельный репозиторий  
