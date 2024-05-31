@@ -1,5 +1,5 @@
 ROUND_LVL = 4
-COLOUMN_SIZE = 12
+COLOUMN_SIZE = 8
 def print_table_row(row):
     for i in row:
         if type(i) == str:
