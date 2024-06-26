@@ -1,4 +1,4 @@
-COLOUMN_SIZE = 7
+﻿COLOUMN_SIZE = 7
 def print_table_row(row):
     for i in row:
         print(str(round(i, 4)).ljust(COLOUMN_SIZE), end=' | ')

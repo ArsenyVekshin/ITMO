@@ -1,4 +1,4 @@
-from tools import *
+﻿from tools import *
 
 def solve(f, start, base_move, accuracy):
     iter = 0
@@ -16,4 +16,3 @@ def solve(f, start, base_move, accuracy):
         print_table_row(_out + [x, f(x), abs(x - prev_x)])
 
     return x
-

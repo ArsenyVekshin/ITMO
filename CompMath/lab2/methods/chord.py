@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 from tools import *
 
 
@@ -24,6 +24,5 @@ def solve(f, a, b, accuracy):
         print_table_row([iter, a, b, x, f(a), f(b), f(x), abs(x - prev_x)])
 
     return x
-
 
 

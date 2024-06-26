@@ -1,4 +1,4 @@
-from tools import *
+﻿from tools import *
 
 
 def solve(f, a, b, accuracy):
@@ -13,6 +13,5 @@ def solve(f, a, b, accuracy):
         print_table_row([iter, a, b, x, f(a), f(b), f(x), abs(a-b)])
     x = mid(a, b)
     return x
-
 
 

@@ -1,4 +1,4 @@
-from tools import *
+﻿from tools import *
 import sys
 
 def solve(functions, x0, y0, accuracy):
@@ -23,7 +23,6 @@ def is_possible(deriv_functions, x0, y0):
             print("ERROR: условие сходимости не выполняется в окресности заданной точки")
             sys.exit(1)
     print("Условие сходимости выполняется")
-
 
 
 

@@ -1,4 +1,4 @@
-import numpy as np
+﻿import numpy as np
 import matplotlib.pyplot as plt
 import math
 
@@ -75,6 +75,5 @@ base_iter_system.is_possible(deriv_system[equation_idx], a, b)
 x, y = base_iter_system.solve(system[equation_idx], a, b, accuracy)
 print("Найдено решение x =", x, "y =", y)
 print("Дельты: delta_x = ", x - system[equation_idx][0](x,y), "delta_y = ", y - system[equation_idx][1](x,y), '\n')
-
 
 
