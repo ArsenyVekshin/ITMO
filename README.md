@@ -39,3 +39,16 @@ upd: Слишком много просьб "закрой репозиторий
 [Архитектура компьютера (лр3)](https://github.com/ArsenyVekshin/csa-lab3) - отдельный репозиторий  
 [Алгоритмы и структуры данных](https://github.com/ArsenyVekshin/ITMO-algo) - отдельный репозиторий  
 [Физика](https://github.com/ArsenyVekshin/ITMO/tree/master/Физика)
+
+---   
+## 5 семестр   
+[Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
+[Встроенные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/Embedded)  
+[Информационные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/InfSys)  
+[Моделирование ](https://github.com/ArsenyVekshin/ITMO/tree/master/Modeling)  
+[Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
+[Операционные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/OS)  
+[Системное программное обеспечение ](https://github.com/ArsenyVekshin/ITMO/tree/master/SPO)  
+[Системы искусственного интеллекта](https://github.com/ArsenyVekshin/ITMO/tree/master/AISys)  
+
+

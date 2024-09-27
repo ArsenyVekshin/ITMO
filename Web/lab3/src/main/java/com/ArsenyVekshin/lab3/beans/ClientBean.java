@@ -10,6 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.function.Function;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
 @ToString
 @Named("client")
 @SessionScoped
-public class ClientBean implements Serializable {
+public class  ClientBean implements Serializable {
     private final String sessionId;
     private final LinkedList<HitResult> currentHits;
 
@@ -63,4 +64,12 @@ public class ClientBean implements Serializable {
 
         System.out.println("Current hits: " + currentHits);
     }
+}
+
+
+public static void main(String args[]){
+    int x= 1;
+    int y =0;
+    double result = x/y;
+    System.out.println(result);
 }

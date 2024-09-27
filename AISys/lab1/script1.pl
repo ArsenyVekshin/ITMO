@@ -133,3 +133,5 @@ remove_item_helper(Item, Count, [Other|Rest], [Other|NewRest]) :-
 craft_time(Crafter, Time, CraftTime) :-
     crafter_speed(Crafter, Speed),
     CraftTime is Time / Speed.
+
+

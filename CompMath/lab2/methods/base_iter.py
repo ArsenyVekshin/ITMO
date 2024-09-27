@@ -26,7 +26,6 @@ def solve(f, deriv, a, b, accuracy):
     print_table_header(["#", "x_i", "x_{i+1}", "f(x_i)", "delta_x"])
     
     iter = 0
-    print(accuracy)
     prev_x = x - 2 * accuracy  # Начальное значение для prev_x, чтобы зайти в цикл
     while abs(f(x)) > accuracy and abs(x - prev_x) > accuracy and iter < 1000:
         prev_x = x
