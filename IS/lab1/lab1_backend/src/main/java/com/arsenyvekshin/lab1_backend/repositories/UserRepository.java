@@ -11,7 +11,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByLogin(String login);
 
-    @Query("SELECT u FROM User u WHERE u.role='ADMIN' and u.approved = false")
+    //@Query("SELECT u FROM User u WHERE u.role= \" and u.approved = false")
+    @Query("select u from User u where u.approved = false")
     List<User> getUnapprovedUsers();
 }
 

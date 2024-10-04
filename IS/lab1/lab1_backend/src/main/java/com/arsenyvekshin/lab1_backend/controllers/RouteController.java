@@ -109,7 +109,7 @@ public class RouteController {
         return ResponseEntity.ok(gson.toJson(routeRepository.findRoutesWithGreaterRating(value)));
     }
 
-    @GetMapping (value = "/route/greaterrating", produces = "application/json")
+    @GetMapping (value = "/route/getallrotesby", produces = "application/json")
     public ResponseEntity<String> getAllRotesBy(@RequestParam long loc1, @RequestParam long loc2, HttpServletRequest request) {
         return ResponseEntity.ok(gson.toJson(routeRepository.findAllRotesBy(loc1, loc2)));
     }

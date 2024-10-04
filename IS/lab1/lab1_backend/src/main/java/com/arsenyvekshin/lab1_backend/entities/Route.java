@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Route")
+@Table(name = "Routes")
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
