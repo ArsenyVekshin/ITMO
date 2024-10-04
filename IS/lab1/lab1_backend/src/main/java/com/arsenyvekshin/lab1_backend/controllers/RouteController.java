@@ -31,6 +31,7 @@ public class RouteController {
     private RouteRepository routeRepository;
 
 
+    // CRUD запросы
     @GetMapping(value = "/route", produces = "application/json")
     public ResponseEntity<String> getRotesTable( HttpServletRequest request) {
         return ResponseEntity.ok(gson.toJson(routeRepository.findAll()));
@@ -68,7 +69,7 @@ public class RouteController {
     }
 
     @DeleteMapping(value = "/route", produces = "application/json")
-    public ResponseEntity<String> clearPointsTable(HttpServletRequest request) {
+    public ResponseEntity<String> clearPointsTable (HttpServletRequest request) {
         if (request.getHeader("object") != null) { // удалить 1 объект
             Gson gson = new GsonBuilder().create();
             Route updatedRoute = gson.fromJson(request.getHeader("object"), Route.class);
@@ -90,6 +91,29 @@ public class RouteController {
         routeRepository.clearByUserId(token.getUser().getId());
         return ResponseEntity.ok(jsonMessage("Deleting all user objects - successful"));
     }
+
+
+    // прочие запросы
+    @GetMapping (value = "/route/totalrating", produces = "application/json")
+    public ResponseEntity<String> getTotalRating (HttpServletRequest request) {
+        return ResponseEntity.ok(gson.toJson(routeRepository.calculateTotalRating()));
+    }
+
+    @GetMapping (value = "/route/maxto", produces = "application/json")
+    public ResponseEntity<String> getMaxTo (HttpServletRequest request) {
+        return ResponseEntity.ok(gson.toJson(routeRepository.findMaxTo()));
+    }
+
+    @GetMapping (value = "/route/greaterrating", produces = "application/json")
+    public ResponseEntity<String> getGreaterRating(@RequestParam int value, HttpServletRequest request) {
+        return ResponseEntity.ok(gson.toJson(routeRepository.findRoutesWithGreaterRating(value)));
+    }
+
+    @GetMapping (value = "/route/greaterrating", produces = "application/json")
+    public ResponseEntity<String> getAllRotesBy(@RequestParam long loc1, @RequestParam long loc2, HttpServletRequest request) {
+        return ResponseEntity.ok(gson.toJson(routeRepository.findAllRotesBy(loc1, loc2)));
+    }
+
 
     public boolean isObjOwner(HttpServletRequest request, Route route){
         AuthToken token = authTokenRepository.findByToken(request.getHeader("auth-token"));

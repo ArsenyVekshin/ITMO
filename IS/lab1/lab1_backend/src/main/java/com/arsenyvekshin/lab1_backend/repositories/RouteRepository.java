@@ -1,6 +1,5 @@
 package com.arsenyvekshin.lab1_backend.repositories;
 
-import com.arsenyvekshin.lab1_backend.entities.Location;
 import com.arsenyvekshin.lab1_backend.entities.Route;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,7 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
     @Query("SELECT p FROM Route p WHERE p.owner.id = ?1 ORDER BY p.creationDate DESC")
     List<Route> findByUserId(Long userId);
 
-    @Query("SELECT calculate_total_rating()")
+    @Query("SELECT SUM(rating) FROM Route")
     int calculateTotalRating(); // Рассчитать сумму значений поля rating для всех объектов.
 
     @Query("SELECT p FROM Route p ORDER BY p.to.id DESC LIMIT 1")
@@ -23,7 +22,7 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
     List<Route> findRoutesWithGreaterRating(int rating); // Вернуть массив объектов, значение поля rating которых больше заданного.
 
     @Query("SELECT p FROM Route p WHERE p.from.id = ?1 AND p.to.id = ?2")
-    List<Route> findMaxTo(Long from_location_id, Long to_location_id); // Найти все маршруты между указанными пользователем локациями, отсортировать список по заданному параметру.
+    List<Route> findAllRotesBy(Long from_location_id, Long to_location_id); // Найти все маршруты между указанными пользователем локациями, отсортировать список по заданному параметру.
 
     @Transactional
     @Modifying
