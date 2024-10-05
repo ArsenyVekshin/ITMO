@@ -1,6 +1,6 @@
-package com.arsenyvekshin.lab1_backend.repositories;
+package com.arsenyvekshin.lab1_backend.repository;
 
-import com.arsenyvekshin.lab1_backend.entities.Route;
+import com.arsenyvekshin.lab1_backend.entity.Route;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

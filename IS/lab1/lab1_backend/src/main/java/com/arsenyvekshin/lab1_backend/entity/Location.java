@@ -1,15 +1,16 @@
-package com.arsenyvekshin.lab1_backend.entities;
+package com.arsenyvekshin.lab1_backend.entity;
 
-import com.arsenyvekshin.lab1_backend.exceptions.InvalidFieldValueException;
+import com.arsenyvekshin.lab1_backend.dto.LocationDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Location")
+@Entity(name = "Location")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +21,17 @@ public class Location {
     private long y;
     @Column(name = "z")
     private long z; //Поле не может быть null
+
+    @NotBlank(message = "Имя локации не может быть пустым")
     @Column(name = "name")
     private String name; //Строка не может быть пустой, Поле не может быть null
 
-    @SneakyThrows
-    public void setName(String name) {
-        if (name.isEmpty()) throw new InvalidFieldValueException("Location.name can't be empty");
-        this.name = name;
-    }
 
+    public void updateByDto(LocationDto dto){
+        this.x = dto.getX();
+        this.y = dto.getY();
+        this.z = dto.getZ();
+        this.name = dto.getName();
+    }
 
 }

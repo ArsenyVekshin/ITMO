@@ -1,4 +1,4 @@
-package com.arsenyvekshin.lab1_backend.exceptions;
+package com.arsenyvekshin.lab1_backend.exception;
 
 import java.io.IOException;
 

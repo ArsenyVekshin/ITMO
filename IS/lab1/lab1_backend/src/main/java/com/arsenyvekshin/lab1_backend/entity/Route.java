@@ -1,15 +1,18 @@
-package com.arsenyvekshin.lab1_backend.entities;
+package com.arsenyvekshin.lab1_backend.entity;
 
-import com.arsenyvekshin.lab1_backend.exceptions.InvalidFieldValueException;
+import com.arsenyvekshin.lab1_backend.dto.RouteDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
+
+import java.io.IOException;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Routes")
+@Table(name = "Route")
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +36,11 @@ public class Route {
     @JoinColumn(name = "to_id")
     private Location to; //Поле может быть null
 
+    @Min(value = 1, message = "Дистанция должна быть >1")
     @Column(name = "distance", nullable = false)
     private Double distance; //Поле не может быть null, Значение поля должно быть больше 1
 
+    @Min(value = 1, message = "Рейтинг должен быть >1")
     @Column(name = "rating", nullable = false)
     private Integer rating; //Поле не может быть null, Значение поля должно быть больше 0
 
@@ -46,25 +51,11 @@ public class Route {
     @Column(name = "readonly", nullable = false, length = 255)
     private boolean readonly;
 
-    @SneakyThrows
-    public void setName(String name) {
-        if (name.isEmpty()) throw new InvalidFieldValueException("Route.name can't be empty");
-        this.name = name;
-    }
 
-    @SneakyThrows
-    public void setDistance(Double distance) {
-        if(distance <= 1) throw new InvalidFieldValueException("Route.distance must be greater than 1");
-        this.distance = distance;
-    }
-
-    @SneakyThrows
-    public void setRating(Integer rating) {
-        if(distance <= 0) throw new InvalidFieldValueException("Route.rating must be greater than 0");
-        this.rating = rating;
-    }
-
-    public void updateBy(Route route) {
-
+    public void updateByDto(RouteDto dto) throws IOException {
+        if (isReadonly()) throw new IOException("Объект помечен как ReadOnly");
+        this.name = dto.getName();
+        this.distance = dto.getDistance();
+        this.rating = dto.getRating();
     }
 }
