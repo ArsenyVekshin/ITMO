@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -95,6 +97,11 @@ public class UserService {
         var user = getCurrentUser();
         user.setRole(Role.ADMIN);
         save(user);
+    }
+
+
+    public List<String> getUnapprovedUsers(){
+        return userRepository.getUnapprovedUsers();
     }
 }
 

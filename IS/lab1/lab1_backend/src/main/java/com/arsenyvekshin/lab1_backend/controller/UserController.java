@@ -19,7 +19,7 @@ public class UserController {
 
     @Operation(summary = "Подтвердить роль ADMIN")
     @PostMapping("/approve")
-    public MessageInfoDto approveUser(@RequestBody @Valid MessageInfoDto request) {
+    public MessageInfoDto approveUser(@RequestBody MessageInfoDto request) {
         userService.approveUser(request.getMessage());
         return new MessageInfoDto("successful");
     }
@@ -27,7 +27,7 @@ public class UserController {
     @Operation(summary = "Список пользователей ожидающих одобрения прав ADMIN")
     @GetMapping ("/approve/list")
     public ApproveListResponse getUnapprovedUsers() {
-        return new ApproveListResponse();
+        return new ApproveListResponse(userService.getUnapprovedUsers());
     }
 
     @ExceptionHandler(RuntimeException.class)

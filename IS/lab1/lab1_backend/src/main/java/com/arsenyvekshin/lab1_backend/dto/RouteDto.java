@@ -1,11 +1,16 @@
 package com.arsenyvekshin.lab1_backend.dto;
 
+import com.arsenyvekshin.lab1_backend.entity.Route;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 @Schema(description = "Маршрут")
 public class RouteDto {
     @Schema(description = "id (если необходимо)", example = "1")
@@ -45,4 +50,19 @@ public class RouteDto {
 
     @Schema(description = "ReadOnly флаг", example = "true")
     private boolean readonly = false;
+
+
+    public RouteDto(Route route){
+        this.id = route.getId();
+        this.name = route.getName();
+        this.coordinates = new CoordinatesDto(route.getCoordinates());
+        this.creationDate = route.getCreationDate();
+        this.from = new LocationDto(route.getFrom());
+        if(route.getTo() != null)
+            this.to = new LocationDto(route.getFrom());
+        this.distance = route.getDistance();
+        this.rating = route.getRating();
+        this.owner = route.getOwner().getUsername();
+        this.readonly = route.isReadonly();
+    }
 }

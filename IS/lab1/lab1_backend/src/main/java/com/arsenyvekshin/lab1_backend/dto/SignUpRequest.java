@@ -6,9 +6,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 @Schema(description = "Запрос на регистрацию")
 public class SignUpRequest {
     @Schema(description = "Имя пользователя", example = "User1")

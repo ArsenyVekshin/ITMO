@@ -57,5 +57,6 @@ public class Route {
         this.name = dto.getName();
         this.distance = dto.getDistance();
         this.rating = dto.getRating();
+        this.readonly = dto.isReadonly();
     }
 }
