@@ -2,6 +2,7 @@ package com.arsenyvekshin.lab1_backend.service;
 
 import com.arsenyvekshin.lab1_backend.dto.CoordinatesDto;
 import com.arsenyvekshin.lab1_backend.dto.RouteDto;
+import com.arsenyvekshin.lab1_backend.dto.SortedObjectListRequest;
 import com.arsenyvekshin.lab1_backend.entity.Coordinates;
 import com.arsenyvekshin.lab1_backend.entity.Location;
 import com.arsenyvekshin.lab1_backend.entity.Route;
@@ -9,8 +10,11 @@ import com.arsenyvekshin.lab1_backend.repository.CoordinatesRepository;
 import com.arsenyvekshin.lab1_backend.repository.LocationRepository;
 import com.arsenyvekshin.lab1_backend.repository.RouteRepository;
 import com.arsenyvekshin.lab1_backend.repository.UserRepository;
+import com.arsenyvekshin.lab1_backend.utils.Comparators;
+import com.arsenyvekshin.lab1_backend.utils.Converter;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,6 +36,25 @@ public class CollectionService {
 
     public List<Route> getRoutes() {
         return routeRepository.findAll();
+    }
+
+    public List<Route> getSortedRoutes(SortedObjectListRequest request) throws NoSuchFieldException, IllegalArgumentException {
+        switch (request.getSign()){
+            case '=':
+                return routeRepository.findAll().stream()
+                    .filter(entity -> entity.compareTo(request.getValue(), request.getField()) == 0)
+                    .toList();
+            case '>':
+                return routeRepository.findAll().stream()
+                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) > 0)
+                        .toList();
+            case '<':
+                return routeRepository.findAll().stream()
+                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) < 0)
+                        .toList();
+            default:
+                throw new IllegalArgumentException("Признак сравнения не опознан");
+        }
     }
 
     public void updateRoute(RouteDto routeDto) throws IOException {
@@ -108,9 +131,9 @@ public class CollectionService {
         coordinatesRepository.save(c2);
         coordinatesRepository.save(c3);
 
-        Location l1 = new Location(0L, 1, 1, 1, "name1");
-        Location l2 = new Location(0L, 2, 2, 2, "name2");
-        Location l3 = new Location(0L, 3, 3, 3, "name3");
+        Location l1 = new Location(0L, 1L, 1L, 1L, "name1");
+        Location l2 = new Location(0L, 2L, 2L, 2L, "name2");
+        Location l3 = new Location(0L, 3L, 3L, 3L, "name3");
         locationRepository.save(l1);
         locationRepository.save(l2);
         locationRepository.save(l3);

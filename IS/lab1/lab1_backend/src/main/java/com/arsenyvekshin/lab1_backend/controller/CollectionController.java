@@ -2,6 +2,7 @@ package com.arsenyvekshin.lab1_backend.controller;
 
 import com.arsenyvekshin.lab1_backend.dto.MessageInfoDto;
 import com.arsenyvekshin.lab1_backend.dto.RouteDto;
+import com.arsenyvekshin.lab1_backend.dto.SortedObjectListRequest;
 import com.arsenyvekshin.lab1_backend.entity.Route;
 import com.arsenyvekshin.lab1_backend.repository.RouteRepository;
 import com.arsenyvekshin.lab1_backend.service.CollectionService;
@@ -27,6 +28,12 @@ public class CollectionController {
     @GetMapping("/list")
     public List<Route> getRoutesList() {
         return collectionService.getRoutes();
+    }
+
+    @Operation(summary = "Список записей в коллекции, после сортировки")
+    @GetMapping("/list/sorted")
+    public List<Route> getSortedRoutesList(SortedObjectListRequest request) throws NoSuchFieldException {
+        return collectionService.getSortedRoutes(request);
     }
 
     @Operation(summary = "Добавить новый маршрут")

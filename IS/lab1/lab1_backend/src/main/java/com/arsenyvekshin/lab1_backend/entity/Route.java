@@ -1,11 +1,15 @@
 package com.arsenyvekshin.lab1_backend.entity;
 
 import com.arsenyvekshin.lab1_backend.dto.RouteDto;
+import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
+import com.arsenyvekshin.lab1_backend.utils.Converter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 @Entity
 @Getter
@@ -13,7 +17,7 @@ import java.io.IOException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Route")
-public class Route {
+public class Route implements ComparableObj {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
@@ -58,5 +62,38 @@ public class Route {
         this.distance = dto.getDistance();
         this.rating = dto.getRating();
         this.readonly = dto.isReadonly();
+    }
+
+    @Override
+    public int compareTo(String value, String fieldName){
+        switch (fieldName){
+            case "id":
+                return this.id.compareTo(Long.valueOf(value));
+            case "name":
+                return this.name.compareTo(value);
+            case "creationDate":
+                return this.creationDate.compareTo(Converter.convert(LocalDate.class, value));
+            case "distance":
+                return this.distance.compareTo(Double.valueOf(value));
+            case "rating":
+                return this.rating.compareTo(Integer.valueOf(value));
+            default:
+                String _class = fieldName.substring(0, fieldName.indexOf('.')).trim();
+                String _field = fieldName.substring(fieldName.indexOf('.')+1).trim();
+                switch (_class){
+                    case "coordinates":
+                        return this.coordinates.compareTo(value, _field);
+                    case "from":
+                        return this.from.compareTo(value, _field);
+                    case "to":
+                        return this.to.compareTo(value, _field);
+                    case "owner":
+                        return this.owner.compareTo(value, _field);
+                    default:
+                        throw new IllegalArgumentException("Поле не найдено. Сравнение невозможно");
+
+                }
+
+        }
     }
 }

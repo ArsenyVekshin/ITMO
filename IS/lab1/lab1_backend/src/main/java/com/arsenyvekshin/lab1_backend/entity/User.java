@@ -1,5 +1,6 @@
 package com.arsenyvekshin.lab1_backend.entity;
 
+import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Users")
-public class User implements UserDetails{
+public class User implements UserDetails, ComparableObj {
 
     @Id
     @Column(name = "id")
@@ -44,4 +45,15 @@ public class User implements UserDetails{
         return List.of(new SimpleGrantedAuthority((role.name())));
     }
 
+    @Override
+    public int compareTo(String value, String fieldName){
+        switch (fieldName){
+            case "id":
+                return this.id.compareTo(Long.valueOf(value));
+            case "username":
+                return this.username.compareTo(value);
+            default:
+                throw new IllegalArgumentException("Поле не найдено или недоступно. Сравнение невозможно");
+        }
+    }
 }
