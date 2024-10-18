@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2/"
+     xml:base="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-2="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#miner -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#miner">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#producer -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#producer">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#requires -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#requires">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#createTime -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#createTime">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#speed -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#speed">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#burner_drill -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#burner_drill">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.25</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#circuit -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#circuit">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#coil -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#coil">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#cooper -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#cooper">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#copper_plate -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#copper_plate">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.2</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.75</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#craft_machine_3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.25</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#default_crafter -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#default_crafter">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Crafter"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#default_miner -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#default_miner">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#electric_drill -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#electric_drill">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Miner"/>
+        <untitled-ontology-2:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</untitled-ontology-2:speed>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#gear -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#gear">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron_plate -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron_plate">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.2</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron_rod -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#iron_rod">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">16.0</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#stone -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#stone">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#wire -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#wire">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Item"/>
+        <untitled-ontology-2:createTime rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</untitled-ontology-2:createTime>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#wood -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#wood">
+        <rdf:type rdf:resource="http://www.semanticweb.org/арсений/ontologies/2024/8/untitled-ontology-2#Resource"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
