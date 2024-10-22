@@ -3,6 +3,7 @@ package com.arsenyvekshin.lab1_backend.entity;
 import com.arsenyvekshin.lab1_backend.dto.RouteDto;
 import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.arsenyvekshin.lab1_backend.utils.Converter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Getter
 @Setter

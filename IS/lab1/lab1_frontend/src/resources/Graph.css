@@ -1,0 +1,8 @@
+.graphBlock {
+    min-width: 425px;
+    max-width: 425px;
+    background-color: #1d1d1de0;
+    margin: auto 20px;
+    border: 2px solid #026496;
+    border-radius: 20px;
+}

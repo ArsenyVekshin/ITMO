@@ -2,11 +2,13 @@ package com.arsenyvekshin.lab1_backend.entity;
 
 import com.arsenyvekshin.lab1_backend.dto.LocationDto;
 import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor

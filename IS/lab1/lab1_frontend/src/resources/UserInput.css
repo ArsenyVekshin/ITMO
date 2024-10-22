@@ -1,0 +1,44 @@
+#controller-title {
+    display: block;
+    font-size: 24px;
+    margin-left: 5%;
+    margin-bottom: 50px;
+}
+
+.controller {
+    min-width: 400px;
+    max-width: 450px;
+    border: 2px solid #026496;
+    border-radius: 20px;
+    padding: 1% 2% 2% 2%;
+    margin-right: 3%;
+    margin-bottom: 20px;
+}
+
+.coordinateInput {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.submitButton {
+    flex-direction: column;
+}
+
+.coordinateName {
+    font-size: 18px;
+}
+
+.coordinateValue {
+    width: 40px;
+}
+
+.controller .p-slider-horizontal, .controller .p-inputtext {
+    width: 14rem;
+}
+
+.controller .p-slider-vertical {
+    height: 30rem;
+}

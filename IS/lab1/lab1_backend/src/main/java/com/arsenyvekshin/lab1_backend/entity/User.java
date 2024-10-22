@@ -2,6 +2,7 @@ package com.arsenyvekshin.lab1_backend.entity;
 
 import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +14,7 @@ import java.util.List;
 
 
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "authorities", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
 @Builder
 @Getter
 @Setter
