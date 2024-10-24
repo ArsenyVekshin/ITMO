@@ -12,10 +12,10 @@ const userSlice = createSlice({
     },
     reducers: {
         logIn(state, action) {
-            localStorage.setItem("token", action.payload);
             state.token = action.payload;
             state.auth = true;
             state.adminRole = action.payload;
+            localStorage.setItem("token", state.token);
             console.log("User authorized");
         },
         logOut(state, action) {

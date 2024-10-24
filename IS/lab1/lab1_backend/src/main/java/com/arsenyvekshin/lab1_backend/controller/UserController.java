@@ -24,6 +24,7 @@ public class UserController {
         return new MessageInfoDto("successful");
     }
 
+
     @Operation(summary = "Список пользователей ожидающих одобрения прав ADMIN")
     @GetMapping ("/approve/list")
     public ApproveListResponse getUnapprovedUsers() {

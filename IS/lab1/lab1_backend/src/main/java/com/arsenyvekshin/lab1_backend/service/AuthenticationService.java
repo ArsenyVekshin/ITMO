@@ -37,7 +37,7 @@ public class AuthenticationService {
         userService.create(user);
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt, false);
     }
 
     /**
@@ -56,8 +56,10 @@ public class AuthenticationService {
                 .userDetailsService()
                 .loadUserByUsername(request.getUsername());
 
+        boolean isAdmin = userService.getByUsername(request.getUsername()).getRole() == Role.ADMIN;
+
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt, isAdmin);
     }
 
 }

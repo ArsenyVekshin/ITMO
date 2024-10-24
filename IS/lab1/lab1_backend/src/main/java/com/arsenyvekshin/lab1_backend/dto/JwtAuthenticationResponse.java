@@ -14,4 +14,7 @@ import lombok.NoArgsConstructor;
 public class JwtAuthenticationResponse {
     @Schema(description = "Токен доступа", example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMjUwNj...")
     private String token;
+
+    @Schema(description = "Пользователь имеет роль ADMIN?", example = "true")
+    private boolean adminRole;
 }

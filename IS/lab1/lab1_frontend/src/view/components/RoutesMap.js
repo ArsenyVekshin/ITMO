@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { Box, Typography } from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
+import {setRoute} from "../../store/chosenObjSlice";
 
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
         const { id, name, rating } = payload[0].payload; // Извлечение id и rating
         return (
-            <div style={{ background: 'rgba(44,44,44,0.9)', border: '1px solid #ccc', padding: '10px' }}>
+            <div style={{ backgroundColor: '#2F2F2F99', border: '1px solid #ccc', padding: '10px' }}>
                 <p>ID: {id}</p>
                 <p>Name: {name}</p>
                 <p>Rating: {rating}</p>
@@ -18,7 +19,7 @@ const CustomTooltip = ({ active, payload }) => {
     return null;
 };
 
-const RoutesMap = ({ routes }) => {
+const RoutesMap = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const chosenObj = useSelector(state => state.chosenObj);
@@ -26,7 +27,7 @@ const RoutesMap = ({ routes }) => {
 
 
     const [chartDimensions, setChartDimensions] = useState({
-        width: window.innerWidth * 0.8, // 80% от ширины окна
+        width: window.innerWidth * 0.95 , // 80% от ширины окна
         height: window.innerHeight * 0.6 // 60% от высоты окна
     });
 
@@ -45,30 +46,23 @@ const RoutesMap = ({ routes }) => {
 
     const chooseColour = (route) => {
         if (route.id === chosenObj.route.id) return '#ff00f2';
-        if (route.owner === user.username) return '#960019';
+        if (route.owner !== user.username) return '#c4001e';
         return '#00FF00';
     };
 
-    const data = routes.map(route => ({
+    const data = collection.routes.map(route => ({
         x: route.coordinates.x,
         y: route.coordinates.y,
         name: route.name,
         id: route.id,
         rating: route.rating,
         color: chooseColour(route),
+        sourceObj: route,
     }));
 
     const handlePointClick = (data) => {
         if (!data) return;
-
-        const routeId = data.id;
-        console.log('Clicked point ID:', routeId);
-        const buff = false;
-
-        //const buff = selectRouteById(collection, routeId); // Используйте селектор для получения маршрута
-        if (buff) {
-            chosenObj.setRoute(buff); // Предполагается, что это функция для обновления выбранного маршрута
-        }
+        dispatch(setRoute(data.sourceObj)); // Предполагается, что это функция для обновления выбранного маршрута
 
 
     };
@@ -76,7 +70,7 @@ const RoutesMap = ({ routes }) => {
     return (
         <Box sx={{ padding: 2}}>
             <Typography variant="h4" gutterBottom>
-                Scatter Chart of Route Coordinates
+                Chart of Routes
             </Typography>
             <ScatterChart  width={chartDimensions.width} height={chartDimensions.height} style={{ background: '#2F2F2F99' }}>
                 <CartesianGrid />

@@ -14,9 +14,11 @@ import Footer from "./view/components/Footer";
 import {Box} from "@mui/material";
 import ObjPage from "./view/pages/ObjPage";
 import MapPage from "./view/pages/MapPage";
+import AdminPanelPage from "./view/pages/AdminPanelPage";
+import {useSelector} from "react-redux";
 
 const App = () => {
-
+    const user = useSelector(state => state.user);
 
     return (
         <ThemeProvider theme={theme}>
@@ -31,13 +33,20 @@ const App = () => {
                     <NavBar/>
                     <div className="container-fluid mt-3">
                         <Routes>
-                            <Route path="/" element={<AuthPage/>}/>
-                            <Route path="/sign-in" element={<AuthPage/>}/>
-                            <Route path="/sign-up" element={<RegisterPage/>}/>
-                            <Route path="/main" element={<MainPage/>}/>;
-                            <Route path="/map" element={<MapPage/>}/>;
-                            <Route path="/obj" element={<ObjPage/>}/>;
-                            <Route path="*" element={<PageNotFound/>}/>
+                            <Route path="/" element={<AuthPage />} />
+                            <Route path="/sign-in" element={<AuthPage />} />
+                            {user.auth ? (
+                                <>
+                                    <Route path="/sign-up" element={<RegisterPage />} />
+                                    <Route path="/main" element={<MainPage />} />
+                                    <Route path="/map" element={<MapPage />} />
+                                    <Route path="/obj" element={<ObjPage />} />
+                                    {user.adminRole && <Route path="/admin" element={<AdminPanelPage />} />}
+                                    <Route path="*" element={<PageNotFound />} />
+                                </>
+                            ) : (
+                                <Route path="*" element={<AuthPage />} />
+                            )}
                         </Routes>
                     </div>
 

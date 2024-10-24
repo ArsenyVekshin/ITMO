@@ -12,11 +12,13 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import AccountSwitch from '@mui/icons-material/SwitchAccount';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {logOut} from "../../store/userSlice";
 import CreateIcon from '@mui/icons-material/Create';
 
 const NavBar = () => {
+    const dispatch = useDispatch();
+
     const user = useSelector((state) => state.user);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
@@ -30,7 +32,7 @@ const NavBar = () => {
     };
 
     const handleLogOut = () => {
-        logOut();
+        dispatch(logOut());
         navigate('/sign-in');
     };
 
@@ -64,7 +66,7 @@ const NavBar = () => {
                     </div>
                 )}
 
-                {!user.auth && (
+                {user.auth && (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Button
                             aria-controls="user-menu"
@@ -81,8 +83,8 @@ const NavBar = () => {
                             onClose={handleClose}
                         >
                             {user.adminRole && (
-                                <MenuItem onClick={() => handleMenuClick('/user/role')}>
-                                    <Settings sx={{ marginRight: 1 }}/> Manage roles
+                                <MenuItem onClick={() => handleMenuClick('/admin')}>
+                                    <Settings sx={{ marginRight: 1 }}/> Admin panel
                                 </MenuItem>
                             )}
                             <MenuItem onClick={() => handleMenuClick('/sign-in')}>

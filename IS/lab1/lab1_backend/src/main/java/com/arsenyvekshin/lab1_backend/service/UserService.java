@@ -87,19 +87,6 @@ public class UserService {
     }
 
 
-    /**
-     * Выдача прав администратора текущему пользователю
-     * <p>
-     * Нужен для демонстрации
-     */
-    @Deprecated
-    public void getAdmin() {
-        var user = getCurrentUser();
-        user.setRole(Role.ADMIN);
-        save(user);
-    }
-
-
     public List<String> getUnapprovedUsers(){
         return userRepository.getUnapprovedUsers();
     }

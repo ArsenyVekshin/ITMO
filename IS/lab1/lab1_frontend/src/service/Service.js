@@ -1,53 +1,57 @@
 import store from "../store/store";
 
-
 const API_URL = 'http://localhost:8080/'
 const AUTH_URL = API_URL + 'auth/'
-const USER_URL = API_URL + 'user/'
+const USER_URL = API_URL + 'user'
 const ROUTE_URL = API_URL + 'route/'
 
 const token = store.getState().user.token;
 
 export async function signUpRequest(user) {
-    const response = await fetch(AUTH_URL + "/sign-up",
+    const response = await fetch(AUTH_URL + "sign-up",
         {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
+            body: JSON.stringify({
                 'username': user.username,
                 'password': user.password,
                 'role': user.role
-            }
+            }),
         });
 
     const text = await response.text();
     try{
-        return JSON.parse(text);  //TODO: ПОЛУЧЕННЫЙ ТОКЕН {message: token}
+        let buff = JSON.parse(text);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${buff.message}`);
+        }
+        return buff;
     } catch (error) {
-        console.log(error.message);
-
-        return {message: text};
+        throw error;
     }
 }
 
 export async function signInRequest(user) {
-    const response = await fetch(AUTH_URL + "/sign-in",
+    const response = await fetch(AUTH_URL + "sign-in",
         {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
-                'username': user.username,
-                'password': user.password,
-            }
+            body: JSON.stringify({
+                "username": user.username,
+                "password": user.password,
+            }),
         });
+
 
     const text = await response.text();
     try{
-        return JSON.parse(text);  //TODO: ПОЛУЧЕННЫЙ ТОКЕН {message: token}
+        let buff = JSON.parse(text);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${buff.message}`);
+        }
+        return buff;
     } catch (error) {
-        console.log(error.message);
-
-        return {message: text};
+        throw error;
     }
 }
 
@@ -86,11 +90,13 @@ export async function approveUserListRequest() {
 
     const text = await response.text();
     try{
-        return JSON.parse(text);  //TODO: ПОЛУЧЕННЫЙ ТОКЕН {message: token}
+        let buff = JSON.parse(text);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${buff.message}`);
+        }
+        return buff;
     } catch (error) {
-        console.log(error.message);
-
-        return {message: text};
+        throw error;
     }
 }
 
@@ -102,16 +108,15 @@ export async function updateRouteRequest(route) {
                 'Content-Type': 'application/json',
                 'token': token,
             },
-            body: route
+            body: JSON.stringify(route),
         });
+
 
     const text = await response.text();
     try{
         return JSON.parse(text);
     } catch (error) {
-        console.log(error.message);
-
-        return {message: text};
+        throw error;
     }
 }
 
