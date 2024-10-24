@@ -5,7 +5,6 @@ const AdminPanelPage = (props) => {
     return (
         <div>
             <UserRolesPanel/>
-            <ErrorMessage />
         </div>
     )
 }

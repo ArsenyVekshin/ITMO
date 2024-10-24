@@ -19,6 +19,7 @@ import {AlertTitle} from "@mui/lab";
 import {useDispatch, useSelector} from "react-redux";
 import {logIn} from "../../store/userSlice";
 import {useNavigate} from "react-router-dom";
+import {showError} from "../../store/errorSlice";
 
 const Auth = (props) => {
     const navigate = useNavigate();
@@ -27,14 +28,11 @@ const Auth = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [adminRoleRequest, setAdminRoleRequest] = useState(false);
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(''); // Сбросить ошибку
         if (username === '' || password === '') {
-            setError('Пожалуйста, заполните все поля.');
             return;
         }
 
@@ -59,7 +57,6 @@ const Auth = (props) => {
 
             }
         } catch (err) {
-            setError(err.message);
             console.error(err);
         } finally {
             setLoading(false); // Скрыть индикатор загрузки
@@ -75,7 +72,6 @@ const Auth = (props) => {
                         {isSignIn ? "Sign In" : "Sign Up"}
                     </Typography>
                 </Box>
-                {error && <Alert severity="error"> {error} </Alert>}
                 <form onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"

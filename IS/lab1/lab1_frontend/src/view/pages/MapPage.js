@@ -5,7 +5,6 @@ const MapPage = (props) => {
     return (
         <div>
             <RoutesMap/>
-            <ErrorMessage />
         </div>
     )
 }

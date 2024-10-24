@@ -11,6 +11,8 @@ import {
     Button,
     Typography
 } from '@mui/material';
+import {approveUserRequest, signInRequest, signUpRequest} from "../../service/Service";
+import {logIn} from "../../store/userSlice";
 
 const UserRolesPanel = () => {
     const [users, setUsers] = useState(['user1', 'user2']);
@@ -22,7 +24,11 @@ const UserRolesPanel = () => {
 
     // Функция для подтверждения пользователя
     const handleApprove = async (username) => {
-        console.error('Ошибка при подтверждении пользователя');
+        try {
+            let response = await approveUserRequest(username);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     useEffect(() => {
