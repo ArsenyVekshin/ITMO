@@ -4,10 +4,9 @@ import {
     TextField,
     Button,
     Typography,
-    Box, IconButton, DialogTitle, DialogContent, DialogActions, Dialog,
+    Box, IconButton, DialogTitle, DialogContent, DialogActions, Dialog, Switch, Alert,
 } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link'; // Import the link icon
-import LinkOffIcon from '@mui/icons-material/LinkOff';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {useSelector} from "react-redux";
 import RoutesTable from "./RoutesTable";
@@ -18,6 +17,7 @@ const RouteForm = () => {
     const chosenObj = useSelector((state) => state.chosenObj);
 
     const [referredPart, setReferredPart] = useState("all");
+    const [loading, setLoading] = useState(false);
 
     const [openModal, setOpenModal] = useState(false);
     const [errors, setErrors] = useState({});
@@ -32,10 +32,16 @@ const RouteForm = () => {
         distance: '',
         rating: '',
         owner: user.username,
+        readonly: false,
     });
 
 
-
+    const chgReadonlyFlag = () => {
+        setRoute((prev) => ({
+            ...prev,
+            readonly: !route.readonly,
+        }));
+    }
 
     const validate = (name, value, subclass) => {
         const newErrors = { ...errors };
@@ -243,8 +249,7 @@ const RouteForm = () => {
                 Route
                 <Box display="inline" ml={1}>
                     <IconButton onClick={() => handleRefer('all')}>
-                        {route.id &&( <LinkIcon style={{color: '#19d21c'}}/> )}
-                        {!route.id &&( <LinkIcon style={{color: '#d21919'}}/> )}
+                        {route.id? <LinkIcon style={{color: '#19d21c'}}/> : <LinkIcon style={{color: '#d21919'}}/> }
                     </IconButton>
                     {route.id &&( <IconButton onClick={() => handleDeleteLink('all')}> <CancelIcon/></IconButton>)}
                 </Box>
@@ -287,7 +292,24 @@ const RouteForm = () => {
                     value={route.rating} // Ensure value is set from route
                     error={!!errors.rating}
                     helperText={errors.rating}
-                />
+                /> <br/>
+                <Box style={{display:"flex !important" }} ml={1}>
+                    <Switch
+                        name="readonly"
+                        label="readonly"
+                        checked={route.readonly}
+                        onChange={chgReadonlyFlag}
+                        color="primary"
+                        margin="normal"
+                    />
+                    <Typography variant="h7" gutterBottom> READONLY </Typography>
+                </Box>
+                {route.readonly &&(
+                    <Alert variant="outlined" severity="warning">
+                        Be careful, you will not be able to change the object after sending it.
+                    </Alert>
+                )}
+
                 <Typography variant="h6" gutterBottom>
                     Coordinates {refButtons('coordinates')}
                 </Typography>
@@ -416,20 +438,17 @@ const RouteForm = () => {
                     helperText={errors.toZ}
                 />
 
+                <Box sx={{ m: 1, position: 'relative' }}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color={route.id ? "primary" : "success"}
+                        disabled={loading}
+                    > {route.id ? "Redact" : "Add"}
+                    </Button>
+                </Box>
 
-            <div id="button-block" style={{ display: 'flex', gap:'16px', padding: '16px' }}>
-                <Button variant="contained" color="success">
-                    Add
-                </Button>
-                <Button variant="contained" color="warning">
-                    Redact
-                </Button>
-                <Button variant="contained" color="primary">
-                    Delete
-                </Button>
-            </div>
-
-            <Dialog open={openModal} onClose={handleReferChanges} fullWidth>
+            <Dialog open={openModal} onClose={handleReferChanges} fullWidth maxWidth="lg">
                 <DialogTitle>Click on the desired item</DialogTitle>
                 <DialogContent>
                     <RoutesTable />

@@ -21,7 +21,7 @@ const Auth = (props) => {
 
     const [error, setError] = useState('');
 
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();

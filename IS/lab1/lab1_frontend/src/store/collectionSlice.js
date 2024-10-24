@@ -6,19 +6,20 @@ const collectionSlice = createSlice({
         routes: []
     },
     reducers: {
-        addRoute(state, action){
+        addRoute(state, action) {
             state.routes.unshift(action.payload);
         },
         setRoutes(state, action) {
             state.routes = action.payload;
         },
-        clearRoutes(state, action) {
+        clearRoutes(state) {
             state.routes = [];
         },
 
     }
+
 });
 
-export const {addRoute, clearRoutes, setRoutes} = collectionSlice.actions;
+export const { addRoute, clearRoutes, setRoutes } = collectionSlice.actions;
 
 export default collectionSlice.reducer;

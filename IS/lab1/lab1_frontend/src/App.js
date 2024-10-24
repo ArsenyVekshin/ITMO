@@ -13,6 +13,7 @@ import theme from "./resources/theme";
 import Footer from "./view/components/Footer";
 import {Box} from "@mui/material";
 import ObjPage from "./view/pages/ObjPage";
+import MapPage from "./view/pages/MapPage";
 
 const App = () => {
 
@@ -34,6 +35,7 @@ const App = () => {
                             <Route path="/sign-in" element={<AuthPage/>}/>
                             <Route path="/sign-up" element={<RegisterPage/>}/>
                             <Route path="/main" element={<MainPage/>}/>;
+                            <Route path="/map" element={<MapPage/>}/>;
                             <Route path="/obj" element={<ObjPage/>}/>;
                             <Route path="*" element={<PageNotFound/>}/>
                         </Routes>
