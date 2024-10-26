@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     Box,
@@ -14,17 +14,15 @@ import {
     TableSortLabel
 } from "@mui/material";
 
-import {sampleRoutes} from "../../store/collectionSlice";
-
 
 import {showError} from "../../store/errorSlice";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
-import {deleteAllRoutesRequest} from "../../service/Service";
-import {clearRoutes} from "../../store/collectionSlice";
+import {deleteAllRoutesRequest, getRoutesListRequest} from "../../service/Service";
 import {wait} from "@testing-library/user-event/dist/utils";
 import {setColumn, setRoute} from "../../store/chosenObjSlice";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import LockIcon from "@mui/icons-material/Lock";
+import {setRoutes} from "../../store/collectionSlice";
 
 
 
@@ -36,17 +34,23 @@ function RoutesTable() {
 
     const [openRow, setOpenRow] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [choosingMode, setChoosingMode] = useState(false)
+    const [choosingMode, setChoosingMode] = useState(false);
     const [loading, setLoading] = React.useState(false);
 
-    const handleClear = async () => {
-        const response = await clearRoutes();
-        if (response.error) {
-            dispatch(showError({detail: response.message}));
-            return;
-        }
-        dispatch(deleteAllRoutesRequest());
-    };
+    useEffect(() => {
+        const fetchRoutes = async () => {
+            try {
+                const routes = await getRoutesListRequest();
+                console.log(routes)
+                dispatch(setRoutes(routes));
+            } catch (error) {
+                console.error('Failed to fetch routes:', error);
+            }
+        };
+
+        fetchRoutes();
+    }, [dispatch]);
+
 
     const handleSort = (column) => {
         console.log(column);
@@ -54,8 +58,7 @@ function RoutesTable() {
     };
 
     const handleDelete = () => {
-        setLoading(true);
-        waitCellClick();
+        console.log("dewe");
     };
 
     const waitCellClick = () => {
@@ -93,7 +96,7 @@ function RoutesTable() {
                     <TableCell onClick={() => handleCellClick(route, 'distance')}>{route.distance}</TableCell>
                     <TableCell onClick={() => handleCellClick(route, 'rating')}>{route.rating}</TableCell>
                     <TableCell>
-                        {(route.readonly || (route.owner !== user.username)) && (<LockIcon fontSize="small"/>)}
+                        {(route.readonly || (route.owner.username !== user.username)) && (<LockIcon fontSize="small"/>)}
                         {route.id === chosenObj.route.id && (<AnchorIcon fontSize="small"/>)}
                     </TableCell>
                 </TableRow>

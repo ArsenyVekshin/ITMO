@@ -11,15 +11,16 @@ import {
     Button,
     Typography
 } from '@mui/material';
-import {approveUserRequest, signInRequest, signUpRequest} from "../../service/Service";
+import {approveUserListRequest, approveUserRequest, signInRequest, signUpRequest} from "../../service/Service";
 import {logIn} from "../../store/userSlice";
 
 const UserRolesPanel = () => {
-    const [users, setUsers] = useState(['user1', 'user2']);
+    const [users, setUsers] = useState([]);
 
     // Запрос списка пользователей
     const fetchUsers = async () => {
-        console.error('Ошибка при получении пользователей');
+        let response = await approveUserListRequest();
+        setUsers(response.usernameList);
     };
 
     // Функция для подтверждения пользователя
@@ -58,8 +59,7 @@ const UserRolesPanel = () => {
                                 <TableCell>{user}</TableCell>
                                 <TableCell>
                                     <Button
-                                        checked={user.approved}
-                                        onChange={() => handleApprove(user)}
+                                        onClick={() => handleApprove(user)}
                                         variant="outlined"
                                         color="success"
                                     >Approve</Button>

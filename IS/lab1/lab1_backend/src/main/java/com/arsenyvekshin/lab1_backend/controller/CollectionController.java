@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/route")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Управление маршрутами", description = "Методы для взаимодействия коллекцией маршрутов.")
 public class CollectionController {
     private final RouteRepository routeRepository;

@@ -35,12 +35,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                // Своего рода отключение CORS (разрешение запросов со всех доменов)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
+                    corsConfiguration.setAllowedOriginPatterns(List.of("*")); // Разрешить все источники
+                    corsConfiguration.setAllowedMethods(List.of("*")); // Разрешить все методы
+                    corsConfiguration.setAllowedHeaders(List.of("*")); // Разрешить все заголовки
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))

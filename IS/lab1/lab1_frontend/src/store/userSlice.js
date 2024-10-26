@@ -1,25 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const storageToken = localStorage.getItem("token");
+const storageUsername = localStorage.getItem("username");
+const storageToken = localStorage.getItem("username");
+const storageAdminRole = localStorage.getItem("adminRole");
+
+
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        username: '',
+        username: storageUsername || '',
         auth: Boolean(storageToken),
         token: storageToken || '',
-        adminRole: false,
+        adminRole: storageAdminRole || false,
     },
     reducers: {
         logIn(state, action) {
-            state.token = action.payload;
+            const { username, token, adminRole } = action.payload;
+            state.username = username;
+            state.token = token;
             state.auth = true;
-            state.adminRole = action.payload;
-            localStorage.setItem("token", state.token);
-            console.log("User authorized");
+            state.adminRole = adminRole;
+            localStorage.setItem("username", username);
+            localStorage.setItem("token", token);
+            localStorage.setItem("adminRole", adminRole);
         },
         logOut(state, action) {
-            localStorage.setItem("token", '');
+            localStorage.removeItem("username");
+            localStorage.removeItem("token");
+            localStorage.removeItem("adminRole");
             state.auth = false;
             state.token = '';
             state.adminRole = false;

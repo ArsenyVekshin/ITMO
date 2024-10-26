@@ -51,10 +51,10 @@ const Auth = (props) => {
                 response = await signUpRequest(user);
             }
 
-            if(response.token){
+            if (response.token) {
+                response.username = username;
                 dispatch(logIn(response));
-                navigate("/main");
-
+                setTimeout(() => navigate("/main"), 100);
             }
         } catch (err) {
             console.error(err);

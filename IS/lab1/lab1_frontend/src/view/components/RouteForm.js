@@ -11,6 +11,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import {useSelector} from "react-redux";
 import RoutesTable from "./RoutesTable";
 import {wait} from "@testing-library/user-event/dist/utils";
+import {addRouteRequest, getRoutesListRequest, updateRouteRequest} from "../../service/Service";
+import {setRoutes} from "../../store/collectionSlice";
 
 const RouteForm = () => {
     const user = useSelector((state) => state.user);
@@ -57,6 +59,7 @@ const RouteForm = () => {
 
                 if (isNaN(buff)) newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
                 else {
+                    console.log(route, subclass, name);
                     route[subclass][name] = buff;
                     delete newErrors[subclass + name.toUpperCase()];
                 }
@@ -140,12 +143,21 @@ const RouteForm = () => {
 
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = Object.keys(errors).length > 0 ? errors : validateAll();
-        if (Object.keys(validationErrors).length === 0) {
-            const jsonString = JSON.stringify(route, null, 2);
-            alert(jsonString);
+        if (Object.keys(errors).length > 0) {
+            let response;
+            try {
+
+                if (route.id) response = await addRouteRequest(route);
+                else response = await updateRouteRequest(route);
+
+                console.log(response);
+
+            } catch (error) {
+                console.error('Failed to fetch routes:', error);
+            }
+
         }
     };
 
@@ -443,7 +455,8 @@ const RouteForm = () => {
                         type="submit"
                         variant="contained"
                         color={route.id ? "primary" : "success"}
-                        disabled={loading}
+                        disabled={loading || Object.keys(errors).length>0}
+                        onClick={handleSubmit}
                     > {route.id ? "Redact" : "Add"}
                     </Button>
                 </Box>

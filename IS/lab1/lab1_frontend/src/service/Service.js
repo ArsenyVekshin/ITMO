@@ -1,9 +1,9 @@
 import store from "../store/store";
 import {showError} from "../store/errorSlice";
 const API_URL = 'http://localhost:8080/'
-const AUTH_URL = API_URL + 'auth/'
+const AUTH_URL = API_URL + 'auth'
 const USER_URL = API_URL + 'user'
-const ROUTE_URL = API_URL + 'route/'
+const ROUTE_URL = API_URL + 'route'
 
 const token = store.getState().user.token;
 
@@ -27,43 +27,52 @@ function showNetSuccess(message){
 
 
 
-async function makeRequest(url, method, body = null, isJson = true) {
+async function makeRequest(url, method, body = null) {
     const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { 'token': token } : {})
+        ...(token ? { token } : {})
     };
 
-    const response = await fetch(url, {
-        method,
-        headers,
-        body: isJson ? JSON.stringify(body) : body,
-    });
 
-    const text = await response.text();
+    let response;
+    if(method === 'POST'){
+        response = await fetch(url, {
+            method,
+            headers,
+            body: JSON.stringify(body),
+    });}
+    else {
+        response = await fetch(url, {
+            method,
+            headers,
+    });}
+
+
+    const data = await response.json();
+
     try {
-        const buff = JSON.parse(text);
         if (!response.ok) {
-            showNetError(response.status, buff.message);
-            throw new Error(`Error: ${response.status} ${buff.message}`);
+            showNetError(response.status, data.message);
+            throw new Error(`Error: ${response.status} ${data.message}`);
         } else showNetSuccess(response.message);
-        return buff;
+        return data;
     } catch (error) {
         throw error;
     }
 }
 
 export async function signUpRequest(user) {
-    return makeRequest(AUTH_URL + "sign-up", 'POST', {
-        'username': user.username,
-        'password': user.password,
-        'role': user.role
+    return makeRequest(AUTH_URL + "/sign-up", 'POST', {
+        username: user.username,
+        password: user.password,
+        role: user.role
     });
 }
 
 export async function signInRequest(user) {
-    return makeRequest(AUTH_URL + "sign-in", 'POST', {
-        "username": user.username,
-        "password": user.password,
+    return makeRequest(AUTH_URL + "/sign-in", 'POST', {
+        username: user.username,
+        password: user.password,
     });
 }
 
@@ -77,6 +86,16 @@ export async function approveUserListRequest() {
     return makeRequest(USER_URL + "/approve/list", 'GET');
 }
 
+export async function getRoutesListRequest() {
+    return makeRequest(ROUTE_URL + "/list", 'GET');
+}
+export async function getSortedRoutesListRequest(sign, field, value) {
+    return makeRequest(ROUTE_URL + `/list/sorted?sign=${sign}&field=${field}&value=${value}`, 'GET');
+}
+
+export async function addRouteRequest(route) {
+    return makeRequest(ROUTE_URL + "/add", 'POST', route);
+}
 export async function updateRouteRequest(route) {
     return makeRequest(ROUTE_URL + "/update", 'POST', route);
 }
@@ -91,9 +110,6 @@ export async function deleteAllRoutesRequest() {
     return makeRequest(ROUTE_URL + "/delete/all", 'POST', {});
 }
 
-export async function addRouteRequest(route) {
-    return makeRequest(ROUTE_URL + "/add", 'POST', route);
-}
 
 export async function getTotalRatingRequest() {
     return makeRequest(ROUTE_URL + "/func/total-rating", 'GET');
