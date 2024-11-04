@@ -54,7 +54,7 @@ public class CollectionController {
     @Operation(summary = "Удалить существующий маршрут")
     @PostMapping("/delete")
     public MessageInfoDto deleteRoute(@RequestBody MessageInfoDto dto) {
-        collectionService.deleteRoute(Long.getLong(dto.getMessage()));
+        collectionService.deleteRoute(Long.valueOf(dto.getMessage()));
         return new MessageInfoDto("ok");
     }
 

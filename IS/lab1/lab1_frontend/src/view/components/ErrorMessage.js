@@ -1,9 +1,19 @@
 import "../../resources/ErrorMessage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { clearError } from "../../store/errorSlice";
+import {clearError, showError} from "../../store/errorSlice";
 import { Alert } from "@mui/material";
 import { AlertTitle } from "@mui/lab";
+import store from "../../store/store";
+
+export function showWarning(code, message){
+    store.dispatch(showError({
+        type: "warning",
+        summary: code,
+        detail: message
+    }));
+}
+
 
 function ErrorMessage() {
     const dispatch = useDispatch();

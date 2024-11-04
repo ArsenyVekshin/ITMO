@@ -57,6 +57,10 @@ public class Route implements ComparableObj {
     @Column(name = "readonly", nullable = false, length = 255)
     private boolean readonly;
 
+    @PrePersist
+    protected void onCreate() {
+        this.creationDate = LocalDate.now(); // Set the current date
+    }
 
     public void updateByDto(RouteDto dto) throws IOException {
         if (isReadonly()) throw new IOException("Объект помечен как ReadOnly");

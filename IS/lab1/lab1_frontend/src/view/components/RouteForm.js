@@ -38,6 +38,21 @@ const RouteForm = () => {
     });
 
 
+    const copyObject = (source) => {
+        return {
+            id: source.id,
+            name: source.name,
+            coordinates: { id: source.coordinates.id, x: source.coordinates.x, y: source.coordinates.y },
+            creationDate: source.creationDate,
+            from: { id: source.from.id, x: source.from.x, y: source.from.y, z: source.from.z, name: source.from.name },
+            to: { id: source.to.id, x: source.to.x, y: source.to.y, z: source.to.z, name: source.to.name },
+            distance: source.distance,
+            rating: source.rating,
+            owner: source.owner.username,
+            readonly: source.readonly,
+        };
+    };
+
     const chgReadonlyFlag = () => {
         setRoute((prev) => ({
             ...prev,
@@ -45,13 +60,18 @@ const RouteForm = () => {
         }));
     }
 
-    const validate = (name, value, subclass) => {
+    const validate = (name, value , subclass) => {
         const newErrors = { ...errors };
         let buff;
         switch (name) {
             case 'name':
-                if (!value.trim()) newErrors.name = 'Name cannot be empty.';
-                else delete newErrors.name;
+                if (!value || !value.trim()) {
+                    newErrors.name = 'Name cannot be empty.';
+                    buff = null;
+                } else {
+                    delete newErrors.name;
+                    buff = value; // возвращаем валидное значение
+                }
                 break;
             case 'x':
                 if (subclass === "coordinates") buff = parseFloat(value);
@@ -59,8 +79,8 @@ const RouteForm = () => {
 
                 if (isNaN(buff)) newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
                 else {
-                    console.log(route, subclass, name);
-                    route[subclass][name] = buff;
+                    //console.log(route, subclass, name);
+                    //route[subclass][name] = buff;
                     delete newErrors[subclass + name.toUpperCase()];
                 }
                 break;
@@ -71,7 +91,7 @@ const RouteForm = () => {
                 if (isNaN(buff)) newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
                 else if (subclass === "coordinates" && buff <= -240) newErrors.coordinatesY = 'Y coordinate must be greater than -240.';
                 else {
-                    route[subclass][name] = buff;
+                    //route[subclass][name] = buff;
                     delete newErrors[subclass + name.toUpperCase()];
                 }
                 break;
@@ -80,23 +100,19 @@ const RouteForm = () => {
 
                 if (isNaN(buff)) newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
                 else {
-                    route[subclass][name] = buff;
+                    //route[subclass][name] = buff;
                     delete newErrors[subclass + name.toUpperCase()];
                 }
                 break;
             case 'distance':
-                const distance = parseFloat(value);
-                if (distance <= 1 || isNaN(distance)) newErrors.distance = 'Distance must be greater than 1.';
+                buff = parseFloat(value);
+                if (buff <= 1 || isNaN(buff)) newErrors.distance = 'Distance must be greater than 1.';
                 else delete newErrors.distance;
                 break;
             case 'rating':
-                const rating = parseInt(value, 10);
-                if (rating <= 0 || isNaN(rating)) newErrors.rating = 'Rating must be greater than 0.';
+                buff = parseInt(value, 10);
+                if (buff <= 0 || isNaN(buff)) newErrors.rating = 'Rating must be greater than 0.';
                 else delete newErrors.rating;
-                break;
-            case 'fromName':
-                if (!value.trim()) newErrors.fromName = 'From location name cannot be empty.';
-                else delete newErrors.fromName;
                 break;
             default:
                 break;
@@ -143,14 +159,40 @@ const RouteForm = () => {
 
     };
 
+    const validateAll = () => {
+
+        if (!(validate("name", route.name)
+            && validate("distance", route.distance)
+            && validate("rating", route.rating)
+            && validate("x", route.coordinates.x, "coordinates")
+            && validate("y", route.coordinates.y, "coordinates")
+        )) return false;
+
+        ['from', 'to'].forEach((location) => {
+            if (!(
+                validate("name", route[location].name, location)
+                && validate("x", route[location].x, location)
+                && validate("y", route[location].y, location)
+                && validate("z", route[location].z, location)
+            )) return false;
+        });
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (Object.keys(errors).length > 0) {
+        if (!validateAll()) return;
+        if (Object.keys(errors).length === 0) {
+            console.log("pre sent: ", route);
             let response;
             try {
-
-                if (route.id) response = await addRouteRequest(route);
-                else response = await updateRouteRequest(route);
+                route.owner = user.username;
+                if (!route.id) {
+                    response = await addRouteRequest(route);
+                }
+                else {
+                    response = await updateRouteRequest(route);
+                }
 
                 console.log(response);
 
@@ -161,17 +203,6 @@ const RouteForm = () => {
         }
     };
 
-    const validateAll = () => {
-        const allErrors = {};
-        validate('id', route.id);
-        validate('name', route.name);
-        validate('x', route.coordinates.x);
-        validate('y', route.coordinates.y);
-        validate('distance', route.distance);
-        validate('rating', route.rating);
-        validate('fromName', route.from.name);
-        return allErrors;
-    };
 
 
     const handleDeleteLink = (part) =>{
@@ -210,8 +241,7 @@ const RouteForm = () => {
 
         switch (referredPart) {
             case 'all':
-                console.log("RELOAD2: ", route , " -> ", chosenObj.route);
-                setRoute(chosenObj.route);
+                setRoute(copyObject(chosenObj.route));
                 break;
             case 'coordinates':
                 setRoute((prev) => ({
@@ -222,7 +252,6 @@ const RouteForm = () => {
             case 'from':
             case 'to':
                 if (chosenObj.column === "to.name" || chosenObj.column === "from.name") {
-                    console.log("AAA:", chosenObj.column.split(".")[0], chosenObj.route[chosenObj.column.split(".")[0]]);
                     setRoute((prev) => ({
                         ...prev,
                         [referredPart]: chosenObj.route[chosenObj.column.split(".")[0]],
@@ -450,12 +479,16 @@ const RouteForm = () => {
                     helperText={errors.toZ}
                 />
 
+            <Typography variant="body1" style={{ whiteSpace: 'pre-wrap', marginTop: '20px' }}>
+                {JSON.stringify(route, null, 4)}
+            </Typography>
+
                 <Box sx={{ m: 1, position: 'relative' }}>
                     <Button
                         type="submit"
                         variant="contained"
                         color={route.id ? "primary" : "success"}
-                        disabled={loading || Object.keys(errors).length>0}
+                        // disabled={loading || Object.keys(errors).length>0}
                         onClick={handleSubmit}
                     > {route.id ? "Redact" : "Add"}
                     </Button>
@@ -477,3 +510,4 @@ const RouteForm = () => {
 };
 
 export default RouteForm;
+

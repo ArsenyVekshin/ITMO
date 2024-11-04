@@ -93,6 +93,7 @@ public class CollectionService {
                 Coordinates buff = new Coordinates();
                 buff.updateByDto(routeDto.getCoordinates());
                 coordinatesRepository.save(buff);
+                route.setCoordinates(buff);
             }
         }
 
@@ -103,6 +104,7 @@ public class CollectionService {
                 Location buff = new Location();
                 buff.updateByDto(routeDto.getTo());
                 locationRepository.save(buff);
+                route.setTo(buff);
             }
         }
 
@@ -113,6 +115,7 @@ public class CollectionService {
                 Location buff = new Location();
                 buff.updateByDto(routeDto.getFrom());
                 locationRepository.save(buff);
+                route.setFrom(buff);
             }
         }
 

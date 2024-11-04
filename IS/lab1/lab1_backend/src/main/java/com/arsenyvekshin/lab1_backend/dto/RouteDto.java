@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,8 +26,8 @@ public class RouteDto {
     @NotBlank(message = "Координаты не могут быть пустыми")
     private CoordinatesDto coordinates; //Поле не может быть null
 
-    @Schema(description = "Время создания", example = "404")
-    private java.time.LocalDate creationDate;
+//    @Schema(description = "Время создания", example = "404")
+//    private java.time.LocalDate creationDate = LocalDate.now();
 
     @Schema(description = "Локация (от куда)", example = "404")
     @NotBlank(message = "Локация (от куда) не может быть пустым")
@@ -56,7 +58,7 @@ public class RouteDto {
         this.id = route.getId();
         this.name = route.getName();
         this.coordinates = new CoordinatesDto(route.getCoordinates());
-        this.creationDate = route.getCreationDate();
+//        this.creationDate = route.getCreationDate();
         this.from = new LocationDto(route.getFrom());
         if(route.getTo() != null)
             this.to = new LocationDto(route.getFrom());

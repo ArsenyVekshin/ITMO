@@ -11,19 +11,25 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TableSortLabel
+    TableSortLabel, TextField
 } from "@mui/material";
 
 
 import {showError} from "../../store/errorSlice";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
-import {deleteAllRoutesRequest, getRoutesListRequest} from "../../service/Service";
+import {
+    deleteAllRoutesRequest,
+    deleteRouteRequest,
+    getRoutesListRequest,
+    getSortedRoutesListRequest
+} from "../../service/Service";
 import {wait} from "@testing-library/user-event/dist/utils";
 import {setColumn, setRoute} from "../../store/chosenObjSlice";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import LockIcon from "@mui/icons-material/Lock";
 import {setRoutes} from "../../store/collectionSlice";
-
+import store from "../../store/store";
+import {showWarning} from "./ErrorMessage";
 
 
 function RoutesTable() {
@@ -33,37 +39,38 @@ function RoutesTable() {
     const chosenObj = useSelector(state => state.chosenObj);
 
     const [openRow, setOpenRow] = useState(null);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [choosingMode, setChoosingMode] = useState(false);
     const [loading, setLoading] = React.useState(false);
 
-    useEffect(() => {
-        const fetchRoutes = async () => {
-            try {
-                const routes = await getRoutesListRequest();
-                console.log(routes)
-                dispatch(setRoutes(routes));
-            } catch (error) {
-                console.error('Failed to fetch routes:', error);
-            }
-        };
+    const [sortInput, setSortInput] = useState('');
+    const [activeSortColumn, setActiveSortColumn] = useState(null);
+    const [sortType, setSortType] = useState('<');
 
+    const fetchRoutes = async () => {
+        try {
+            const routes = await getRoutesListRequest();
+            console.log(routes)
+            dispatch(setRoutes(routes));
+        } catch (error) {
+            console.error('Failed to fetch routes:', error);
+        }
+    };
+    useEffect(() => {
         fetchRoutes();
     }, [dispatch]);
 
 
-    const handleSort = (column) => {
-        console.log(column);
-        // Sorting logic here
-    };
 
-    const handleDelete = () => {
-        console.log("dewe");
-    };
 
-    const waitCellClick = () => {
-        while (setChoosingMode === true) {
-            wait(1);
+    const handleDelete = async () => {
+        try {
+            if(!chosenObj.route.id) {
+                showWarning("Unable to delete", "The object has not been selected for deletion")
+                return;
+            }
+            await deleteRouteRequest(chosenObj.route);
+            await fetchRoutes();
+        } catch (error) {
+            console.error('Failed to delete route:', error);
         }
     };
 
@@ -71,6 +78,45 @@ function RoutesTable() {
         dispatch(setRoute(route));
         dispatch(setColumn(column));
         console.log(chosenObj.route, chosenObj.column)
+    };
+
+
+    const handleSortInputChange = (event) => {
+        setSortInput(event.target.value);
+    };
+
+    const handleSort = (column) => {
+        setActiveSortColumn(column);
+        setSortType(sortType === '>'? '<' : '>');
+        console.log(column, "sort clmn = ", activeSortColumn, "sort type=", sortType, "sort value = ", sortInput);
+        if(activeSortColumn && sortInput){
+            requestSorted();
+        }
+    };
+
+    const requestSorted = async () => {
+        try {
+            const response = await getSortedRoutesListRequest(sortType, activeSortColumn, sortInput);
+            collection.useState(response);
+        } catch (error) {
+            console.error('Failed to request sorted list: ', error);
+        }
+
+    }
+
+
+    const SortPanel = (column) => {
+        if (activeSortColumn !== column) return;
+        return (
+            <TextField
+                variant="outlined"
+                size="small"
+                value={sortInput}
+                onChange={handleSortInputChange}
+                placeholder="Sort value"
+                onBlur={() => setActiveSortColumn(null)} // Hide input on blur
+            />
+        );
     };
 
     const RouteRow = ({route}) => {
@@ -118,7 +164,6 @@ function RoutesTable() {
     };
 
 
-
     return (
         <div>
             <Box
@@ -134,31 +179,39 @@ function RoutesTable() {
                                 <TableCell/>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('id')}>ID</TableSortLabel>
+                                    {SortPanel('id')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('name')}>Name</TableSortLabel>
+                                    {SortPanel('name')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('coordinates.x')}>X</TableSortLabel>
+                                    {SortPanel('coordinates.x')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('coordinates.y')}>Y</TableSortLabel>
+                                    {SortPanel('coordinates.y')}
                                 </TableCell>
                                 <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('creationDate')}>Creation
-                                        Date</TableSortLabel>
+                                    <TableSortLabel onClick={() => handleSort('creationDate')}>Creation Date</TableSortLabel>
+                                    {SortPanel('creationDate')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('from.name')}>From</TableSortLabel>
+                                    {SortPanel('from.name')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('to.name')}>To</TableSortLabel>
+                                    {SortPanel('to.name')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('distance')}>Distance</TableSortLabel>
+                                    {SortPanel('distance')}
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel onClick={() => handleSort('rating')}>Rating</TableSortLabel>
+                                    {SortPanel('rating')}
                                 </TableCell>
                                 <TableCell> </TableCell>
                             </TableRow>
