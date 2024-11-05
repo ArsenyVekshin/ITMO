@@ -17,6 +17,7 @@ import MapPage from "./view/pages/MapPage";
 import AdminPanelPage from "./view/pages/AdminPanelPage";
 import {useSelector} from "react-redux";
 import ErrorMessage from "./view/components/ErrorMessage";
+import CollectionFuncPanel from "./view/components/CollectionFuncPanel";
 
 const App = () => {
     const user = useSelector(state => state.user);
@@ -40,6 +41,7 @@ const App = () => {
                             {user.auth ? (
                                 <>
                                     <Route path="/main" element={<MainPage />} />
+                                    <Route path="/func" element={<CollectionFuncPanel />} />
                                     <Route path="/map" element={<MapPage />} />
                                     <Route path="/obj" element={<ObjPage />} />
                                     {user.adminRole && <Route path="/admin" element={<AdminPanelPage />} />}

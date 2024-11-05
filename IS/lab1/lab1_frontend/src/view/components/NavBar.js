@@ -15,6 +15,7 @@ import AccountSwitch from '@mui/icons-material/SwitchAccount';
 import {useDispatch, useSelector} from "react-redux";
 import {logOut} from "../../store/userSlice";
 import CreateIcon from '@mui/icons-material/Create';
+import FunctionsIcon from '@mui/icons-material/Functions';
 
 const NavBar = () => {
     const dispatch = useDispatch();
@@ -56,6 +57,10 @@ const NavBar = () => {
                     <Button color="inherit" onClick={() => navigate('/obj')}>
                         <CreateIcon sx={{ marginRight: 1 }} />
                         Object
+                    </Button>
+                    <Button color="inherit" onClick={() => navigate('/func')}>
+                        <FunctionsIcon sx={{ marginRight: 1 }} />
+                        Func
                     </Button>
                 </div>
 

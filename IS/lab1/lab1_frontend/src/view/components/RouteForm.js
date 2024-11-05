@@ -13,6 +13,7 @@ import RoutesTable from "./RoutesTable";
 import {wait} from "@testing-library/user-event/dist/utils";
 import {addRouteRequest, getRoutesListRequest, updateRouteRequest} from "../../service/Service";
 import {setRoutes} from "../../store/collectionSlice";
+import MainPage from "../pages/MainPage";
 
 const RouteForm = () => {
     const user = useSelector((state) => state.user);
@@ -497,7 +498,7 @@ const RouteForm = () => {
             <Dialog open={openModal} onClose={handleReferChanges} fullWidth maxWidth="lg">
                 <DialogTitle>Click on the desired item</DialogTitle>
                 <DialogContent>
-                    <RoutesTable />
+                    <MainPage />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleReferChanges} color="primary">

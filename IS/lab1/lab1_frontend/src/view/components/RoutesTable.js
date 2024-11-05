@@ -30,11 +30,13 @@ import LockIcon from "@mui/icons-material/Lock";
 import {setRoutes} from "../../store/collectionSlice";
 import store from "../../store/store";
 import {showWarning} from "./ErrorMessage";
+import LinkIcon from "@mui/icons-material/Link";
+import SearchIcon from "@mui/icons-material/Search";
 
 
-function RoutesTable() {
+function RoutesTable({ collection })  {
     const dispatch = useDispatch();
-    const collection = useSelector(state => state.collection);
+    //const collection = useSelector(state => state.collection);
     const user = useSelector(state => state.user);
     const chosenObj = useSelector(state => state.chosenObj);
 
@@ -87,8 +89,7 @@ function RoutesTable() {
 
     const handleSort = (column) => {
         setActiveSortColumn(column);
-        setSortType(sortType === '>'? '<' : '>');
-        console.log(column, "sort clmn = ", activeSortColumn, "sort type=", sortType, "sort value = ", sortInput);
+        console.log(column, "sort clmn = ", activeSortColumn, "sort value = ", sortInput);
         if(activeSortColumn && sortInput){
             requestSorted();
         }
@@ -96,8 +97,11 @@ function RoutesTable() {
 
     const requestSorted = async () => {
         try {
-            const response = await getSortedRoutesListRequest(sortType, activeSortColumn, sortInput);
-            collection.useState(response);
+            const response = await getSortedRoutesListRequest('=', activeSortColumn, sortInput);
+            console.log(response);
+            let buff = {routes: []};
+            buff.routes = response;
+            collection = buff;
         } catch (error) {
             console.error('Failed to request sorted list: ', error);
         }
@@ -108,14 +112,17 @@ function RoutesTable() {
     const SortPanel = (column) => {
         if (activeSortColumn !== column) return;
         return (
-            <TextField
-                variant="outlined"
-                size="small"
-                value={sortInput}
-                onChange={handleSortInputChange}
-                placeholder="Sort value"
-                onBlur={() => setActiveSortColumn(null)} // Hide input on blur
-            />
+            <Box display="flex" alignItems="center">
+                <TextField
+                    variant="outlined"
+                    size="small"
+                    value={sortInput}
+                    onChange={handleSortInputChange}
+                    placeholder="Sort value"
+                    onBlur={() => setActiveSortColumn(null)} // Hide input on blur
+                />
+                <IconButton onClick={() => handleSort(column)}><SearchIcon/></IconButton>
+            </Box>
         );
     };
 
@@ -177,41 +184,32 @@ function RoutesTable() {
                         <TableHead>
                             <TableRow>
                                 <TableCell/>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('id')}>ID</TableSortLabel>
-                                    {SortPanel('id')}
+                                <TableCell onClick={() => setActiveSortColumn('id')}>
+                                    ID {SortPanel('id')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('name')}>Name</TableSortLabel>
-                                    {SortPanel('name')}
+                                <TableCell onClick={() => setActiveSortColumn('name')}>
+                                    Name {SortPanel('name')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('coordinates.x')}>X</TableSortLabel>
-                                    {SortPanel('coordinates.x')}
+                                <TableCell onClick={() => setActiveSortColumn('coordinates.x')}>
+                                    X {SortPanel('coordinates.x')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('coordinates.y')}>Y</TableSortLabel>
-                                    {SortPanel('coordinates.y')}
+                                <TableCell onClick={() => setActiveSortColumn('coordinates.y')}>
+                                    Y {SortPanel('coordinates.y')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('creationDate')}>Creation Date</TableSortLabel>
-                                    {SortPanel('creationDate')}
+                                <TableCell onClick={() => setActiveSortColumn('creationDate')}>
+                                    Creation Date {SortPanel('creationDate')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('from.name')}>From</TableSortLabel>
-                                    {SortPanel('from.name')}
+                                <TableCell onClick={() => setActiveSortColumn('from.name')}>
+                                    From {SortPanel('from.name')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('to.name')}>To</TableSortLabel>
-                                    {SortPanel('to.name')}
+                                <TableCell onClick={() => setActiveSortColumn('to.name')}>
+                                    To {SortPanel('to.name')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('distance')}>Distance</TableSortLabel>
-                                    {SortPanel('distance')}
+                                <TableCell onClick={() => setActiveSortColumn('distance')}>
+                                    Distance {SortPanel('distance')}
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel onClick={() => handleSort('rating')}>Rating</TableSortLabel>
-                                    {SortPanel('rating')}
+                                <TableCell onClick={() => setActiveSortColumn('rating')}>
+                                    Rating {SortPanel('rating')}
                                 </TableCell>
                                 <TableCell> </TableCell>
                             </TableRow>
