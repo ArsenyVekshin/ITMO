@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const storageUsername = localStorage.getItem("username");
-const storageToken = localStorage.getItem("username");
+const storageToken = localStorage.getItem("token");
 const storageAdminRole = localStorage.getItem("adminRole");
 
 
@@ -16,14 +16,14 @@ const userSlice = createSlice({
     },
     reducers: {
         logIn(state, action) {
-            const { username, token, adminRole } = action.payload;
-            state.username = username;
-            state.token = token;
+            // const { username, token, adminRole } = action.payload;
+            state.username = action.payload.username;
+            state.token = action.payload.token;
             state.auth = true;
-            state.adminRole = adminRole;
-            localStorage.setItem("username", username);
-            localStorage.setItem("token", token);
-            localStorage.setItem("adminRole", adminRole);
+            state.adminRole = action.payload.adminRole;
+            localStorage.setItem("username", action.payload.username);
+            localStorage.setItem("token", action.payload.token);
+            localStorage.setItem("adminRole", action.payload.adminRole);
         },
         logOut(state, action) {
             localStorage.removeItem("username");

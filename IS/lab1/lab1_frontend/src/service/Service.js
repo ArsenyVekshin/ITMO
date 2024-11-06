@@ -30,9 +30,9 @@ function showNetSuccess(message){
 async function makeRequest(url, method, body = null) {
     const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { token } : {})
     };
 
+    if(token && token!=='') headers['Authorization'] = 'Bearer ' + token;
 
     let response;
     if(method === 'POST'){

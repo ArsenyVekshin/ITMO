@@ -13,8 +13,6 @@ import {
     TableRow,
     TableSortLabel, TextField
 } from "@mui/material";
-
-
 import {showError} from "../../store/errorSlice";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import {
@@ -23,7 +21,6 @@ import {
     getRoutesListRequest,
     getSortedRoutesListRequest
 } from "../../service/Service";
-import {wait} from "@testing-library/user-event/dist/utils";
 import {setColumn, setRoute} from "../../store/chosenObjSlice";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import LockIcon from "@mui/icons-material/Lock";
@@ -36,7 +33,6 @@ import SearchIcon from "@mui/icons-material/Search";
 
 function RoutesTable({ collection })  {
     const dispatch = useDispatch();
-    //const collection = useSelector(state => state.collection);
     const user = useSelector(state => state.user);
     const chosenObj = useSelector(state => state.chosenObj);
 
@@ -47,6 +43,9 @@ function RoutesTable({ collection })  {
     const [activeSortColumn, setActiveSortColumn] = useState(null);
     const [sortType, setSortType] = useState('<');
 
+    // Локальное состояние для отсортированных маршрутов
+    const [sortedRoutes, setSortedRoutes] = useState([]);
+
     const fetchRoutes = async () => {
         try {
             const routes = await getRoutesListRequest();
@@ -56,12 +55,10 @@ function RoutesTable({ collection })  {
             console.error('Failed to fetch routes:', error);
         }
     };
+
     useEffect(() => {
         fetchRoutes();
     }, [dispatch]);
-
-
-
 
     const handleDelete = async () => {
         try {
@@ -82,7 +79,6 @@ function RoutesTable({ collection })  {
         console.log(chosenObj.route, chosenObj.column)
     };
 
-
     const handleSortInputChange = (event) => {
         setSortInput(event.target.value);
     };
@@ -99,15 +95,12 @@ function RoutesTable({ collection })  {
         try {
             const response = await getSortedRoutesListRequest('=', activeSortColumn, sortInput);
             console.log(response);
-            let buff = {routes: []};
-            buff.routes = response;
-            collection = buff;
+            setSortedRoutes(response); // Обновляем локальное состояние
+            dispatch(setRoutes(response)); // Можно обновить данные в Redux, если нужно
         } catch (error) {
             console.error('Failed to request sorted list: ', error);
         }
-
-    }
-
+    };
 
     const SortPanel = (column) => {
         if (activeSortColumn !== column) return;
@@ -170,7 +163,6 @@ function RoutesTable({ collection })  {
         );
     };
 
-
     return (
         <div>
             <Box
@@ -215,9 +207,15 @@ function RoutesTable({ collection })  {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {collection.routes.map(route => (
-                                <RouteRow key={route.id} route={route}/>
-                            ))}
+                            {sortedRoutes.length > 0 ? (
+                                sortedRoutes.map(route => (
+                                    <RouteRow key={route.id} route={route}/>
+                                ))
+                            ) : (
+                                collection.routes.map(route => (
+                                    <RouteRow key={route.id} route={route}/>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -233,7 +231,6 @@ function RoutesTable({ collection })  {
                 </Button>
             </Box>
         </div>
-
     );
 }
 
