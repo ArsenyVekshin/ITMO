@@ -1,6 +1,6 @@
 import store from "../store/store";
 import {showError} from "../store/errorSlice";
-const API_URL = 'http://localhost:3000/'
+const API_URL = 'http://localhost:32810/'
 const AUTH_URL = API_URL + 'auth'
 const USER_URL = API_URL + 'user'
 const ROUTE_URL = API_URL + 'route'

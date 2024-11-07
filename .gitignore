@@ -133,3 +133,4 @@ Programming Languages/lab2/src/.gitlab-ci.yml
 *.pyc
 CompMath/lab4/test_generator.py
 OPI/lab4/*
+/IS/lab1/lab1_backend/src/main/resources/static

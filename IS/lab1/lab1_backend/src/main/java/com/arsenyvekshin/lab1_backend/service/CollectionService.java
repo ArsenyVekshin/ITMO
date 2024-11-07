@@ -64,7 +64,7 @@ public class CollectionService {
 
     public void deleteRoute(Long id) {
         Route route = routeRepository.getById(id);
-
+/*
         if (coordinatesRepository.calcUsageNum(route.getCoordinates().getId()) > 1)
             route.setCoordinates(null);
         else coordinatesRepository.delete(route.getCoordinates());
@@ -77,7 +77,7 @@ public class CollectionService {
             if (locationRepository.calcUsageNum(route.getTo().getId()) > 1)
                 route.setTo(null);
             else locationRepository.delete(route.getTo());
-        }
+        }*/
 
         routeRepository.delete(route);
     }

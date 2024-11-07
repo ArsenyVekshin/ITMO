@@ -56,9 +56,15 @@ function RoutesTable({ collection })  {
         }
     };
 
+    // useEffect(() => {
+    //     fetchRoutes();
+    // }, [dispatch]);
     useEffect(() => {
         fetchRoutes();
-    }, [dispatch]);
+        const interval = setInterval(fetchRoutes, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
 
     const handleDelete = async () => {
         try {

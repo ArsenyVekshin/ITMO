@@ -480,9 +480,6 @@ const RouteForm = () => {
                     helperText={errors.toZ}
                 />
 
-            <Typography variant="body1" style={{ whiteSpace: 'pre-wrap', marginTop: '20px' }}>
-                {JSON.stringify(route, null, 4)}
-            </Typography>
 
                 <Box sx={{ m: 1, position: 'relative' }}>
                     <Button
