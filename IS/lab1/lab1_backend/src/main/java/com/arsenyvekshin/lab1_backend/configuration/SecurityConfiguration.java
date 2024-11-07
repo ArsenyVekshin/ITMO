@@ -47,11 +47,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         // Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
                         //.requestMatchers("/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/route/**", "func/**").authenticated()
                         .requestMatchers("/user/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
