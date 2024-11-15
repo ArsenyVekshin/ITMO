@@ -127,6 +127,7 @@ const RouteForm = () => {
     const handleChange = (e) => {
         let { name, value } = e.target;
         value = validate(name, value);
+        if(!value) return;
         setRoute((prev) => ({
             ...prev,
             [name]: value,
@@ -137,6 +138,7 @@ const RouteForm = () => {
     const handleCoordinatesChange = (e) => {
         let { name, value } = e.target;
         value = validate(name, value, "coordinates");
+        if(!value) return;
         setRoute((prev) => ({
             ...prev,
             coordinates: {
@@ -150,6 +152,7 @@ const RouteForm = () => {
     const handleLocationChange = (e, loc) => {
         let { name, value } = e.target;
         value = validate(name, value, loc);
+        if(!value) return;
         setRoute((prev) => ({
             ...prev,
             [loc]: {

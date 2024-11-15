@@ -22,7 +22,7 @@ public class UserService {
      */
     public void approveUser(String username) {
         User user = getByUsername(username);
-
+        if(getCurrentUser().getRole() != Role.ADMIN) throw new IllegalArgumentException("У вас нет прав на выполнение этого действия");
         if (user.getRole() == Role.ADMIN) throw new IllegalArgumentException("User is already an administrator");
         if (!user.isRoleRequest()) throw new IllegalArgumentException("User don't need to be approved");
 

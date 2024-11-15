@@ -3,6 +3,8 @@ import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, CartesianGrid } from 'rec
 import { Box, Typography } from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import {setRoute} from "../../store/chosenObjSlice";
+import {getRoutesListRequest} from "../../service/Service";
+import {setRoutes} from "../../store/collectionSlice";
 
 
 const CustomTooltip = ({ active, payload }) => {
@@ -19,11 +21,30 @@ const CustomTooltip = ({ active, payload }) => {
     return null;
 };
 
+
+
+
 const RoutesMap = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const chosenObj = useSelector(state => state.chosenObj);
     const collection = useSelector(state => state.collection);
+
+    const fetchRoutes = async () => {
+        try {
+            const routes = await getRoutesListRequest();
+            console.log(routes)
+            dispatch(setRoutes(routes));
+        } catch (error) {
+            console.error('Failed to fetch routes:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchRoutes();
+        const interval = setInterval(fetchRoutes, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
 
     const [chartDimensions, setChartDimensions] = useState({
