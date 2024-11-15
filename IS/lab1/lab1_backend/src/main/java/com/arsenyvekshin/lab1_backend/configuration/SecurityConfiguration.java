@@ -47,8 +47,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         // Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
                         //.requestMatchers("/**").permitAll()
-                        .requestMatchers("/route/**", "func/**").authenticated()
-                        .requestMatchers("/user/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**", "/route/**", "func/**").authenticated()
+                        //.requestMatchers(.hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())

@@ -3,9 +3,7 @@ package com.arsenyvekshin.lab1_backend.service;
 import com.arsenyvekshin.lab1_backend.dto.CoordinatesDto;
 import com.arsenyvekshin.lab1_backend.dto.RouteDto;
 import com.arsenyvekshin.lab1_backend.dto.SortedObjectListRequest;
-import com.arsenyvekshin.lab1_backend.entity.Coordinates;
-import com.arsenyvekshin.lab1_backend.entity.Location;
-import com.arsenyvekshin.lab1_backend.entity.Route;
+import com.arsenyvekshin.lab1_backend.entity.*;
 import com.arsenyvekshin.lab1_backend.repository.CoordinatesRepository;
 import com.arsenyvekshin.lab1_backend.repository.LocationRepository;
 import com.arsenyvekshin.lab1_backend.repository.RouteRepository;
@@ -15,6 +13,7 @@ import com.arsenyvekshin.lab1_backend.utils.Converter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,6 +27,7 @@ public class CollectionService {
     private final LocationRepository locationRepository;
     private final RouteRepository routeRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public void createRoute(RouteDto routeDto) throws IOException {
         Route route = new Route();
@@ -59,11 +59,20 @@ public class CollectionService {
 
     public void updateRoute(RouteDto routeDto) throws IOException {
         Route route = routeRepository.getById(routeDto.getId());
-        routeRepository.save(buildObject(route, routeDto));
+        User redactor = userService.getCurrentUser();
+        if(route.isReadonly()) throw new IllegalArgumentException("Обьект помечен как READONLY");
+        if(redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
+            routeRepository.save(buildObject(route, routeDto));
+        else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
     }
 
     public void deleteRoute(Long id) {
         Route route = routeRepository.getById(id);
+        User redactor = userService.getCurrentUser();
+        if(route.isReadonly()) throw new IllegalArgumentException("Обьект помечен как READONLY");
+        if(redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
+            routeRepository.delete(route);
+        else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
 /*
         if (coordinatesRepository.calcUsageNum(route.getCoordinates().getId()) > 1)
             route.setCoordinates(null);
@@ -79,7 +88,7 @@ public class CollectionService {
             else locationRepository.delete(route.getTo());
         }*/
 
-        routeRepository.delete(route);
+
     }
 
 
