@@ -69,7 +69,7 @@ function RoutesTable({ collection })  {
     const handleDelete = async () => {
         try {
             if(!chosenObj.route.id) {
-                showWarning("Unable to delete", "The object has not been selected for deletion")
+                showWarning("Unable to delete", "The object has not been selected for deletion");
                 return;
             }
             await deleteRouteRequest(chosenObj.route);

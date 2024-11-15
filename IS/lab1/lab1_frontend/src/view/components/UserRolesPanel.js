@@ -27,6 +27,7 @@ const UserRolesPanel = () => {
     const handleApprove = async (username) => {
         try {
             let response = await approveUserRequest(username);
+
         } catch (err) {
             console.error(err);
         }
