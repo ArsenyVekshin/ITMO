@@ -14,6 +14,9 @@ import {wait} from "@testing-library/user-event/dist/utils";
 import {addRouteRequest, getRoutesListRequest, updateRouteRequest} from "../../service/Service";
 import {setRoutes} from "../../store/collectionSlice";
 import MainPage from "../pages/MainPage";
+import {showWarning} from "./ErrorMessage";
+import async from "async";
+
 
 const RouteForm = () => {
     const user = useSelector((state) => state.user);
@@ -67,18 +70,22 @@ const RouteForm = () => {
         switch (name) {
             case 'name':
                 if (!value || !value.trim()) {
-                    newErrors.name = 'Name cannot be empty.';
+                    if(!subclass) newErrors.name = 'Name cannot be empty.';
+                    else newErrors[subclass + 'Name'] = 'Name cannot be empty.';
                     buff = null;
                 } else {
-                    delete newErrors.name;
-                    buff = value; // возвращаем валидное значение
+                    if(!subclass) delete newErrors.name;
+                    else delete newErrors[subclass + 'Name'];
+                    buff = value;
                 }
                 break;
             case 'x':
                 if (subclass === "coordinates") buff = parseFloat(value);
                 else buff = parseInt(value);
 
-                if (isNaN(buff)) newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
+                if (isNaN(buff)) {
+                    newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
+                }
                 else {
                     //console.log(route, subclass, name);
                     //route[subclass][name] = buff;
@@ -107,7 +114,7 @@ const RouteForm = () => {
                 break;
             case 'distance':
                 buff = parseFloat(value);
-                if (buff <= 1 || isNaN(buff)) newErrors.distance = 'Distance must be greater than 1.';
+                if (buff <= 1 || isNaN(buff)) newErrors.distance = 'Distance must be greater than 1.0';
                 else delete newErrors.distance;
                 break;
             case 'rating':
@@ -126,24 +133,29 @@ const RouteForm = () => {
 
     const handleChange = (e) => {
         let { name, value } = e.target;
-        value = validate(name, value);
-        if(!value) return;
+        let valid = validate(name, value);
+        if(!valid || String(valid) !== value) {
+            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+            valid = value;
+        }
         setRoute((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: valid,
         }));
-
     };
 
     const handleCoordinatesChange = (e) => {
         let { name, value } = e.target;
-        value = validate(name, value, "coordinates");
-        if(!value) return;
+        let valid = validate(name, value, "coordinates");
+        if(!valid || String(valid) !== value) {
+            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+            valid = value;
+        }
         setRoute((prev) => ({
             ...prev,
             coordinates: {
                 ...prev.coordinates,
-                [name]: value,
+                [name]: valid,
             },
         }));
 
@@ -151,13 +163,16 @@ const RouteForm = () => {
 
     const handleLocationChange = (e, loc) => {
         let { name, value } = e.target;
-        value = validate(name, value, loc);
-        if(!value) return;
+        let valid = validate(name, value, loc);
+        if(!valid || String(valid) !== value) {
+            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+            valid = value;
+        }
         setRoute((prev) => ({
             ...prev,
             [loc]: {
                 ...prev[loc],
-                [name]: value,
+                [name]: valid,
             },
         }));
 
