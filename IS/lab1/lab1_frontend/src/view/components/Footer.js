@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Link } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, Link, Typography} from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Footer = () => {
@@ -31,10 +31,11 @@ const Footer = () => {
                 Векшин Арсений P3316
 
             </Typography>
-            <Link href="https://github.com/ArsenyVekshin/ITMO/tree/master/IS/lab1" target="_blank" color="inherit" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1 }}>
-                <GitHubIcon sx={{ mr: 0.5 }} />
+            <Link href="https://github.com/ArsenyVekshin/ITMO/tree/master/IS/lab1" target="_blank" color="inherit"
+                  sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1}}>
+                <GitHubIcon sx={{mr: 0.5}}/>
             </Link>
-            <Typography variant="body2" sx={{ mt: 1 }}>
+            <Typography variant="body2" sx={{mt: 1}}>
                 Текущее время: {currentTime}
             </Typography>
         </Box>

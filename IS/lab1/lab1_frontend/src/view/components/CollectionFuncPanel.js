@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-    Container,
-    TextField,
-    Button,
-    Typography,
     Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
     Table,
+    TableBody,
+    TableCell,
+    TableContainer,
     TableHead,
     TableRow,
-    TableCell,
-    TableBody,
-    TableContainer,
-    DialogTitle,
-    DialogContent,
-    DialogActions, Dialog, IconButton,
+    TextField,
+    Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import {
@@ -25,12 +27,11 @@ import {
 import RoutesTable from "./RoutesTable";
 import LinkIcon from "@mui/icons-material/Link";
 import {useSelector} from "react-redux";
-import SearchIcon from '@mui/icons-material/Search';
 
 const CollectionFuncPanel = () => {
     const collection = useSelector(state => state.collection);
     const chosenObj = useSelector((state) => state.chosenObj);
-    let collectionAdapter = {routes : ''}
+    let collectionAdapter = {routes: ''}
 
     const [totalRatingResult, setTotalRatingResult] = useState('');  // состояние для хранения результата
     const [rateInput, setRateInput] = useState(null);
@@ -111,7 +112,7 @@ const CollectionFuncPanel = () => {
     const handleCloseDialog = () => {
         setOpenModal(false);
         setModalData(null); // Очистим данные при закрытии
-        if (referredPart !== null){
+        if (referredPart !== null) {
             if (chosenObj.column.includes("to.")) locations[referredPart] = chosenObj.route.to.id;
             else locations[referredPart] = chosenObj.route.from.id;
 
@@ -132,7 +133,7 @@ const CollectionFuncPanel = () => {
             </Typography>
 
             <Box display="flex" flexDirection="column" alignItems="center">
-                <TableContainer sx={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                <TableContainer sx={{maxHeight: '70vh', overflowY: 'auto'}}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -152,7 +153,7 @@ const CollectionFuncPanel = () => {
                                     <Button
                                         onClick={handleTotalRatingButton}
                                         variant="outlined"
-                                        endIcon={<SendIcon />}
+                                        endIcon={<SendIcon/>}
                                     >
                                         send
                                     </Button>
@@ -167,7 +168,7 @@ const CollectionFuncPanel = () => {
                                     <Button
                                         onClick={handleMaxToButton}
                                         variant="outlined"
-                                        endIcon={<SendIcon />}
+                                        endIcon={<SendIcon/>}
                                     >
                                         send
                                     </Button>
@@ -192,8 +193,8 @@ const CollectionFuncPanel = () => {
                                     <Button
                                         onClick={handleGreaterRateButton}
                                         variant="outlined"
-                                        endIcon={<SendIcon />}
-                                        disabled={!!errors.rating  || rateInput === null}
+                                        endIcon={<SendIcon/>}
+                                        disabled={!!errors.rating || rateInput === null}
                                     >
                                         send
                                     </Button>
@@ -234,7 +235,7 @@ const CollectionFuncPanel = () => {
                                     <Button
                                         onClick={handleRoutesBetweenButton}
                                         variant="outlined"
-                                        endIcon={<SendIcon />}
+                                        endIcon={<SendIcon/>}
                                         disabled={!!errors.location0 || !!errors.location1 || locations[0] === null || locations[1] === null}
                                     >
                                         send
@@ -251,7 +252,7 @@ const CollectionFuncPanel = () => {
             <Dialog open={openModal} onClose={handleCloseDialog} fullWidth maxWidth="lg">
                 <DialogTitle>Click on the desired item</DialogTitle>
                 <DialogContent>
-                    {modalData && <RoutesTable collection={modalData} />}
+                    {modalData && <RoutesTable collection={modalData}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog} color="primary">

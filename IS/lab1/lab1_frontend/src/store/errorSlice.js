@@ -8,7 +8,7 @@ const errorSlice = createSlice({
         detail: "",
     },
     reducers: {
-        showError(state, action) {
+        addError(state, action) {
             state.type = action.payload.type || "";
             state.summary = action.payload.summary || "";
             state.detail = action.payload.detail || "";
@@ -21,6 +21,6 @@ const errorSlice = createSlice({
     },
 });
 
-export const {showError, clearError} = errorSlice.actions;
+export const {addError, clearError} = errorSlice.actions;
 
 export default errorSlice.reducer;

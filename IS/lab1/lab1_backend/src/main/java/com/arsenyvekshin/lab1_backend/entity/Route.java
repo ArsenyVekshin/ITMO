@@ -6,11 +6,13 @@ import com.arsenyvekshin.lab1_backend.utils.Converter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -71,8 +73,8 @@ public class Route implements ComparableObj {
     }
 
     @Override
-    public int compareTo(String value, String fieldName){
-        switch (fieldName){
+    public int compareTo(String value, String fieldName) {
+        switch (fieldName) {
             case "id":
                 return this.id.compareTo(Long.valueOf(value));
             case "name":
@@ -85,8 +87,8 @@ public class Route implements ComparableObj {
                 return this.rating.compareTo(Integer.valueOf(value));
             default:
                 String _class = fieldName.substring(0, fieldName.indexOf('.')).trim();
-                String _field = fieldName.substring(fieldName.indexOf('.')+1).trim();
-                switch (_class){
+                String _field = fieldName.substring(fieldName.indexOf('.') + 1).trim();
+                switch (_class) {
                     case "coordinates":
                         return this.coordinates.compareTo(value, _field);
                     case "from":

@@ -5,10 +5,10 @@ import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.*;
-
-import java.io.IOException;
-import java.time.chrono.ChronoLocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
@@ -28,14 +28,14 @@ public class Coordinates implements ComparableObj {
     private Integer y; //Значение поля должно быть больше -761
 
 
-    public void updateByDto(CoordinatesDto dto){
+    public void updateByDto(CoordinatesDto dto) {
         this.x = dto.getX();
         this.y = dto.getY();
     }
 
     @Override
-    public int compareTo(String value, String fieldName){
-        switch (fieldName){
+    public int compareTo(String value, String fieldName) {
+        switch (fieldName) {
             case "id":
                 return this.id.compareTo(Long.valueOf(value));
             case "x":

@@ -1,19 +1,36 @@
 import "../../resources/ErrorMessage.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import {clearError, showError} from "../../store/errorSlice";
-import { Alert } from "@mui/material";
-import { AlertTitle } from "@mui/lab";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {addError, clearError} from "../../store/errorSlice";
+import {Alert} from "@mui/material";
+import {AlertTitle} from "@mui/lab";
 import store from "../../store/store";
 
-export function showWarning(code, message){
-    store.dispatch(showError({
+export function showError(code, message) {
+    console.error("code = ", code, "mes = ", message);
+    store.dispatch(addError({
+        type: "error",
+        summary: code,
+        detail: message
+    }));
+}
+
+export function showWarning(code, message) {
+    console.warn("code = ", code, "mes = ", message);
+    store.dispatch(addError({
         type: "warning",
         summary: code,
         detail: message
     }));
 }
 
+export function showSuccess(message) {
+    store.dispatch(addError({
+        type: "success",
+        summary: 'OK',
+        detail: message
+    }));
+}
 
 function ErrorMessage() {
     const dispatch = useDispatch();

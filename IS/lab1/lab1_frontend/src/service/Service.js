@@ -1,5 +1,6 @@
 import store from "../store/store";
-import {showError} from "../store/errorSlice";
+import {showError, showSuccess} from "../view/components/ErrorMessage";
+
 const API_URL = 'http://localhost:32810/'
 const AUTH_URL = API_URL + 'auth'
 const USER_URL = API_URL + 'user'
@@ -7,59 +8,48 @@ const ROUTE_URL = API_URL + 'route'
 
 const token = store.getState().user.token;
 
+async function makeRequest(url, method, body = null, fileFlag = null) {
+    const headers = {};
 
-
-function showNetError(code, message){
-    store.dispatch(showError({
-        type: "error",
-        summary: `Server returned an error ${code}`,
-        detail: message
-    }));
-}
-
-function showNetSuccess(message){
-    store.dispatch(showError({
-        type: "success",
-        summary: "OK",
-        detail: message,
-    }));
-}
-
-
-
-async function makeRequest(url, method, body = null) {
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-
-    if(token && token!=='') headers['Authorization'] = 'Bearer ' + token;
+    if (!fileFlag) headers['Content-Type'] = 'application/json';
+    if (token && token !== '') headers['Authorization'] = 'Bearer ' + token;
 
     let response;
-    if(method === 'POST'){
+    if (fileFlag && body) {
+        const formData = new FormData();
+        formData.append('file', body);
+        response = await fetch(url, {
+            method,
+            headers,
+            body: formData,
+        });
+    } else if (method === 'POST') {
         response = await fetch(url, {
             method,
             headers,
             body: JSON.stringify(body),
-    });}
-    else {
+        });
+    } else {
         response = await fetch(url, {
             method,
             headers,
-    });}
+        });
+    }
 
 
     const data = await response.json();
 
     try {
         if (!response.ok) {
-            showNetError(response.status, data.message);
+            showError(`Server returned an error ${response.status}`, data.message);
             throw new Error(`Error: ${response.status} ${data.message}`);
-        } else showNetSuccess(response.message);
+        } else showSuccess(response.message);
         return data;
     } catch (error) {
         throw error;
     }
 }
+
 
 export async function signUpRequest(user) {
     return makeRequest(AUTH_URL + "/sign-up", 'POST', {
@@ -89,6 +79,7 @@ export async function approveUserListRequest() {
 export async function getRoutesListRequest() {
     return makeRequest(ROUTE_URL + "/list", 'GET');
 }
+
 export async function getSortedRoutesListRequest(sign, field, value) {
     return makeRequest(ROUTE_URL + `/list/sorted?sign=${sign}&field=${field}&value=${value}`, 'GET');
 }
@@ -96,6 +87,11 @@ export async function getSortedRoutesListRequest(sign, field, value) {
 export async function addRouteRequest(route) {
     return makeRequest(ROUTE_URL + "/add", 'POST', route);
 }
+
+export async function multiAddRoutesRequest(file) {
+    return makeRequest(ROUTE_URL + "/add/file", 'POST', file, true);
+}
+
 export async function updateRouteRequest(route) {
     return makeRequest(ROUTE_URL + "/update", 'POST', route);
 }

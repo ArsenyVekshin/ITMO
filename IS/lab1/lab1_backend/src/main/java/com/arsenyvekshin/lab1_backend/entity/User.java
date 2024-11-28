@@ -4,14 +4,13 @@ import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import lombok.*;
 
 import java.util.Collection;
 import java.util.List;
-
 
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "authorities", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
@@ -48,8 +47,8 @@ public class User implements UserDetails, ComparableObj {
     }
 
     @Override
-    public int compareTo(String value, String fieldName){
-        switch (fieldName){
+    public int compareTo(String value, String fieldName) {
+        switch (fieldName) {
             case "id":
                 return this.id.compareTo(Long.valueOf(value));
             case "username":

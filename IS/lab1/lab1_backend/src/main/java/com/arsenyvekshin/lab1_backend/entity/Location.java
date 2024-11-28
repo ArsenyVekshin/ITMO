@@ -5,7 +5,10 @@ import com.arsenyvekshin.lab1_backend.utils.ComparableObj;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -30,7 +33,7 @@ public class Location implements ComparableObj {
     private String name; //Строка не может быть пустой, Поле не может быть null
 
 
-    public void updateByDto(LocationDto dto){
+    public void updateByDto(LocationDto dto) {
         this.x = dto.getX();
         this.y = dto.getY();
         this.z = dto.getZ();
@@ -38,8 +41,8 @@ public class Location implements ComparableObj {
     }
 
     @Override
-    public int compareTo(String value, String fieldName){
-        switch (fieldName){
+    public int compareTo(String value, String fieldName) {
+        switch (fieldName) {
             case "id":
                 return this.id.compareTo(Long.valueOf(value));
             case "x":
