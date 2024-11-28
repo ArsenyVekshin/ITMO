@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { Box, Typography } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {CartesianGrid, Scatter, ScatterChart, Tooltip, XAxis, YAxis} from 'recharts';
+import {Box, Typography} from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import {setRoute} from "../../store/chosenObjSlice";
 import {getRoutesListRequest} from "../../service/Service";
 import {setRoutes} from "../../store/collectionSlice";
 
 
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({active, payload}) => {
     if (active && payload && payload.length) {
-        const { id, name, rating } = payload[0].payload; // Извлечение id и rating
+        const {id, name, rating} = payload[0].payload; // Извлечение id и rating
         return (
-            <div style={{ backgroundColor: '#2F2F2F99', border: '1px solid #ccc', padding: '10px' }}>
+            <div style={{backgroundColor: '#2F2F2F99', border: '1px solid #ccc', padding: '10px'}}>
                 <p>ID: {id}</p>
                 <p>Name: {name}</p>
                 <p>Rating: {rating}</p>
@@ -20,8 +20,6 @@ const CustomTooltip = ({ active, payload }) => {
     }
     return null;
 };
-
-
 
 
 const RoutesMap = () => {
@@ -48,7 +46,7 @@ const RoutesMap = () => {
 
 
     const [chartDimensions, setChartDimensions] = useState({
-        width: window.innerWidth * 0.95 , // 80% от ширины окна
+        width: window.innerWidth * 0.95, // 80% от ширины окна
         height: window.innerHeight * 0.6 // 60% от высоты окна
     });
 
@@ -89,21 +87,22 @@ const RoutesMap = () => {
     };
 
     return (
-        <Box sx={{ padding: 2}}>
+        <Box sx={{padding: 2}}>
             <Typography variant="h4" gutterBottom>
                 Chart of Routes
             </Typography>
-            <ScatterChart  width={chartDimensions.width} height={chartDimensions.height} style={{ background: '#2F2F2F99' }}>
-                <CartesianGrid />
-                <XAxis type="number" dataKey="x" name="X Coordinate" />
-                <YAxis type="number" dataKey="y" name="Y Coordinate" />
-                <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+            <ScatterChart width={chartDimensions.width} height={chartDimensions.height}
+                          style={{background: '#2F2F2F99'}}>
+                <CartesianGrid/>
+                <XAxis type="number" dataKey="x" name="X Coordinate"/>
+                <YAxis type="number" dataKey="y" name="Y Coordinate"/>
+                <Tooltip content={<CustomTooltip/>} cursor={{strokeDasharray: '3 3'}}/>
                 <Scatter
                     name="Routes"
                     data={data}
                     onClick={handlePointClick}
                     shape={(props) => (
-                        <circle {...props} r={props.rating} fill={props.color} />
+                        <circle {...props} r={props.rating} fill={props.color}/>
                     )}
                 />
             </ScatterChart>

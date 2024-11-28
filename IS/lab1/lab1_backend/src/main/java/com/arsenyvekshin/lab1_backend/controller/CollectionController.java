@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,6 +45,13 @@ public class CollectionController {
         return new MessageInfoDto("ok");
     }
 
+    @Operation(summary = "Добавить набор маршрутов при помощи файла")
+    @PostMapping("/add/file")
+    public MessageInfoDto multiAddRoute(@RequestParam("file") MultipartFile file) throws IOException {
+        collectionService.createRoutesFromFile(file);
+        return new MessageInfoDto("ok");
+    }
+
     @Operation(summary = "Изменить существующий маршрут")
     @PostMapping("/update")
     public MessageInfoDto updateRoute(@RequestBody @Valid RouteDto route) throws IOException {
@@ -65,28 +73,27 @@ public class CollectionController {
         return new MessageInfoDto("ok");
     }
 
-    // Прочая хуета
     @Operation(summary = "Рассчитать сумму значений поля rating для всех объектов.")
     @GetMapping("/func/total-rating")
-    public int calculateTotalRating(){
+    public int calculateTotalRating() {
         return routeRepository.calculateTotalRating();
     }
 
     @Operation(summary = "Вернуть один (любой) объект, значение поля to которого является максимальным.")
     @GetMapping("/func/max-to")
-    public List<Route> findMaxTo(){
+    public List<Route> findMaxTo() {
         return routeRepository.findMaxTo();
     }
 
     @Operation(summary = "Вернуть массив объектов, значение поля rating которых больше заданного.")
     @GetMapping("/func/greatest-rate")
-    public List<Route> findRoutesWithGreaterRating(int rating){
+    public List<Route> findRoutesWithGreaterRating(int rating) {
         return routeRepository.findRoutesWithGreaterRating(rating);
     }
 
     @Operation(summary = "Найти все маршруты между указанными пользователем локациями.")
     @GetMapping("/func/all-routes-by")
-    public List<Route> findAllRotesBy(Long from_location_id, Long to_location_id){
+    public List<Route> findAllRotesBy(Long from_location_id, Long to_location_id) {
         return routeRepository.findAllRotesBy(from_location_id, to_location_id);
     }
 

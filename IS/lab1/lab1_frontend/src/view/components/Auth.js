@@ -1,25 +1,22 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import '../../resources/Auth.css';
 import {
-    Container,
-    TextField,
-    Button,
-    Typography,
     Box,
-    Paper,
+    Button,
     CircularProgress,
+    Container,
+    FormControlLabel,
     Switch,
-    FormControlLabel, Alert,
+    TextField,
+    Typography,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import { signInRequest, signUpRequest } from "../../service/Service";
-import {AlertTitle} from "@mui/lab";
-import {useDispatch, useSelector} from "react-redux";
+import {signInRequest, signUpRequest} from "../../service/Service";
+import {useDispatch} from "react-redux";
 import {logIn} from "../../store/userSlice";
 import {useNavigate} from "react-router-dom";
-import {showError} from "../../store/errorSlice";
 
 const Auth = (props) => {
     const navigate = useNavigate();
@@ -67,7 +64,7 @@ const Auth = (props) => {
         <div>
             <Container component="main" maxWidth="xs">
                 <Box display="flex" flexDirection="column" alignItems="center">
-                    <LockIcon fontSize="large" color="primary" />
+                    <LockIcon fontSize="large" color="primary"/>
                     <Typography variant="h5" component="h1" gutterBottom textAlign="center">
                         {isSignIn ? "Sign In" : "Sign Up"}
                     </Typography>
@@ -105,7 +102,7 @@ const Auth = (props) => {
                             label="Запросить роль ADMIN"
                         />
                     )}
-                    <Box textAlign="center" sx={{ m: 1, position: 'relative' }}>
+                    <Box textAlign="center" sx={{m: 1, position: 'relative'}}>
                         <Button
                             type="submit"
                             variant="contained"

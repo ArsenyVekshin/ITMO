@@ -3,8 +3,8 @@ package com.arsenyvekshin.lab1_backend.service;
 import com.arsenyvekshin.lab1_backend.dto.JwtAuthenticationResponse;
 import com.arsenyvekshin.lab1_backend.dto.SignInRequest;
 import com.arsenyvekshin.lab1_backend.dto.SignUpRequest;
-import com.arsenyvekshin.lab1_backend.entity.User;
 import com.arsenyvekshin.lab1_backend.entity.Role;
+import com.arsenyvekshin.lab1_backend.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +33,7 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
 
-        if(request.getRole() == Role.ADMIN) user.setRoleRequest(true);
+        if (request.getRole() == Role.ADMIN) user.setRoleRequest(true);
         userService.create(user);
 
         var jwt = jwtService.generateToken(user);

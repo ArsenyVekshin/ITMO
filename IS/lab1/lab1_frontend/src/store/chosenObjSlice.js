@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 const chosenObjSlice = createSlice({
     name: 'chosen',
@@ -7,8 +7,8 @@ const chosenObjSlice = createSlice({
         column: '',
     },
     reducers: {
-        clear(state){
-          state.routes = {};
+        clear(state) {
+            state.routes = {};
         },
         setRoute(state, action) {
             state.route = action.payload;

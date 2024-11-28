@@ -7,6 +7,7 @@ public class Comparators {
 
     /**
      * Custom string comparator
+     *
      * @param s1 string 1
      * @param s2 string 2
      * @return
@@ -22,6 +23,7 @@ public class Comparators {
 
     /**
      * Comparator for any primitive
+     *
      * @param f1 obj 1
      * @param f2 obj 2
      * @return
@@ -33,14 +35,14 @@ public class Comparators {
             return compareStrings(a, b);
         }
         if (f1.getClass() == Number.class) {
-            if(f1.getClass().equals(Float.class) ||
-                    f1.getClass().equals(Double.class)){
+            if (f1.getClass().equals(Float.class) ||
+                    f1.getClass().equals(Double.class)) {
                 float a = (float) f1;
                 float b = (float) f2;
 
                 if (a > b) return 1;
                 if (a < b) return -1;
-            }  else {
+            } else {
                 long a = (long) f1;
                 long b = (long) f2;
 

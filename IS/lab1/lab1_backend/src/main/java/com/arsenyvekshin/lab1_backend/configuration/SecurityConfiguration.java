@@ -1,8 +1,7 @@
 package com.arsenyvekshin.lab1_backend.configuration;
 
-import com.arsenyvekshin.lab1_backend.service.UserService;
 import com.arsenyvekshin.lab1_backend.filter.JwtAuthenticationFilter;
-
+import com.arsenyvekshin.lab1_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +46,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         // Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
                         //.requestMatchers("/**").permitAll()
-                        .requestMatchers("/user/**", "/route/**", "func/**").authenticated()
+                        .requestMatchers("/user/**", "/route/**", "/route/add/file", "func/**").authenticated()
                         //.requestMatchers(.hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

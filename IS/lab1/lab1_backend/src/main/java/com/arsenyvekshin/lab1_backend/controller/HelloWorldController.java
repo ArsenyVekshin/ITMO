@@ -13,10 +13,9 @@ public class HelloWorldController {
 
     @Operation(summary = "kurwa")
     @GetMapping(value = "/hello", produces = "application/json")
-    public MessageInfoDto hello(){
+    public MessageInfoDto hello() {
         return new MessageInfoDto("hello world");
     }
-
 
 
 }

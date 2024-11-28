@@ -1,9 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 const storageUsername = localStorage.getItem("username");
 const storageToken = localStorage.getItem("token");
 const storageAdminRole = localStorage.getItem("adminRole");
-
 
 
 const userSlice = createSlice({

@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+    Button,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Switch,
-    Paper,
-    Button,
     Typography
 } from '@mui/material';
-import {approveUserListRequest, approveUserRequest, signInRequest, signUpRequest} from "../../service/Service";
-import {logIn} from "../../store/userSlice";
+import {approveUserListRequest, approveUserRequest} from "../../service/Service";
 
 const UserRolesPanel = () => {
     const [users, setUsers] = useState([]);

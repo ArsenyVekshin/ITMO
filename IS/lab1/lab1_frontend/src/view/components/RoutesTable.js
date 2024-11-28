@@ -11,27 +11,19 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TableSortLabel, TextField
+    TextField
 } from "@mui/material";
-import {showError} from "../../store/errorSlice";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
-import {
-    deleteAllRoutesRequest,
-    deleteRouteRequest,
-    getRoutesListRequest,
-    getSortedRoutesListRequest
-} from "../../service/Service";
+import {deleteRouteRequest, getRoutesListRequest, getSortedRoutesListRequest} from "../../service/Service";
 import {setColumn, setRoute} from "../../store/chosenObjSlice";
 import AnchorIcon from "@mui/icons-material/Anchor";
 import LockIcon from "@mui/icons-material/Lock";
 import {setRoutes} from "../../store/collectionSlice";
-import store from "../../store/store";
 import {showWarning} from "./ErrorMessage";
-import LinkIcon from "@mui/icons-material/Link";
 import SearchIcon from "@mui/icons-material/Search";
 
 
-function RoutesTable({ collection })  {
+function RoutesTable({collection}) {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const chosenObj = useSelector(state => state.chosenObj);
@@ -68,7 +60,7 @@ function RoutesTable({ collection })  {
 
     const handleDelete = async () => {
         try {
-            if(!chosenObj.route.id) {
+            if (!chosenObj.route.id) {
                 showWarning("Unable to delete", "The object has not been selected for deletion");
                 return;
             }
@@ -92,7 +84,7 @@ function RoutesTable({ collection })  {
     const handleSort = (column) => {
         setActiveSortColumn(column);
         console.log(column, "sort clmn = ", activeSortColumn, "sort value = ", sortInput);
-        if(activeSortColumn && sortInput){
+        if (activeSortColumn && sortInput) {
             requestSorted();
         }
     };

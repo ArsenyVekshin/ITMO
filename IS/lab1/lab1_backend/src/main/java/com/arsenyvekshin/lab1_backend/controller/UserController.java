@@ -1,11 +1,10 @@
 package com.arsenyvekshin.lab1_backend.controller;
 
-import com.arsenyvekshin.lab1_backend.dto.*;
-import com.arsenyvekshin.lab1_backend.service.AuthenticationService;
+import com.arsenyvekshin.lab1_backend.dto.ApproveListResponse;
+import com.arsenyvekshin.lab1_backend.dto.MessageInfoDto;
 import com.arsenyvekshin.lab1_backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class UserController {
 
 
     @Operation(summary = "Список пользователей ожидающих одобрения прав ADMIN")
-    @GetMapping ("/approve/list")
+    @GetMapping("/approve/list")
     public ApproveListResponse getUnapprovedUsers() {
         return new ApproveListResponse(userService.getUnapprovedUsers());
     }

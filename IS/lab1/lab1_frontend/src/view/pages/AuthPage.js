@@ -1,5 +1,4 @@
 import Auth from "../components/Auth";
-import ErrorMessage from "../components/ErrorMessage";
 
 const AuthPage = (props) => {
     return (
@@ -10,7 +9,7 @@ const AuthPage = (props) => {
 }
 
 export const RegisterPage = () => {
-    return <AuthPage authType="register" />
+    return <AuthPage authType="register"/>
 }
 
 export default AuthPage;

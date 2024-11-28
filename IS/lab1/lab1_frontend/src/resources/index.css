@@ -1,9 +1,9 @@
 body {
-  background-image: url("background.jpg");
-  color: white;
-  font-family: monospace;
+    background-image: url("background.jpg");
+    color: white;
+    font-family: monospace;
 }
 
 ::selection {
-  background-color: #4b61cf;
+    background-color: #4b61cf;
 }

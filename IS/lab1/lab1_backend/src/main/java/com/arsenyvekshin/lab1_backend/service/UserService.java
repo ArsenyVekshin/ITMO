@@ -22,7 +22,8 @@ public class UserService {
      */
     public void approveUser(String username) {
         User user = getByUsername(username);
-        if(getCurrentUser().getRole() != Role.ADMIN) throw new IllegalArgumentException("У вас нет прав на выполнение этого действия");
+        if (getCurrentUser().getRole() != Role.ADMIN)
+            throw new IllegalArgumentException("У вас нет прав на выполнение этого действия");
         if (user.getRole() == Role.ADMIN) throw new IllegalArgumentException("User is already an administrator");
         if (!user.isRoleRequest()) throw new IllegalArgumentException("User don't need to be approved");
 
@@ -60,7 +61,7 @@ public class UserService {
      */
     public User getByUsername(String username) {
         User user = userRepository.findByUsername(username);
-        if(user == null) throw new EntityNotFoundException("Пользователь не найден");
+        if (user == null) throw new EntityNotFoundException("Пользователь не найден");
         return user;
     }
 
@@ -87,7 +88,7 @@ public class UserService {
     }
 
 
-    public List<String> getUnapprovedUsers(){
+    public List<String> getUnapprovedUsers() {
         return userRepository.getUnapprovedUsers();
     }
 }

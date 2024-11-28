@@ -1,18 +1,17 @@
 package com.arsenyvekshin.lab1_backend.dto;
 
 import com.arsenyvekshin.lab1_backend.entity.Route;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
 @Builder
-@AllArgsConstructor
+//@AllArgsConstructor
 @Schema(description = "Маршрут")
 public class RouteDto {
     @Schema(description = "id (если необходимо)", example = "1")
@@ -54,17 +53,41 @@ public class RouteDto {
     private boolean readonly = false;
 
 
-    public RouteDto(Route route){
+    public RouteDto(Route route) {
         this.id = route.getId();
         this.name = route.getName();
         this.coordinates = new CoordinatesDto(route.getCoordinates());
 //        this.creationDate = route.getCreationDate();
         this.from = new LocationDto(route.getFrom());
-        if(route.getTo() != null)
+        if (route.getTo() != null)
             this.to = new LocationDto(route.getFrom());
         this.distance = route.getDistance();
         this.rating = route.getRating();
         this.owner = route.getOwner().getUsername();
         this.readonly = route.isReadonly();
     }
+
+    @JsonCreator
+    public RouteDto(
+            @JsonProperty("id") Long id,
+            @JsonProperty("name") String name,
+            @JsonProperty("coordinates") CoordinatesDto coordinates,
+            @JsonProperty("from") LocationDto from,
+            @JsonProperty("to") LocationDto to,
+            @JsonProperty("distance") Double distance,
+            @JsonProperty("rating") Integer rating,
+            @JsonProperty("owner") String owner,
+            @JsonProperty("readonly") boolean readonly
+    ) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.from = from;
+        this.to = to;
+        this.distance = distance;
+        this.rating = rating;
+        this.owner = owner;
+        this.readonly = readonly;
+    }
+
 }

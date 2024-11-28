@@ -1,4 +1,3 @@
-import ErrorMessage from "../components/ErrorMessage";
 import UserRolesPanel from "../components/UserRolesPanel";
 
 const AdminPanelPage = (props) => {

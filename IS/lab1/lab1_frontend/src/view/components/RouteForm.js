@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-    Container,
-    TextField,
+    Alert,
+    Box,
     Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Switch,
+    TextField,
     Typography,
-    Box, IconButton, DialogTitle, DialogContent, DialogActions, Dialog, Switch, Alert,
 } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link'; // Import the link icon
 import CancelIcon from '@mui/icons-material/Cancel';
 import {useSelector} from "react-redux";
-import RoutesTable from "./RoutesTable";
-import {wait} from "@testing-library/user-event/dist/utils";
-import {addRouteRequest, getRoutesListRequest, updateRouteRequest} from "../../service/Service";
-import {setRoutes} from "../../store/collectionSlice";
+import {addRouteRequest, updateRouteRequest} from "../../service/Service";
 import MainPage from "../pages/MainPage";
 import {showWarning} from "./ErrorMessage";
-import async from "async";
 
 
 const RouteForm = () => {
@@ -31,10 +34,10 @@ const RouteForm = () => {
     const [route, setRoute] = useState({
         id: '',
         name: '',
-        coordinates: {id: '', x: '', y: '' },
+        coordinates: {id: '', x: '', y: ''},
         creationDate: '',
-        from: { id: '', x: '', y: '', z: '', name: '' },
-        to: { id: '', x: '', y: '', z: '', name: '' },
+        from: {id: '', x: '', y: '', z: '', name: ''},
+        to: {id: '', x: '', y: '', z: '', name: ''},
         distance: '',
         rating: '',
         owner: user.username,
@@ -46,10 +49,10 @@ const RouteForm = () => {
         return {
             id: source.id,
             name: source.name,
-            coordinates: { id: source.coordinates.id, x: source.coordinates.x, y: source.coordinates.y },
+            coordinates: {id: source.coordinates.id, x: source.coordinates.x, y: source.coordinates.y},
             creationDate: source.creationDate,
-            from: { id: source.from.id, x: source.from.x, y: source.from.y, z: source.from.z, name: source.from.name },
-            to: { id: source.to.id, x: source.to.x, y: source.to.y, z: source.to.z, name: source.to.name },
+            from: {id: source.from.id, x: source.from.x, y: source.from.y, z: source.from.z, name: source.from.name},
+            to: {id: source.to.id, x: source.to.x, y: source.to.y, z: source.to.z, name: source.to.name},
             distance: source.distance,
             rating: source.rating,
             owner: source.owner.username,
@@ -64,17 +67,17 @@ const RouteForm = () => {
         }));
     }
 
-    const validate = (name, value , subclass) => {
-        const newErrors = { ...errors };
+    const validate = (name, value, subclass) => {
+        const newErrors = {...errors};
         let buff;
         switch (name) {
             case 'name':
                 if (!value || !value.trim()) {
-                    if(!subclass) newErrors.name = 'Name cannot be empty.';
+                    if (!subclass) newErrors.name = 'Name cannot be empty.';
                     else newErrors[subclass + 'Name'] = 'Name cannot be empty.';
                     buff = null;
                 } else {
-                    if(!subclass) delete newErrors.name;
+                    if (!subclass) delete newErrors.name;
                     else delete newErrors[subclass + 'Name'];
                     buff = value;
                 }
@@ -85,8 +88,7 @@ const RouteForm = () => {
 
                 if (isNaN(buff)) {
                     newErrors[subclass + name.toUpperCase()] = 'Coordinates must be numbers.';
-                }
-                else {
+                } else {
                     //console.log(route, subclass, name);
                     //route[subclass][name] = buff;
                     delete newErrors[subclass + name.toUpperCase()];
@@ -132,10 +134,10 @@ const RouteForm = () => {
     };
 
     const handleChange = (e) => {
-        let { name, value } = e.target;
+        let {name, value} = e.target;
         let valid = validate(name, value);
-        if(!valid || String(valid) !== value) {
-            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+        if (!valid || String(valid) !== value) {
+            if (valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid);
             valid = value;
         }
         setRoute((prev) => ({
@@ -145,10 +147,10 @@ const RouteForm = () => {
     };
 
     const handleCoordinatesChange = (e) => {
-        let { name, value } = e.target;
+        let {name, value} = e.target;
         let valid = validate(name, value, "coordinates");
-        if(!valid || String(valid) !== value) {
-            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+        if (!valid || String(valid) !== value) {
+            if (valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid);
             valid = value;
         }
         setRoute((prev) => ({
@@ -162,10 +164,10 @@ const RouteForm = () => {
     };
 
     const handleLocationChange = (e, loc) => {
-        let { name, value } = e.target;
+        let {name, value} = e.target;
         let valid = validate(name, value, loc);
-        if(!valid || String(valid) !== value) {
-            if(valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid );
+        if (!valid || String(valid) !== value) {
+            if (valid) showWarning("Wrong format", 'Entered value will be interpreted as ' + valid);
             valid = value;
         }
         setRoute((prev) => ({
@@ -208,8 +210,7 @@ const RouteForm = () => {
                 route.owner = user.username;
                 if (!route.id) {
                     response = await addRouteRequest(route);
-                }
-                else {
+                } else {
                     response = await updateRouteRequest(route);
                 }
 
@@ -223,14 +224,13 @@ const RouteForm = () => {
     };
 
 
-
-    const handleDeleteLink = (part) =>{
+    const handleDeleteLink = (part) => {
 
         switch (part) {
             case 'all':
                 setRoute((prev) => ({
                     ...prev,
-                    id : '',
+                    id: '',
                 }));
                 break;
 
@@ -241,7 +241,7 @@ const RouteForm = () => {
                     ...prev,
                     [part]: {
                         ...prev[part],
-                        id : '',
+                        id: '',
                     },
                 }));
                 break;
@@ -250,12 +250,12 @@ const RouteForm = () => {
         }
     }
 
-    const handleRefer = (part) =>{
+    const handleRefer = (part) => {
         setReferredPart(part);
         setOpenModal(true);
     }
 
-    const handleReferChanges = () =>{
+    const handleReferChanges = () => {
         setOpenModal(false);
 
         switch (referredPart) {
@@ -289,16 +289,16 @@ const RouteForm = () => {
 
     }
 
-    const refButtons = (part) =>{
+    const refButtons = (part) => {
         const isLinked = route[part].id; // Use optional chaining
         return (
             <Box display="inline" ml={1}>
                 <IconButton onClick={() => handleRefer(part)}>
-                    {isLinked ? <LinkIcon style={{color: '#19d21c'}}/> : <LinkIcon style={{color: '#d21919'}}/> }
+                    {isLinked ? <LinkIcon style={{color: '#19d21c'}}/> : <LinkIcon style={{color: '#d21919'}}/>}
                 </IconButton>
-                {isLinked &&( <IconButton onClick={() => handleDeleteLink(part)}> <CancelIcon/></IconButton>)}
+                {isLinked && (<IconButton onClick={() => handleDeleteLink(part)}> <CancelIcon/></IconButton>)}
             </Box>
-    );
+        );
     }
 
     return (
@@ -309,211 +309,211 @@ const RouteForm = () => {
                 Route
                 <Box display="inline" ml={1}>
                     <IconButton onClick={() => handleRefer('all')}>
-                        {route.id? <LinkIcon style={{color: '#19d21c'}}/> : <LinkIcon style={{color: '#d21919'}}/> }
+                        {route.id ? <LinkIcon style={{color: '#19d21c'}}/> : <LinkIcon style={{color: '#d21919'}}/>}
                     </IconButton>
-                    {route.id &&( <IconButton onClick={() => handleDeleteLink('all')}> <CancelIcon/></IconButton>)}
+                    {route.id && (<IconButton onClick={() => handleDeleteLink('all')}> <CancelIcon/></IconButton>)}
                 </Box>
             </Typography>
-                <TextField
-                    name="id"
-                    label="ID"
-                    value={route.id}
-                    disabled
-                    fullWidth
+            <TextField
+                name="id"
+                label="ID"
+                value={route.id}
+                disabled
+                fullWidth
+                margin="normal"
+            />
+            <TextField
+                name="name"
+                label="Name"
+                required
+                fullWidth
+                onChange={handleChange}
+                margin="normal"
+                value={route.name}  // Ensure value is set from route
+                error={!!errors.name}
+                helperText={errors.name}
+            />
+            <TextField
+                name="distance"
+                label="Distance"
+                required
+                onChange={handleChange}
+                margin="normal"
+                value={route.distance} // Ensure value is set from route
+                error={!!errors.distance}
+                helperText={errors.distance}
+            />
+            <TextField
+                name="rating"
+                label="Rating"
+                required
+                onChange={handleChange}
+                margin="normal"
+                value={route.rating} // Ensure value is set from route
+                error={!!errors.rating}
+                helperText={errors.rating}
+            /> <br/>
+            <Box style={{display: "flex !important"}} ml={1}>
+                <Switch
+                    name="readonly"
+                    label="readonly"
+                    checked={route.readonly}
+                    onChange={chgReadonlyFlag}
+                    color="primary"
                     margin="normal"
                 />
-                <TextField
-                    name="name"
-                    label="Name"
-                    required
-                    fullWidth
-                    onChange={handleChange}
-                    margin="normal"
-                    value={route.name}  // Ensure value is set from route
-                    error={!!errors.name}
-                    helperText={errors.name}
-                />
-                <TextField
-                    name="distance"
-                    label="Distance"
-                    required
-                    onChange={handleChange}
-                    margin="normal"
-                    value={route.distance} // Ensure value is set from route
-                    error={!!errors.distance}
-                    helperText={errors.distance}
-                />
-                <TextField
-                    name="rating"
-                    label="Rating"
-                    required
-                    onChange={handleChange}
-                    margin="normal"
-                    value={route.rating} // Ensure value is set from route
-                    error={!!errors.rating}
-                    helperText={errors.rating}
-                /> <br/>
-                <Box style={{display:"flex !important" }} ml={1}>
-                    <Switch
-                        name="readonly"
-                        label="readonly"
-                        checked={route.readonly}
-                        onChange={chgReadonlyFlag}
-                        color="primary"
-                        margin="normal"
-                    />
-                    <Typography variant="h7" gutterBottom> READONLY </Typography>
-                </Box>
-                {route.readonly &&(
-                    <Alert variant="outlined" severity="warning">
-                        Be careful, you will not be able to change the object after sending it.
-                    </Alert>
-                )}
+                <Typography variant="h7" gutterBottom> READONLY </Typography>
+            </Box>
+            {route.readonly && (
+                <Alert variant="outlined" severity="warning">
+                    Be careful, you will not be able to change the object after sending it.
+                </Alert>
+            )}
 
-                <Typography variant="h6" gutterBottom>
-                    Coordinates {refButtons('coordinates')}
-                </Typography>
-                <TextField
-                    name="id"
-                    label="ID"
-                    value={route.coordinates.id}
-                    disabled
-                    margin="normal"
-                />
-                <TextField
-                    name="x"
-                    label="X"
-                    required
-                    onChange={handleCoordinatesChange}
-                    margin="normal"
-                    value={route.coordinates.x} // Ensure value is set from route
-                    error={!!errors.coordinatesX}
-                    helperText={errors.coordinatesX}
-                />
-                <TextField
-                    name="y"
-                    label="Y"
-                    required
-                    onChange={handleCoordinatesChange}
-                    margin="normal"
-                    value={route.coordinates.y} // Ensure value is set from route
-                    error={!!errors.coordinatesY}
-                    helperText={errors.coordinatesY}
-                />
-                <Typography variant="h6" gutterBottom>
-                    From {refButtons('from')}
-                </Typography>
-                <TextField
-                    name="id"
-                    label="ID"
-                    value={route.from.id}
-                    disabled
-                    margin="normal"
-                />
-                <TextField
-                    name="name"
-                    label="Name"
-                    required
-                    onChange={(e) => handleLocationChange(e, 'from')}
-                    margin="normal"
-                    value={route.from.name} // Ensure value is set from route
-                    error={!!errors.fromName}
-                    helperText={errors.fromName}
-                />
-                <TextField
-                    name="x"
-                    label="X"
-                    required
-                    onChange={(e) => handleLocationChange(e, 'from')}
-                    margin="normal"
-                    value={route.from.x} // Ensure value is set from route
-                    error={!!errors.fromX}
-                    helperText={errors.fromX}
-                />
-                <TextField
-                    name="y"
-                    label="Y"
-                    required
-                    onChange={(e) => handleLocationChange(e, 'from')}
-                    margin="normal"
-                    value={route.from.y} // Ensure value is set from route
-                    error={!!errors.fromY}
-                    helperText={errors.fromY}
-                />
-                <TextField
-                    name="z"
-                    label="Z"
-                    required
-                    onChange={(e) => handleLocationChange(e, 'from')}
-                    margin="normal"
-                    value={route.from.z} // Ensure value is set from route
-                    error={!!errors.fromZ}
-                    helperText={errors.fromZ}
-                />
+            <Typography variant="h6" gutterBottom>
+                Coordinates {refButtons('coordinates')}
+            </Typography>
+            <TextField
+                name="id"
+                label="ID"
+                value={route.coordinates.id}
+                disabled
+                margin="normal"
+            />
+            <TextField
+                name="x"
+                label="X"
+                required
+                onChange={handleCoordinatesChange}
+                margin="normal"
+                value={route.coordinates.x} // Ensure value is set from route
+                error={!!errors.coordinatesX}
+                helperText={errors.coordinatesX}
+            />
+            <TextField
+                name="y"
+                label="Y"
+                required
+                onChange={handleCoordinatesChange}
+                margin="normal"
+                value={route.coordinates.y} // Ensure value is set from route
+                error={!!errors.coordinatesY}
+                helperText={errors.coordinatesY}
+            />
+            <Typography variant="h6" gutterBottom>
+                From {refButtons('from')}
+            </Typography>
+            <TextField
+                name="id"
+                label="ID"
+                value={route.from.id}
+                disabled
+                margin="normal"
+            />
+            <TextField
+                name="name"
+                label="Name"
+                required
+                onChange={(e) => handleLocationChange(e, 'from')}
+                margin="normal"
+                value={route.from.name} // Ensure value is set from route
+                error={!!errors.fromName}
+                helperText={errors.fromName}
+            />
+            <TextField
+                name="x"
+                label="X"
+                required
+                onChange={(e) => handleLocationChange(e, 'from')}
+                margin="normal"
+                value={route.from.x} // Ensure value is set from route
+                error={!!errors.fromX}
+                helperText={errors.fromX}
+            />
+            <TextField
+                name="y"
+                label="Y"
+                required
+                onChange={(e) => handleLocationChange(e, 'from')}
+                margin="normal"
+                value={route.from.y} // Ensure value is set from route
+                error={!!errors.fromY}
+                helperText={errors.fromY}
+            />
+            <TextField
+                name="z"
+                label="Z"
+                required
+                onChange={(e) => handleLocationChange(e, 'from')}
+                margin="normal"
+                value={route.from.z} // Ensure value is set from route
+                error={!!errors.fromZ}
+                helperText={errors.fromZ}
+            />
 
-                <Typography variant="h6" gutterBottom>
-                    To {refButtons('to')}
-                </Typography>
-                <TextField
-                    name="id"
-                    label="ID"
-                    value={route.to.id}
-                    disabled
-                    margin="normal"
-                />
-                <TextField
-                    name="name"
-                    label="Name"
-                    onChange={(e) => handleLocationChange(e, 'to')}
-                    margin="normal"
-                    value={route.to.name} // Ensure value is set from route
-                    error={!!errors.toName}
-                    helperText={errors.toName}
-                />
-                <TextField
-                    name="x"
-                    label="X"
-                    onChange={(e) => handleLocationChange(e, 'to')}
-                    margin="normal"
-                    value={route.to.x} // Ensure value is set from route
-                    error={!!errors.toX}
-                    helperText={errors.toX}
-                />
-                <TextField
-                    name="y"
-                    label="Y"
-                    onChange={(e) => handleLocationChange(e, 'to')}
-                    margin="normal"
-                    value={route.to.y} // Ensure value is set from route
-                    error={!!errors.toY}
-                    helperText={errors.toY}
-                />
-                <TextField
-                    name="z"
-                    label="Z"
-                    onChange={(e) => handleLocationChange(e, 'to')}
-                    margin="normal"
-                    value={route.to.z} // Ensure value is set from route
-                    error={!!errors.toZ}
-                    helperText={errors.toZ}
-                />
+            <Typography variant="h6" gutterBottom>
+                To {refButtons('to')}
+            </Typography>
+            <TextField
+                name="id"
+                label="ID"
+                value={route.to.id}
+                disabled
+                margin="normal"
+            />
+            <TextField
+                name="name"
+                label="Name"
+                onChange={(e) => handleLocationChange(e, 'to')}
+                margin="normal"
+                value={route.to.name} // Ensure value is set from route
+                error={!!errors.toName}
+                helperText={errors.toName}
+            />
+            <TextField
+                name="x"
+                label="X"
+                onChange={(e) => handleLocationChange(e, 'to')}
+                margin="normal"
+                value={route.to.x} // Ensure value is set from route
+                error={!!errors.toX}
+                helperText={errors.toX}
+            />
+            <TextField
+                name="y"
+                label="Y"
+                onChange={(e) => handleLocationChange(e, 'to')}
+                margin="normal"
+                value={route.to.y} // Ensure value is set from route
+                error={!!errors.toY}
+                helperText={errors.toY}
+            />
+            <TextField
+                name="z"
+                label="Z"
+                onChange={(e) => handleLocationChange(e, 'to')}
+                margin="normal"
+                value={route.to.z} // Ensure value is set from route
+                error={!!errors.toZ}
+                helperText={errors.toZ}
+            />
 
 
-                <Box sx={{ m: 1, position: 'relative' }}>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color={route.id ? "primary" : "success"}
-                        // disabled={loading || Object.keys(errors).length>0}
-                        onClick={handleSubmit}
-                    > {route.id ? "Redact" : "Add"}
-                    </Button>
-                </Box>
+            <Box sx={{m: 1, position: 'relative'}}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color={route.id ? "primary" : "success"}
+                    // disabled={loading || Object.keys(errors).length>0}
+                    onClick={handleSubmit}
+                > {route.id ? "Redact" : "Add"}
+                </Button>
+            </Box>
 
             <Dialog open={openModal} onClose={handleReferChanges} fullWidth maxWidth="lg">
                 <DialogTitle>Click on the desired item</DialogTitle>
                 <DialogContent>
-                    <MainPage />
+                    <MainPage/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleReferChanges} color="primary">
