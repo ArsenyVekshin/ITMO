@@ -19,6 +19,7 @@ import {useSelector} from "react-redux";
 import ErrorMessage from "./view/components/ErrorMessage";
 import CollectionFuncPanel from "./view/components/CollectionFuncPanel";
 import MultiAddPanel from "./view/components/MultiAddPanel";
+import ImportLogTable from "./view/components/ImportLogTable";
 
 const App = () => {
     const user = useSelector(state => state.user);
@@ -44,6 +45,7 @@ const App = () => {
                                             <Route path="/main" element={<MainPage/>}/>
                                             <Route path="/func" element={<CollectionFuncPanel/>}/>
                                             <Route path="/map" element={<MapPage/>}/>
+                                            <Route path="/log/import" element={<ImportLogTable/>}/>
                                             <Route path="/obj" element={<ObjPage/>}/>
                                             <Route path="/obj/file" element={<MultiAddPanel/>}/>
                                             {user.adminRole && <Route path="/admin" element={<AdminPanelPage/>}/>}

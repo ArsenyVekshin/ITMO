@@ -1,10 +1,11 @@
 import store from "../store/store";
 import {showError, showSuccess} from "../view/components/ErrorMessage";
 
-const API_URL = 'http://localhost:32810/'
-const AUTH_URL = API_URL + 'auth'
-const USER_URL = API_URL + 'user'
-const ROUTE_URL = API_URL + 'route'
+const API_URL = 'http://localhost:32810/';
+const AUTH_URL = API_URL + 'auth';
+const USER_URL = API_URL + 'user';
+const ROUTE_URL = API_URL + 'route';
+const LOG_URL = API_URL + 'log';
 
 const token = store.getState().user.token;
 
@@ -36,10 +37,8 @@ async function makeRequest(url, method, body = null, fileFlag = null) {
         });
     }
 
-
-    const data = await response.json();
-
     try {
+        const data = await response.json();
         if (!response.ok) {
             showError(`Server returned an error ${response.status}`, data.message);
             throw new Error(`Error: ${response.status} ${data.message}`);
@@ -123,3 +122,6 @@ export async function getAllRoutesByRequest(from_id, to_id) {
     return makeRequest(ROUTE_URL + `/func/all-routes-by?from_location_id=${from_id}&to_location_id=${to_id}`, 'GET');
 }
 
+export async function getImportLogRequest() {
+    return makeRequest(LOG_URL + "/import", 'GET');
+}

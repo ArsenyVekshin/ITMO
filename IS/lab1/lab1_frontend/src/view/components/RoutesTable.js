@@ -48,9 +48,6 @@ function RoutesTable({collection}) {
         }
     };
 
-    // useEffect(() => {
-    //     fetchRoutes();
-    // }, [dispatch]);
     useEffect(() => {
         fetchRoutes();
         const interval = setInterval(fetchRoutes, 1000);

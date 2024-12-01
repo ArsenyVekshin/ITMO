@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import HomeIcon from '@mui/icons-material/Home'; // Иконка для Home
+import HomeIcon from '@mui/icons-material/Home';
 import MapIcon from '@mui/icons-material/Map'; // Иконка для Map
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Settings from '@mui/icons-material/Settings';
@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {logOut} from "../../store/userSlice";
 import CreateIcon from '@mui/icons-material/Create';
 import FunctionsIcon from '@mui/icons-material/Functions';
+import HistoryIcon from '@mui/icons-material/History';
 
 const NavBar = () => {
     const dispatch = useDispatch();
@@ -91,6 +92,9 @@ const NavBar = () => {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
+                            <MenuItem onClick={() => handleMenuClick('/log/import')}>
+                                <HistoryIcon sx={{marginRight: 1}}/> Log
+                            </MenuItem>
                             {user.adminRole && (
                                 <MenuItem onClick={() => handleMenuClick('/admin')}>
                                     <Settings sx={{marginRight: 1}}/> Admin panel

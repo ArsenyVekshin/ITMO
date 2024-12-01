@@ -26,6 +26,7 @@ public class CollectionService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final LogService logService;
 
     @Transactional
     public void createRoute(RouteDto routeDto) throws IOException {
@@ -36,7 +37,9 @@ public class CollectionService {
     @Transactional
     public void createRoutesFromFile(MultipartFile file) throws IOException {
         RoutesListDto arr = fileStorageService.parseRoutes(fileStorageService.storeFile(file));
+        Long operationId = logService.addImportLog((long) arr.getRoutes().size());
         for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
+        logService.markImportLogSuccess(operationId);
     }
 
     public List<Route> getRoutes() {
@@ -78,22 +81,6 @@ public class CollectionService {
         if (redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
             routeRepository.delete(route);
         else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
-/*
-        if (coordinatesRepository.calcUsageNum(route.getCoordinates().getId()) > 1)
-            route.setCoordinates(null);
-        else coordinatesRepository.delete(route.getCoordinates());
-
-        if (locationRepository.calcUsageNum(route.getFrom().getId()) > 1)
-            route.setFrom(null);
-        else locationRepository.delete(route.getFrom());
-
-        if(route.getTo() != null) {
-            if (locationRepository.calcUsageNum(route.getTo().getId()) > 1)
-                route.setTo(null);
-            else locationRepository.delete(route.getTo());
-        }*/
-
-
     }
 
 
