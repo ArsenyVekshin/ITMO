@@ -34,7 +34,7 @@ public class CollectionService {
         routeRepository.save(buildObject(route, routeDto));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createRoutesFromFile(MultipartFile file) throws IOException {
         RoutesListDto arr = fileStorageService.parseRoutes(fileStorageService.storeFile(file));
         Long operationId = logService.addImportLog((long) arr.getRoutes().size());
@@ -42,10 +42,12 @@ public class CollectionService {
         logService.markImportLogSuccess(operationId);
     }
 
+    @Transactional(readOnly = true)
     public List<Route> getRoutes() {
         return routeRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Route> getSortedRoutes(SortedObjectListRequest request) throws NoSuchFieldException, IllegalArgumentException {
         switch (request.getSign()) {
             case '=':
@@ -65,6 +67,7 @@ public class CollectionService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void updateRoute(RouteDto routeDto) throws IOException {
         Route route = routeRepository.getById(routeDto.getId());
         User redactor = userService.getCurrentUser();
@@ -74,6 +77,7 @@ public class CollectionService {
         else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRoute(Long id) {
         Route route = routeRepository.getById(id);
         User redactor = userService.getCurrentUser();

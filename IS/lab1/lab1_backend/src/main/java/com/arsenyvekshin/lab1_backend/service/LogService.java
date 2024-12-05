@@ -7,6 +7,7 @@ import com.arsenyvekshin.lab1_backend.entity.User;
 import com.arsenyvekshin.lab1_backend.repository.ImportLogRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class LogService {
     private final UserService userService;
     private final ImportLogRepository importLogRepository;
 
+    @Transactional(readOnly = true)
     public List<ImportLogDto> getImportLog() {
         User currentUser = userService.getCurrentUser();
         return importLogRepository.findAll().stream()
@@ -24,12 +26,14 @@ public class LogService {
                 .toList();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Long addImportLog(Long number) {
         ImportLogNote note = new ImportLogNote(userService.getCurrentUser(), number);
         importLogRepository.save(note);
         return note.getId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void markImportLogSuccess(Long operationId) {
         ImportLogNote note = importLogRepository.getById(operationId);
         note.setSuccessful(true);

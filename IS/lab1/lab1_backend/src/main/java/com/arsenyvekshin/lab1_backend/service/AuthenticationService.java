@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class AuthenticationService {
      * @param request данные пользователя
      * @return токен
      */
+    @Transactional(rollbackFor = Exception.class)
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
 
         User user = User.builder()

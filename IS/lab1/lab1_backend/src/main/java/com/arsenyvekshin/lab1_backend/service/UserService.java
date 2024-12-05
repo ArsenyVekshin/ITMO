@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class UserService {
     /**
      * Подтвердить права пользователя на роль администратора
      */
+    @Transactional(rollbackFor = Exception.class)
     public void approveUser(String username) {
         User user = getByUsername(username);
         if (getCurrentUser().getRole() != Role.ADMIN)
@@ -37,6 +39,7 @@ public class UserService {
      *
      * @return сохраненный пользователь
      */
+    @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -47,6 +50,7 @@ public class UserService {
      *
      * @return созданный пользователь
      */
+    @Transactional(rollbackFor = Exception.class)
     public User create(User user) {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new EntityNotFoundException("Пользователь с таким именем уже существует");
@@ -59,6 +63,7 @@ public class UserService {
      *
      * @return пользователь
      */
+    @Transactional(readOnly = true)
     public User getByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) throw new EntityNotFoundException("Пользователь не найден");
@@ -87,7 +92,7 @@ public class UserService {
         return getByUsername(username);
     }
 
-
+    @Transactional(readOnly = true)
     public List<String> getUnapprovedUsers() {
         return userRepository.getUnapprovedUsers();
     }
