@@ -31,3 +31,11 @@
 [Текст условия (23.11.2024)](https://github.com/ArsenyVekshin/ITMO/tree/master/IS/lab1/tasks-text/lab2.md)   
 [Код (архив)](https://github.com/ArsenyVekshin/ITMO/tree/IS-lab2-archive/IS/lab1)
 
+
+
+ЛР3
+----
+Вариант: 1600   
+[Текст условия (10.12.2024)](https://github.com/ArsenyVekshin/ITMO/tree/master/IS/lab1/tasks-text/lab3.md)   
+[Код (архив)](https://github.com/ArsenyVekshin/ITMO/tree/IS-lab3-archive/IS/lab1)
+
