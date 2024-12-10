@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface RouteRepository extends JpaRepository<Route, Long> {
+
+    List<Route> findRouteByName(String name);
+
     @Query("SELECT p FROM Route p WHERE p.owner.id = ?1 ORDER BY p.creationDate DESC")
     List<Route> findByUserId(Long userId);
 

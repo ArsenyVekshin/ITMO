@@ -30,16 +30,17 @@ public class CollectionService {
 
     @Transactional
     public void createRoute(RouteDto routeDto) throws IOException {
+        validateDto(routeDto);
         Route route = new Route();
         routeRepository.save(buildObject(route, routeDto));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void createRoutesFromFile(MultipartFile file) throws IOException {
+        Long operationId = logService.addImportLog(0L);
         RoutesListDto arr = fileStorageService.parseRoutes(fileStorageService.storeFile(file));
-        Long operationId = logService.addImportLog((long) arr.getRoutes().size());
+        System.out.println(operationId);
         for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
-        logService.markImportLogSuccess(operationId);
+        logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
     }
 
     @Transactional(readOnly = true)
@@ -129,6 +130,24 @@ public class CollectionService {
         }
 
         return route;
+    }
+
+
+    private void validateDto(RouteDto dto){
+        if (dto.getName() != null) {
+            if(!routeRepository.findRouteByName(dto.getName()).isEmpty())
+                throw new IllegalArgumentException("Имя маршрута должно быть уникальным");
+        }
+
+        if(dto.getFrom() != null){
+            if(!locationRepository.findLocationByName(dto.getFrom().getName()).isEmpty())
+                throw new IllegalArgumentException("Имя локации FROM должно быть уникальным");
+        }
+
+        if(dto.getTo() != null){
+            if(!locationRepository.findLocationByName(dto.getTo().getName()).isEmpty())
+                throw new IllegalArgumentException("Имя локации TO должно быть уникальным");
+        }
     }
 
     public void fillDefault() {

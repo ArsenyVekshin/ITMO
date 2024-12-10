@@ -1,0 +1,57 @@
+{
+  "routes": [
+    {
+      "id": 4,
+      "name": "meow8",
+      "coordinates": {
+        "id": null,
+        "x": 2,
+        "y": 2
+      },
+      "from": {
+        "id": null,
+        "x": -2,
+        "y": -2000,
+        "z": -2,
+        "name": "frommeow"
+      },
+      "to": {
+        "id": null,
+        "x": 2,
+        "y": 2,
+        "z": 2,
+        "name": "tomeow"
+      },
+      "distance": 2.0,
+      "rating": -2777,
+      "owner": "admin",
+      "readonly": false
+    },{
+      "id": 4,
+      "name": "meow28",
+      "coordinates": {
+        "id": null,
+        "x": 2,
+        "y": 2
+      },
+      "from": {
+        "id": null,
+        "x": 2,
+        "y": 2,
+        "z": 2,
+        "name": "frommeow2"
+      },
+      "to": {
+        "id": null,
+        "x": 2,
+        "y": -75467657754,
+        "z": 2,
+        "name": "tomeow2"
+      },
+      "distance": 2.0,
+      "rating": 2,
+      "owner": "admin",
+      "readonly": false
+    }
+  ]
+}

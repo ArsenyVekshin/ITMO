@@ -26,17 +26,17 @@ public class LogService {
                 .toList();
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Long addImportLog(Long number) {
         ImportLogNote note = new ImportLogNote(userService.getCurrentUser(), number);
         importLogRepository.save(note);
         return note.getId();
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void markImportLogSuccess(Long operationId) {
+
+    public void markImportLogSuccess(Long operationId, Long number) {
         ImportLogNote note = importLogRepository.getById(operationId);
         note.setSuccessful(true);
+        note.setNumber(number);
         importLogRepository.save(note);
     }
 
