@@ -34,6 +34,9 @@ public class ImportLogNote {
     @Column(name = "successful")
     private boolean successful = false;
 
+    @Column(name = "key")
+    private String key;
+
     public ImportLogNote(User user, Long number) {
         this.owner = user;
         this.number = number;

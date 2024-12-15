@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ public class CollectionService {
     private final UserService userService;
     private final FileStorageService fileStorageService;
     private final LogService logService;
+    private final MinIOService minIOService;
 
     @Transactional
     public void createRoute(RouteDto routeDto) throws IOException {
@@ -35,12 +37,18 @@ public class CollectionService {
         routeRepository.save(buildObject(route, routeDto));
     }
 
-    public void createRoutesFromFile(MultipartFile file) throws IOException {
+    public void createRoutesFromFile(MultipartFile file) throws Exception {
         Long operationId = logService.addImportLog(0L);
-        RoutesListDto arr = fileStorageService.parseRoutes(fileStorageService.storeFile(file));
-        System.out.println(operationId);
+
+        logService.setKeyLink(operationId, minIOService.uploadFile(file));
+
+        File buffFile = fileStorageService.storeFile(file);
+        RoutesListDto arr = fileStorageService.parseRoutes(buffFile);
+        fileStorageService.deleteFile(buffFile);
+
         for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
         logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
+
     }
 
     @Transactional(readOnly = true)

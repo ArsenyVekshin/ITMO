@@ -1,11 +1,29 @@
-import {Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import {getImportLogRequest} from "../../service/Service";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {getFileFromServer, getImportLogRequest} from "../../service/Service";
 
 const ImportLogTable = () => {
     const [data, setData] = useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [fileContent, setFileContent] = useState("");
+    const [fileName, setFileName] = useState("");
 
     const fetchLog = async () => {
         setData(await getImportLogRequest());
@@ -18,21 +36,34 @@ const ImportLogTable = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const LogRow = ({note}) => {
-        return (
-            <>
-                <TableRow>
-                    <TableCell>{note.id}</TableCell>
-                    <TableCell>{note.creationDate}</TableCell>
-                    <TableCell>{note.owner}</TableCell>
-                    <TableCell>{note.number}</TableCell>
-                    <TableCell>{note.successful ? <DoneIcon fontSize="small"/> :
-                        <CloseIcon fontSize="small"/>} </TableCell>
-                </TableRow>
-            </>
-        );
+    const fetchFile = async (key) => {
+        setFileName(key);
+        const buff = await getFileFromServer(key)
+        setFileContent(JSON.stringify(buff, null, 2));
+        setOpenDialog(true);
     };
 
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    const LogRow = ({note}) => {
+        return (
+            <TableRow>
+                <TableCell>{note.id}</TableCell>
+                <TableCell>{note.creationDate}</TableCell>
+                <TableCell>{note.owner}</TableCell>
+                <TableCell>{note.number}</TableCell>
+                <TableCell>{note.key ?
+                    <IconButton onClick={() => fetchFile(note.key)}>
+                        <VisibilityIcon fontSize="small"/>
+                    </IconButton>
+                    : " "}</TableCell>
+                <TableCell>{note.successful ? <DoneIcon fontSize="small"/> :
+                    <CloseIcon fontSize="small"/>} </TableCell>
+            </TableRow>
+        );
+    };
 
     return (
         <div>
@@ -50,6 +81,7 @@ const ImportLogTable = () => {
                                 <TableCell>Time</TableCell>
                                 <TableCell>User</TableCell>
                                 <TableCell>Obj num</TableCell>
+                                <TableCell>File</TableCell>
                                 <TableCell> </TableCell>
                             </TableRow>
                         </TableHead>
@@ -59,9 +91,22 @@ const ImportLogTable = () => {
                     </Table>
                 </TableContainer>
             </Box>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>{fileName}</DialogTitle>
+                <DialogContent>
+                    <Box component="pre" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'monospace' }}>
+                        {fileContent}
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
-
-}
+};
 
 export default ImportLogTable;

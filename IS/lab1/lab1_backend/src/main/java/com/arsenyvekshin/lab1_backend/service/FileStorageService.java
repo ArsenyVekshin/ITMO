@@ -14,7 +14,7 @@ public class FileStorageService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${file.upload-dir}")
-    String uploadDir;
+    private String uploadDir;
 
     public File storeFile(MultipartFile file) throws IOException {
 

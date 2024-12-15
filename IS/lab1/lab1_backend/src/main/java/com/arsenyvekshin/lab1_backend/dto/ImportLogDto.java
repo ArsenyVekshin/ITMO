@@ -1,6 +1,7 @@
 package com.arsenyvekshin.lab1_backend.dto;
 
 import com.arsenyvekshin.lab1_backend.entity.ImportLogNote;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -13,19 +14,23 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Запись лога о импорте из файла")
 public class ImportLogDto {
     @Schema(description = "id", example = "1")
+    @JsonProperty("id")
     private Long id;
 
-    @Column(name = "creationDate")
+    @JsonProperty("creationDate")
     private java.time.LocalDate creationDate;
 
-    @Column(name = "owner")
+    @JsonProperty("owner")
     private String owner;
 
-    @Column(name = "number")
+    @JsonProperty("number")
     private Long number = 0L;
 
-    @Column(name = "successful")
+    @JsonProperty("successful")
     private boolean successful = false;
+
+    @JsonProperty("key")
+    private String key;
 
     public ImportLogDto(ImportLogNote note) {
         this.id = note.getId();
@@ -33,6 +38,7 @@ public class ImportLogDto {
         this.owner = note.getOwner().getUsername();
         this.number = note.getNumber();
         this.successful = note.isSuccessful();
+        this.key = note.getKey();
     }
 
 }

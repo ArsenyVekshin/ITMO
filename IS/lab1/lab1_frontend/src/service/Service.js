@@ -1,11 +1,12 @@
 import store from "../store/store";
 import {showError, showSuccess} from "../view/components/ErrorMessage";
 
-const API_URL = 'http://localhost:32810/';
-const AUTH_URL = API_URL + 'auth';
-const USER_URL = API_URL + 'user';
-const ROUTE_URL = API_URL + 'route';
-const LOG_URL = API_URL + 'log';
+const API_URL = 'http://localhost:32810';
+const AUTH_URL = API_URL + '/auth';
+const USER_URL = API_URL + '/user';
+const ROUTE_URL = API_URL + '/route';
+const LOG_URL = API_URL + '/log';
+const FILE_URL = API_URL + '/file';
 
 const token = store.getState().user.token;
 
@@ -124,4 +125,8 @@ export async function getAllRoutesByRequest(from_id, to_id) {
 
 export async function getImportLogRequest() {
     return makeRequest(LOG_URL + "/import", 'GET');
+}
+
+export async function getFileFromServer(key) {
+    return makeRequest(FILE_URL + `/get/${key}`, 'GET');
 }

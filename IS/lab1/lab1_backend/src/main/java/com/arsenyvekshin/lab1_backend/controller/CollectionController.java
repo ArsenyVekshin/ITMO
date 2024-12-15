@@ -47,7 +47,7 @@ public class CollectionController {
 
     @Operation(summary = "Добавить набор маршрутов при помощи файла")
     @PostMapping("/add/file")
-    public MessageInfoDto multiAddRoute(@RequestParam("file") MultipartFile file) throws IOException {
+    public MessageInfoDto multiAddRoute(@RequestParam("file") MultipartFile file) throws Exception {
         collectionService.createRoutesFromFile(file);
         return new MessageInfoDto("ok");
     }

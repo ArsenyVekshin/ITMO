@@ -32,6 +32,12 @@ public class LogService {
         return note.getId();
     }
 
+    public void setKeyLink(Long operationId, String key) {
+        ImportLogNote note = importLogRepository.getById(operationId);
+        note.setKey(key);
+        importLogRepository.save(note);
+    }
+
 
     public void markImportLogSuccess(Long operationId, Long number) {
         ImportLogNote note = importLogRepository.getById(operationId);

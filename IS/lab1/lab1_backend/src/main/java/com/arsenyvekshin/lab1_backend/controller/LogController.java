@@ -25,4 +25,5 @@ public class LogController {
     public List<ImportLogDto> getRoutesList() {
         return logService.getImportLog();
     }
+
 }
