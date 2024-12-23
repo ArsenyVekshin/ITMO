@@ -44,10 +44,10 @@ upd: Слишком много просьб "закрой репозиторий
 ## 5 семестр   
 [Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
 [Встроенные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/Embedded)  
-[Информационные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/InfSys)  
+[Информационные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/IS)  
 [Моделирование ](https://github.com/ArsenyVekshin/ITMO/tree/master/Modeling)  
 [Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
-[Операционные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/OS)  
+[Операционные системы ](https://github.com/secs-dev-os-course/xv6-riscv-24y-ArsenyVekshin)  
 [Системное программное обеспечение ](https://github.com/ArsenyVekshin/ITMO/tree/master/SPO)  
 [Системы искусственного интеллекта](https://github.com/ArsenyVekshin/ITMO/tree/master/AISys)  
 
