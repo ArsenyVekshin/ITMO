@@ -9,15 +9,21 @@ import com.arsenyvekshin.lab1_backend.repository.LocationRepository;
 import com.arsenyvekshin.lab1_backend.repository.RouteRepository;
 import com.arsenyvekshin.lab1_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
+@Setter
 @Service
 @RequiredArgsConstructor
 public class CollectionService {
@@ -30,74 +36,122 @@ public class CollectionService {
     private final LogService logService;
     private final MinIOService minIOService;
 
-    @Transactional
-    public void createRoute(RouteDto routeDto) throws IOException {
-        validateDto(routeDto);
-        Route route = new Route();
-        routeRepository.save(buildObject(route, routeDto));
+    private boolean importEnabled = true;
+
+    private void decryptException(Exception e) throws Exception{
+        if (e instanceof DataAccessException)
+            throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE, "Database is not available: Try again later.");
+        else if (e instanceof IllegalArgumentException)
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
+        else if (e instanceof IllegalAccessException)
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, e.getMessage());
+        else
+            throw e;
     }
 
-    public void createRoutesFromFile(MultipartFile file) throws Exception {
-        Long operationId = logService.addImportLog(0L);
-
-        logService.setKeyLink(operationId, minIOService.uploadFile(file));
-
-        File buffFile = fileStorageService.storeFile(file);
-        RoutesListDto arr = fileStorageService.parseRoutes(buffFile);
-        fileStorageService.deleteFile(buffFile);
-
-        for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
-        logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
-
-    }
-
-    @Transactional(readOnly = true)
-    public List<Route> getRoutes() {
-        return routeRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Route> getSortedRoutes(SortedObjectListRequest request) throws NoSuchFieldException, IllegalArgumentException {
-        switch (request.getSign()) {
-            case '=':
-                return routeRepository.findAll().stream()
-                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) == 0)
-                        .toList();
-            case '>':
-                return routeRepository.findAll().stream()
-                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) > 0)
-                        .toList();
-            case '<':
-                return routeRepository.findAll().stream()
-                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) < 0)
-                        .toList();
-            default:
-                throw new IllegalArgumentException("Признак сравнения не опознан");
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void createRoute(RouteDto routeDto) throws Exception {
+        try {
+            validateDto(routeDto);
+            Route route = new Route();
+            routeRepository.save(buildObject(route, routeDto));
+        }
+        catch (Exception e){
+            decryptException(e);
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void updateRoute(RouteDto routeDto) throws IOException {
-        Route route = routeRepository.getById(routeDto.getId());
-        User redactor = userService.getCurrentUser();
-        if (route.isReadonly()) throw new IllegalArgumentException("Обьект помечен как READONLY");
-        if (redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
-            routeRepository.save(buildObject(route, routeDto));
-        else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void createRoutesFromFile(MultipartFile file) throws Exception {
+        Long operationId = logService.addImportLog(0L);
+        String uploadedFileLink = null;
+        try {
+            RoutesListDto arr = fileStorageService.parseRoutes(file);
+
+            for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
+
+            // Проверка кейса "RuntimeException внутри транзакции"
+            if(!importEnabled) throw new RuntimeException("Import from files disabled. Try again later");
+
+            uploadedFileLink = minIOService.uploadFile(file);
+
+            logService.setKeyLink(operationId, uploadedFileLink);
+            logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
+
+        } catch (Exception e) {
+            logService.markImportLogError(operationId, e.getMessage());
+            decryptException(e);
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Route> getRoutes() throws Exception {
+        try {
+            return routeRepository.findAll();
+        }
+        catch (Exception e){
+            decryptException(e);
+        }
+        return null;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Route> getSortedRoutes(SortedObjectListRequest request) throws Exception{
+        try {
+            return switch (request.getSign()) {
+                case '=' -> routeRepository.findAll().stream()
+                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) == 0)
+                        .toList();
+                case '>' -> routeRepository.findAll().stream()
+                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) > 0)
+                        .toList();
+                case '<' -> routeRepository.findAll().stream()
+                        .filter(entity -> entity.compareTo(request.getValue(), request.getField()) < 0)
+                        .toList();
+                default -> throw new IllegalArgumentException("Признак сравнения не опознан");
+            };
+        }
+        catch (Exception e){
+            decryptException(e);
+        }
+       return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void updateRoute(RouteDto routeDto) throws Exception {
+        try {
+            Route route = routeRepository.getById(routeDto.getId());
+            User redactor = userService.getCurrentUser();
+            if (route.isReadonly()) throw new IllegalArgumentException("Объект помечен как READONLY");
+            if (redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
+                routeRepository.save(buildObject(route, routeDto));
+            else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
+        }
+        catch (Exception e){
+            decryptException(e);
+        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteRoute(Long id) {
-        Route route = routeRepository.getById(id);
-        User redactor = userService.getCurrentUser();
-        if (route.isReadonly()) throw new IllegalArgumentException("Обьект помечен как READONLY");
-        if (redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
-            routeRepository.delete(route);
-        else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
+    public void deleteRoute(Long id) throws Exception {
+        try {
+            Route route = routeRepository.getById(id);
+            User redactor = userService.getCurrentUser();
+            if (route.isReadonly()) throw new IllegalArgumentException("Объект помечен как READONLY");
+            if (redactor.getRole() == Role.ADMIN || redactor == route.getOwner())
+                routeRepository.delete(route);
+            else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
+        }
+        catch (Exception e){
+            decryptException(e);
+        }
+
     }
 
 
-    private Route buildObject(Route route, RouteDto routeDto) throws IOException {
+    private Route buildObject(Route route, RouteDto routeDto) throws Exception {
         route.updateByDto(routeDto);
 
         if (routeDto.getCoordinates() != null) {
@@ -141,7 +195,7 @@ public class CollectionService {
     }
 
 
-    private void validateDto(RouteDto dto){
+    private void validateDto(RouteDto dto) throws Exception {
         if (dto.getName() != null) {
             if(!routeRepository.findRouteByName(dto.getName()).isEmpty())
                 throw new IllegalArgumentException("Имя маршрута должно быть уникальным");
@@ -158,28 +212,5 @@ public class CollectionService {
         }
     }
 
-    public void fillDefault() {
-        Coordinates c1 = new Coordinates(0L, 1, 1);
-        Coordinates c2 = new Coordinates(0L, 2, 2);
-        Coordinates c3 = new Coordinates(0L, 3, 3);
-        coordinatesRepository.save(c1);
-        coordinatesRepository.save(c2);
-        coordinatesRepository.save(c3);
-
-        Location l1 = new Location(0L, 1L, 1L, 1L, "name1");
-        Location l2 = new Location(0L, 2L, 2L, 2L, "name2");
-        Location l3 = new Location(0L, 3L, 3L, 3L, "name3");
-        locationRepository.save(l1);
-        locationRepository.save(l2);
-        locationRepository.save(l3);
-
-
-        Route r1 = new Route(0L, "name1", coordinatesRepository.getById(1L), LocalDate.now(), locationRepository.getById(1L), locationRepository.getById(2L), 1.0, 1, userRepository.findByUsername("user1"), false);
-        Route r2 = new Route(0L, "name2", coordinatesRepository.getById(2L), LocalDate.now(), locationRepository.getById(2L), locationRepository.getById(3L), 2.0, 2, userRepository.findByUsername("user1"), false);
-        Route r3 = new Route(0L, "name2", coordinatesRepository.getById(2L), LocalDate.now(), locationRepository.getById(3L), locationRepository.getById(1L), 3.0, 3, userRepository.findByUsername("user1"), false);
-        routeRepository.save(r1);
-        routeRepository.save(r2);
-        routeRepository.save(r3);
-    }
 
 }

@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "id": 4,
+      "name": "meow525dfbg252",
+      "coordinates": {
+        "id": null,
+        "x": 2,
+        "y": 2
+      },
+      "from": {
+        "id": null,
+        "x": -2,
+        "y": -2000,
+        "z": -2,
+        "name": "frommeow52524dfbцц2"
+      },
+      "to": {
+        "id": null,
+        "x": 2,
+        "y": 2,
+        "z": 2,
+        "name": "tomeow5dbf252542"
+      },
+      "distance": 52,
+      "rating": 522,
+      "owner": "admin",
+      "readonly": false
+    }
+  ]
+}

@@ -37,6 +37,9 @@ public class ImportLogNote {
     @Column(name = "key")
     private String key;
 
+    @Column(name = "error")
+    private String error;
+
     public ImportLogNote(User user, Long number) {
         this.owner = user;
         this.number = number;

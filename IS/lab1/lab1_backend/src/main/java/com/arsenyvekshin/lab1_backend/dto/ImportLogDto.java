@@ -32,6 +32,9 @@ public class ImportLogDto {
     @JsonProperty("key")
     private String key;
 
+    @JsonProperty("error")
+    private String error;
+
     public ImportLogDto(ImportLogNote note) {
         this.id = note.getId();
         this.creationDate = note.getCreationDate();
@@ -39,6 +42,7 @@ public class ImportLogDto {
         this.number = note.getNumber();
         this.successful = note.isSuccessful();
         this.key = note.getKey();
+        this.error = note.getError();
     }
 
 }

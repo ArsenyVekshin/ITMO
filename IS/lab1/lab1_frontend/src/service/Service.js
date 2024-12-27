@@ -1,7 +1,7 @@
 import store from "../store/store";
 import {showError, showSuccess} from "../view/components/ErrorMessage";
 
-const API_URL = 'http://localhost:32810';
+const API_URL = 'http://188.134.94.41:32810';
 const AUTH_URL = API_URL + '/auth';
 const USER_URL = API_URL + '/user';
 const ROUTE_URL = API_URL + '/route';
@@ -14,6 +14,7 @@ async function makeRequest(url, method, body = null, fileFlag = null) {
     const headers = {};
 
     if (!fileFlag) headers['Content-Type'] = 'application/json';
+    //else headers['Content-Type'] = 'multipart/form-data';
     if (token && token !== '') headers['Authorization'] = 'Bearer ' + token;
 
     let response;
