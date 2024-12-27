@@ -9,18 +9,25 @@ import com.arsenyvekshin.lab1_backend.repository.LocationRepository;
 import com.arsenyvekshin.lab1_backend.repository.RouteRepository;
 import com.arsenyvekshin.lab1_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CollectionService {
+    private static final Object lock = new Object();
+    private static boolean importEnabled = true;
     private final CoordinatesRepository coordinatesRepository;
     private final LocationRepository locationRepository;
     private final RouteRepository routeRepository;
@@ -30,34 +37,69 @@ public class CollectionService {
     private final LogService logService;
     private final MinIOService minIOService;
 
-    @Transactional
-    public void createRoute(RouteDto routeDto) throws IOException {
-        validateDto(routeDto);
-        Route route = new Route();
-        routeRepository.save(buildObject(route, routeDto));
+    public void setImportEnabled(boolean status) {
+        importEnabled = status;
     }
 
+    private void decryptException(Exception e) throws Exception {
+        if (e instanceof DataAccessException)
+            throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE, "Database is not available: Try again later.");
+        else if (e instanceof IllegalArgumentException)
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, e.getMessage());
+        else if (e instanceof IllegalAccessException)
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, e.getMessage());
+        else
+            throw e;
+    }
+
+    @Transactional // propagination = Propagation.REQUIRES_NEW
+    public void createRoute(RouteDto routeDto) throws Exception {
+        try {
+            validateDto(routeDto);
+            Route route = new Route();
+            routeRepository.save(buildObject(route, routeDto));
+        } catch (Exception e) {
+            decryptException(e);
+        }
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createRoutesFromFile(MultipartFile file) throws Exception {
-        Long operationId = logService.addImportLog(0L);
+        synchronized (lock) {
+            Long operationId = logService.addImportLog(0L);
+            String uploadedFileLink;
+            try {
+                RoutesListDto arr = fileStorageService.parseRoutes(file);
 
-        logService.setKeyLink(operationId, minIOService.uploadFile(file));
+                for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
 
-        File buffFile = fileStorageService.storeFile(file);
-        RoutesListDto arr = fileStorageService.parseRoutes(buffFile);
-        fileStorageService.deleteFile(buffFile);
+                // Проверка кейса "RuntimeException внутри транзакции"
+                if (!importEnabled) throw new RuntimeException("Import from files disabled. Try again later");
 
-        for (RouteDto routeDto : arr.getRoutes()) createRoute(routeDto);
-        logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
+                uploadedFileLink = minIOService.uploadFile(file, operationId.toString());
 
+                logService.setKeyLink(operationId, uploadedFileLink);
+                logService.markImportLogSuccess(operationId, (long) arr.getRoutes().size());
+
+            } catch (Exception e) {
+                logService.setErrorMes(operationId, e.getMessage());
+                decryptException(e);
+            }
+        }
     }
 
     @Transactional(readOnly = true)
-    public List<Route> getRoutes() {
-        return routeRepository.findAll();
+    public List<Route> getRoutes() throws Exception {
+        try {
+            return routeRepository.findAll();
+        } catch (Exception e) {
+            decryptException(e);
+        }
+        return new ArrayList<>();
     }
 
     @Transactional(readOnly = true)
-    public List<Route> getSortedRoutes(SortedObjectListRequest request) throws NoSuchFieldException, IllegalArgumentException {
+    public List<Route> getSortedRoutes(SortedObjectListRequest request) {
         switch (request.getSign()) {
             case '=':
                 return routeRepository.findAll().stream()
@@ -76,8 +118,8 @@ public class CollectionService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void updateRoute(RouteDto routeDto) throws IOException {
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void updateRoute(RouteDto routeDto) throws Exception {
         Route route = routeRepository.getById(routeDto.getId());
         User redactor = userService.getCurrentUser();
         if (route.isReadonly()) throw new IllegalArgumentException("Обьект помечен как READONLY");
@@ -86,7 +128,7 @@ public class CollectionService {
         else throw new IllegalAccessError("У вас нет прав на редактирование этого объекта");
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public void deleteRoute(Long id) {
         Route route = routeRepository.getById(id);
         User redactor = userService.getCurrentUser();
@@ -141,19 +183,19 @@ public class CollectionService {
     }
 
 
-    private void validateDto(RouteDto dto){
+    private void validateDto(RouteDto dto) {
         if (dto.getName() != null) {
-            if(!routeRepository.findRouteByName(dto.getName()).isEmpty())
+            if (!routeRepository.findRouteByName(dto.getName()).isEmpty())
                 throw new IllegalArgumentException("Имя маршрута должно быть уникальным");
         }
 
-        if(dto.getFrom() != null){
-            if(!locationRepository.findLocationByName(dto.getFrom().getName()).isEmpty())
+        if (dto.getFrom() != null) {
+            if (!locationRepository.findLocationByName(dto.getFrom().getName()).isEmpty())
                 throw new IllegalArgumentException("Имя локации FROM должно быть уникальным");
         }
 
-        if(dto.getTo() != null){
-            if(!locationRepository.findLocationByName(dto.getTo().getName()).isEmpty())
+        if (dto.getTo() != null) {
+            if (!locationRepository.findLocationByName(dto.getTo().getName()).isEmpty())
                 throw new IllegalArgumentException("Имя локации TO должно быть уникальным");
         }
     }

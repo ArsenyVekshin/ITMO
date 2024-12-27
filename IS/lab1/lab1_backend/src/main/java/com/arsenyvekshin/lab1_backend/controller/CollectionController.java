@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,19 +27,19 @@ public class CollectionController {
 
     @Operation(summary = "Список записей в коллекции")
     @GetMapping("/list")
-    public List<Route> getRoutesList() {
+    public List<Route> getRoutesList() throws Exception {
         return collectionService.getRoutes();
     }
 
     @Operation(summary = "Список записей в коллекции, после сортировки")
     @GetMapping("/list/sorted")
-    public List<Route> getSortedRoutesList(SortedObjectListRequest request) throws NoSuchFieldException {
+    public List<Route> getSortedRoutesList(SortedObjectListRequest request) throws Exception {
         return collectionService.getSortedRoutes(request);
     }
 
     @Operation(summary = "Добавить новый маршрут")
     @PostMapping("/add")
-    public MessageInfoDto addRoute(@RequestBody @Valid RouteDto route) throws IOException {
+    public MessageInfoDto addRoute(@RequestBody @Valid RouteDto route) throws Exception {
         collectionService.createRoute(route);
         return new MessageInfoDto("ok");
     }
@@ -52,23 +51,30 @@ public class CollectionController {
         return new MessageInfoDto("ok");
     }
 
+    @Operation(summary = "Сменить режим доступности импорта файлов")
+    @PatchMapping("/add/file/settings/")
+    public MessageInfoDto getRoutesList(boolean enabled) {
+        collectionService.setImportEnabled(enabled);
+        return new MessageInfoDto("ok");
+    }
+
     @Operation(summary = "Изменить существующий маршрут")
     @PostMapping("/update")
-    public MessageInfoDto updateRoute(@RequestBody @Valid RouteDto route) throws IOException {
+    public MessageInfoDto updateRoute(@RequestBody @Valid RouteDto route) throws Exception {
         collectionService.updateRoute(route);
         return new MessageInfoDto("ok");
     }
 
     @Operation(summary = "Удалить существующий маршрут")
     @PostMapping("/delete")
-    public MessageInfoDto deleteRoute(@RequestBody MessageInfoDto dto) {
+    public MessageInfoDto deleteRoute(@RequestBody MessageInfoDto dto) throws Exception {
         collectionService.deleteRoute(Long.valueOf(dto.getMessage()));
         return new MessageInfoDto("ok");
     }
 
     @Operation(summary = "заполнить тестовыми сущностями")
     @PostMapping("/default")
-    public MessageInfoDto deleteRoute() {
+    public MessageInfoDto deleteRoute() throws Exception {
         collectionService.fillDefault();
         return new MessageInfoDto("ok");
     }

@@ -1,11 +1,9 @@
 package com.arsenyvekshin.lab1_backend.configuration;
 
+import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import io.minio.MinioClient;
-
-import java.net.URI;
 
 @Configuration
 public class MinIOConfiguration {

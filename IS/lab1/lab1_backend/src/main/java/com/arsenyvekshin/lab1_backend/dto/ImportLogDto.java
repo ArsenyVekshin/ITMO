@@ -3,7 +3,6 @@ package com.arsenyvekshin.lab1_backend.dto;
 import com.arsenyvekshin.lab1_backend.entity.ImportLogNote;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +31,9 @@ public class ImportLogDto {
     @JsonProperty("key")
     private String key;
 
+    @JsonProperty("error")
+    private String error;
+
     public ImportLogDto(ImportLogNote note) {
         this.id = note.getId();
         this.creationDate = note.getCreationDate();
@@ -39,6 +41,7 @@ public class ImportLogDto {
         this.number = note.getNumber();
         this.successful = note.isSuccessful();
         this.key = note.getKey();
+        this.error = note.getError();
     }
 
 }

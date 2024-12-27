@@ -9,11 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.naming.ServiceUnavailableException;
 import java.io.InputStream;
+import java.net.ConnectException;
 
 
 @RequiredArgsConstructor
@@ -26,17 +28,31 @@ public class MinIOService {
     private String bucketName;
 
     public void createBucketIfNotExists() throws Exception {
-        boolean isExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
-        if (!isExist) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        try {
+            boolean isExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (!isExist) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            }
+        } catch (ConnectException e) {
+            throw new ServiceUnavailableException("MinIO unavailable: try again later");
+        } catch (Exception e) {
+            throw e;
         }
     }
 
-    @Transactional
     public String uploadFile(MultipartFile file) throws Exception {
-        createBucketIfNotExists();
+        return uploadFile(file, "");
+    }
 
-        String key = userService.getCurrentUser().getUsername() + "-" + file.getOriginalFilename();
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 10)
+    public String uploadFile(MultipartFile file, String id) throws Exception {
+        createBucketIfNotExists();
+        String key = "";
+        if (id.isEmpty())
+            key = userService.getCurrentUser().getUsername() + "-" + file.getOriginalFilename();
+        else
+            key = userService.getCurrentUser().getUsername() + "-" + id + "-" + file.getOriginalFilename();
         InputStream inputStream = file.getInputStream();
 
         minioClient.putObject(PutObjectArgs.builder()
@@ -50,6 +66,8 @@ public class MinIOService {
     }
 
     public InputStream getFile(@NotNull String key) throws Exception {
+        createBucketIfNotExists();
+
         User user = userService.getCurrentUser();
         if (user.getRole() != Role.ADMIN && !key.contains(user.getUsername()))
             throw new AccessDeniedException("У вас нет прав на доступ к этому файлу");

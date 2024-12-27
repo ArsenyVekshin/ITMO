@@ -80,9 +80,9 @@ public class RouteDto {
         this.coordinates = coordinates;
         this.from = from;
         this.to = to;
-        if(distance<1) throw new IllegalArgumentException("Дистанция должна быть >1");
+        if (distance < 1) throw new IllegalArgumentException("Дистанция должна быть >1");
         this.distance = distance;
-        if(rating<1) throw new IllegalArgumentException("Дистанция должна быть >1");
+        if (rating < 1) throw new IllegalArgumentException("Дистанция должна быть >1");
         this.rating = rating;
         this.owner = owner;
         this.readonly = readonly;

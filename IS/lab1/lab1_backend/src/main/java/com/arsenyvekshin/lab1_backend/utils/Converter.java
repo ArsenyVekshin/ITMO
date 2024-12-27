@@ -4,16 +4,16 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 public class Converter {
-    private static HashMap<String, Convert> converters = new HashMap<>();
+    private static final HashMap<String, Convert> converters = new HashMap<>();
 
     static {
-        converters.put(String.class.getTypeName(), (type, x) -> (String) x);
+        converters.put(String.class.getTypeName(), (type, x) -> x);
         converters.put(Integer.class.getName(), (type, x) -> Integer.valueOf(x));
         converters.put(Long.class.getName(), (type, x) -> Long.valueOf(x));
         converters.put(Float.class.getName(), (type, x) -> Float.valueOf(x));
         converters.put(Double.class.getName(), (type, x) -> Double.valueOf(x));
         converters.put(LocalDate.class.getName(), (type, x) -> (LocalDate.parse(x)));
-        converters.put("String", (type, x) -> (String) x);
+        converters.put("String", (type, x) -> x);
         converters.put("int", (type, x) -> Integer.valueOf(x));
         converters.put("long", (type, x) -> Long.valueOf(x));
         converters.put("float", (type, x) -> Float.valueOf(x));

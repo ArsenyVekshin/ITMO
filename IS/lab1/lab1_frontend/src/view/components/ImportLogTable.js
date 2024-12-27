@@ -11,7 +11,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow,
+    Tooltip
 } from "@mui/material";
 import React, {useEffect, useState} from "react";
 import CloseIcon from '@mui/icons-material/Close';
@@ -27,7 +28,6 @@ const ImportLogTable = () => {
 
     const fetchLog = async () => {
         setData(await getImportLogRequest());
-        console.log(data);
     };
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const ImportLogTable = () => {
 
     const fetchFile = async (key) => {
         setFileName(key);
-        const buff = await getFileFromServer(key)
+        const buff = await getFileFromServer(key);
         setFileContent(JSON.stringify(buff, null, 2));
         setOpenDialog(true);
     };
@@ -54,13 +54,24 @@ const ImportLogTable = () => {
                 <TableCell>{note.creationDate}</TableCell>
                 <TableCell>{note.owner}</TableCell>
                 <TableCell>{note.number}</TableCell>
-                <TableCell>{note.key ?
-                    <IconButton onClick={() => fetchFile(note.key)}>
-                        <VisibilityIcon fontSize="small"/>
-                    </IconButton>
-                    : " "}</TableCell>
-                <TableCell>{note.successful ? <DoneIcon fontSize="small"/> :
-                    <CloseIcon fontSize="small"/>} </TableCell>
+                <TableCell>
+                    {note.key ? (
+                        <IconButton onClick={() => fetchFile(note.key)}>
+                            <VisibilityIcon fontSize="small"/>
+                        </IconButton>
+                    ) : " "}
+                </TableCell>
+                <TableCell>
+                    {note.successful ? (
+                        <DoneIcon fontSize="small" color="success"/>
+                    ) : (
+                        <Tooltip title={note.error || "Error occurred"}>
+                            <IconButton>
+                                <CloseIcon fontSize="small" color="error"/>
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                </TableCell>
             </TableRow>
         );
     };
@@ -82,7 +93,7 @@ const ImportLogTable = () => {
                                 <TableCell>User</TableCell>
                                 <TableCell>Obj num</TableCell>
                                 <TableCell>File</TableCell>
-                                <TableCell> </TableCell>
+                                <TableCell>Status</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

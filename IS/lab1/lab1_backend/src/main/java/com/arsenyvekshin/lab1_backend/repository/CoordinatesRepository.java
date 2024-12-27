@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface CoordinatesRepository extends JpaRepository<Coordinates, Long> {
 
     @Query("select count(*) from Route r where r.coordinates.id = ?1")
-    public long calcUsageNum(Long id);
+    long calcUsageNum(Long id);
 
 }
 

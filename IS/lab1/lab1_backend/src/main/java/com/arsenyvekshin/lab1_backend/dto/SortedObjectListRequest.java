@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Schema(description = "Запрос на отсортированный список маршрутов")
 public class SortedObjectListRequest {
-    @Schema(description = "Тип сортировки", example = "\'=\' / \'>\' / \'<\'")
+    @Schema(description = "Тип сортировки", example = "'=' / '>' / '<'")
     private char sign = '=';
 
     @Schema(description = "Поле для сортировки", example = "to.name")

@@ -2,6 +2,7 @@ package com.arsenyvekshin.lab1_backend.service;
 
 import com.arsenyvekshin.lab1_backend.dto.RoutesListDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,29 @@ public class FileStorageService {
             return objectMapper.readValue(file, RoutesListDto.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Error parsing the file");
+        }
+    }
+
+    public RoutesListDto parseRoutes(MultipartFile file) throws IOException {
+        try {
+            if (file == null || file.isEmpty()) {
+                throw new IllegalArgumentException("File is empty or null");
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(file.getInputStream(), RoutesListDto.class);
+        } catch (ValueInstantiationException e) {
+            System.out.println(e.getCause().getMessage());
+            throw new IllegalArgumentException("Error parsing the file: "
+                    + e.getCause().getMessage()
+                    + " at line = " + e.getLocation().getLineNr()
+                    + ", col = " + e.getLocation().getColumnNr()
+            );
+        } catch (IOException e) {
+            if (e.getCause() != null)
+                throw new IllegalArgumentException("Error parsing the file: " + e.getCause().getMessage());
+            else
+                throw new IllegalArgumentException("Error parsing the file: " + e.getMessage());
         }
     }
 
