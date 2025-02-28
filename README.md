@@ -6,8 +6,6 @@
 
 #### Важно: данный репозиторий - мое личное хранилище для лаб. Если у вас возникли проблемы с копирайтом - это исключительно ВАШИ проблемы
 
-upd: Слишком много просьб "закрой репозиторий на время пж"
-
 ---
 ## 1 семестр
 [Информатика](https://github.com/ArsenyVekshin/ITMO/tree/master/Inf)  
@@ -42,13 +40,18 @@ upd: Слишком много просьб "закрой репозиторий
 
 ---   
 ## 5 семестр   
-[Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
-[Встроенные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/Embedded)  
-[Информационные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/IS)  
-[Моделирование ](https://github.com/ArsenyVekshin/ITMO/tree/master/Modeling)  
-[Архитектура программных систем ](https://github.com/ArsenyVekshin/ITMO/tree/master/ArchProgSys)  
-[Операционные системы ](https://github.com/secs-dev-os-course/xv6-riscv-24y-ArsenyVekshin)  
-[Системное программное обеспечение ](https://github.com/ArsenyVekshin/ITMO/tree/master/SPO)  
-[Системы искусственного интеллекта](https://github.com/ArsenyVekshin/ITMO/tree/master/AISys)  
+[Встроенные системы (проект)](https://github.com/ArsenyVekshin/UMK-32) - отдельный репозиторий  
+[Информационные системы ](https://github.com/ArsenyVekshin/ITMO/tree/master/IS)    
+[Информационные системы (курсовая работа)](https://github.com/ArsenyVekshin/SmartTasker) - отдельный репозиторий  
+[Моделирование](https://github.com/ArsenyVekshin/ITMO/tree/master/Modeling)    
+[Операционные системы ](https://github.com/secs-dev-os-course/xv6-riscv-24y-ArsenyVekshin)    
+[Системы искусственного интеллекта](https://github.com/ArsenyVekshin/ITMO/tree/master/AISys)    
 
-
+---   
+## 6 семестр 
+[Компьютерные сети](https://github.com/ArsenyVekshin/ITMO/tree/master/Computer%20networks)   
+[Многопоточное программирование](https://github.com/ArsenyVekshin/ITMO/tree/master/Multithread)   
+[Разработка компиляторов](https://github.com/ArsenyVekshin/ITMO/tree/master/Compilers)  
+[Распределенные системы хранения данных](https://github.com/ArsenyVekshin/ITMO/tree/master/RSHD)   
+[Системы ввода-вывода](https://github.com/ArsenyVekshin/ITMO/tree/master/IOsystems)  
+[Тестирование программного обеспечения](https://github.com/ArsenyVekshin/ITMO/tree/master/Testing)   
