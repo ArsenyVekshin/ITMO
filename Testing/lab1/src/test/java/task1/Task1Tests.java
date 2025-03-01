@@ -4,6 +4,8 @@ package task1;
 import com.ArsenyVekshin.task1.ArctanSeries;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,6 +57,22 @@ public class Task1Tests {
     public void testArctgHighTerms() {
         double result = ArctanSeries.arctg(0.5, 1000000000);
         assertEquals(Math.atan(0.5), result, 1e-9);  // Точность увеличивается
+    }
+
+    @ParameterizedTest
+    @DisplayName("Параметризованный тест")
+    @CsvSource({
+            "0.0, 0.0",
+            "1.0, 0.7853981633974483",
+            "-1.0, -0.7853981633974483",
+            "0.5, 0.4636476090008061",
+            "-0.5, -0.4636476090008061",
+            "10.0, 1.4711276743037347",
+            "-10.0, -1.4711276743037347"
+    })
+    void testArctanValues(double input, double expected) {
+        double result = ArctanSeries.arctg(input, 1000000);
+        assertEquals(expected, result, 1e-6);
     }
 
 }

@@ -3,7 +3,7 @@ package com.ArsenyVekshin.task1;
 import com.ArsenyVekshin.task1.ArctanSeries;
 
 
-public class Task1 {
+public class   Task1 {
     public static void main(String[] args) {
         // Печать заголовка таблицы
         System.out.println("   x    | arctan(x)");

@@ -9,12 +9,13 @@ import lombok.*;
 @RequiredArgsConstructor
 public class Alive implements Named {
 
-    private String name;
-    private boolean isAlive = true;
+    protected String name;
+    protected boolean isAlive = true;
 
-    private Location location;
+    protected Location location;
 
     public Subject dead() {
+        System.out.println(this.name + " умирает");
         this.isAlive = false;
         return new Subject("Останки " + name, true);
     }
