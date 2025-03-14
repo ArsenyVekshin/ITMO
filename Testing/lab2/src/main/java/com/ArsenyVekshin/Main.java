@@ -1,7 +1,10 @@
 package com.ArsenyVekshin;
 
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    static MathFunctions mathFunctions = new MathFunctions();
+    public static void main(String[] args) throws IOException {
+        mathFunctions.meow(args);
     }
 }
