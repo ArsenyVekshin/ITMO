@@ -9,6 +9,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.ArsenyVekshin.Func.f;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -28,12 +31,13 @@ public class SecIntegrationTest {
     public void testMockedSec(double x, double ctrlValue, double selfExpected, double funcExpected) {
         mocked.when(() -> Cos.cos(anyDouble())).thenAnswer(invocation -> {
             double arg = invocation.getArgument(0);
-            return Math.cos(arg);
+            BigDecimal bd = BigDecimal.valueOf(Math.cos(arg)).setScale(5, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         });
         //mocked.when(() -> Cos.cos(anyDouble())).thenReturn(ctrlValue);
 
         assertEquals(selfExpected, Sec.sec(x), DELTA);
         assertEquals(funcExpected, f(x), DELTA);
-        mocked.verify(() -> Sin.sin(anyDouble()), atLeastOnce());
+        mocked.verify(() -> Cos.cos(anyDouble()), atLeastOnce());
     }
 }

@@ -8,6 +8,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.ArsenyVekshin.Func.f;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -27,7 +30,8 @@ public class CosIntegrationTest {
     public void testMockedCos(double x, double ctrlValue, double selfExpected, double funcExpected) {
         mocked.when(() -> Sin.sin(anyDouble())).thenAnswer(invocation -> {
             double arg = invocation.getArgument(0);
-            return Math.sin(arg);
+            BigDecimal bd = BigDecimal.valueOf(Math.sin(arg)).setScale(5, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         });
 
         assertEquals(selfExpected, Cos.cos(x), DELTA);

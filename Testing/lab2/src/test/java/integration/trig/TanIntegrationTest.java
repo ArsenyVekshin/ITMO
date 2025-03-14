@@ -9,6 +9,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.ArsenyVekshin.Func.f;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -30,11 +33,13 @@ public class TanIntegrationTest {
     public void testMockedTan(double x, double ctrlValue1, double ctrlValue2, double selfExpected, double funcExpected) {
         mockedSin.when(() -> Sin.sin(anyDouble())).thenAnswer(invocation -> {
             double arg = invocation.getArgument(0);
-            return Math.sin(arg);
+            BigDecimal bd = BigDecimal.valueOf(Math.sin(arg)).setScale(5, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         });
         mockedCos.when(() -> Cos.cos(anyDouble())).thenAnswer(invocation -> {
             double arg = invocation.getArgument(0);
-            return Math.cos(arg);
+            BigDecimal bd = BigDecimal.valueOf(Math.cos(arg)).setScale(5, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         });
 
 
