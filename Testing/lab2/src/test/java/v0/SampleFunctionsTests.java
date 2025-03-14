@@ -1,3 +1,5 @@
+package v0;
+
 import com.ArsenyVekshin.MathFunctions;
 import org.junit.jupiter.api.Test;
 
@@ -5,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SampleFunctionsTests {
 
-    private final MathFunctions mathFunctions = new MathFunctions();
     private static final double DELTA = 1e-5;
+    private final MathFunctions mathFunctions = new MathFunctions();
 
     @Test
     void testSin() {

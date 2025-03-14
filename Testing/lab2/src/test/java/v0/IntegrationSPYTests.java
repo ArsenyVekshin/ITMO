@@ -1,3 +1,5 @@
+package v0;
+
 import com.ArsenyVekshin.MathFunctions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -7,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyDouble;
 
 
-public class IntegrationTests {
+public class IntegrationSPYTests {
     private static final double DELTA = 1e-5;
     private final MathFunctions mathFunctions = new MathFunctions();
 
