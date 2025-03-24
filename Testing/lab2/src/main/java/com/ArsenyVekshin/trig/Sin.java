@@ -16,8 +16,10 @@ public class Sin {
             term *= -x * x / ((2 * n) * (2 * n + 1));
             n++;
         }
+
         BigDecimal bd = new BigDecimal(result).setScale(5, RoundingMode.HALF_UP); // Указываем количество знаков после запятой
-        return bd.doubleValue();
+        return result;
+        //return bd.doubleValue();
     }
 
 

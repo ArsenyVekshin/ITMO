@@ -24,7 +24,7 @@ public class MathFunctions implements Cloneable {
         int n = 1;
         int sign = 1;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10000; i++) {
             result += term;
             term *= -x * x / ((2 * n) * (2 * n + 1));
             n++;
