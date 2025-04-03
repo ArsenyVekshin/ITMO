@@ -53,5 +53,5 @@
 [Многопоточное программирование](https://github.com/ArsenyVekshin/ITMO/tree/master/Multithread)   
 [Разработка компиляторов](https://github.com/ArsenyVekshin/ITMO/tree/master/Compilers)  
 [Распределенные системы хранения данных](https://github.com/ArsenyVekshin/ITMO/tree/master/RSHD)   
-[Системы ввода-вывода](https://github.com/ArsenyVekshin/ITMO/tree/master/IOsystems)  
+[Системы ввода-вывода](https://github.com/ArsenyVekshin/ITMO/tree/master/IOSystems)  
 [Тестирование программного обеспечения](https://github.com/ArsenyVekshin/ITMO/tree/master/Testing)   

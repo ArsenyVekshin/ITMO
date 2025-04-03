@@ -1,0 +1,17 @@
+Found 1 valid DHT-11 Sensor Readings:
+=======================================
+
+Reading #1 (at time 6.36s):
+---------------------
+Humidity:    33.0%
+Temperature: 23.4°C
+
+Bit Sequences:
+-------------
+Full 40-bit sequence: 0010000100000000000101110000010000111100
+Humidity INT:    00100001 = 33
+Humidity DEC:    00000000 = 0
+Temperature INT: 00010111 = 23
+Temperature DEC: 00000100 = 4
+Checksum:        00111100 = 60
+Calculated checksum: 60 (should match checksum value)

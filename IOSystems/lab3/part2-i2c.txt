@@ -1,0 +1,62 @@
+Raw measurement 1 (time: 1.224):
+  Temperature: 524288
+
+Raw measurement 2 (time: 2.230):
+  Temperature: 522744
+
+Raw measurement 3 (time: 2.232):
+  Temperature: 522744
+
+Raw measurement 4 (time: 3.239):
+  Temperature: 522752
+
+Raw measurement 5 (time: 3.241):
+  Temperature: 522752
+
+Raw measurement 6 (time: 4.247):
+  Temperature: 522756
+
+Raw measurement 7 (time: 4.249):
+  Temperature: 522756
+Loaded 35 transactions from: i2c-ver2.csv
+Chip ID: 0x58
+Found 7 temperature readings
+
+Temperature Sensor Configuration:
+------------------------------
+Filter: 16
+Mode: Normal
+Standby Time: 250ms
+Temperature Oversampling: 8
+
+Found 7 temperature readings
+
+Latest Valid Temperature Measurement:
+------------------------------------
+Temperature: 21.14 °C
+
+All Temperature Measurements:
+--------------------------------------------------
+ # | Time (s) | Temp (°C) |  Raw Value
+--------------------------------------------------
+ 1 |    1.224 |    21.62 |     524288
+ 2 |    2.230 |    21.14 |     522744
+ 3 |    2.232 |    21.14 |     522744
+ 4 |    3.239 |    21.14 |     522752
+ 5 |    3.241 |    21.14 |     522752
+ 6 |    4.247 |    21.14 |     522756
+ 7 |    4.249 |    21.14 |     522756
+
+Raw Value for Valid Measurement:
+Raw Temperature: 522756
+
+Chip ID: 0x58 (BMP280)
+
+Sensor Configuration Summary:
+- Temperature oversampling: x8
+- Mode: Normal
+- Filter: 16
+- Standby time: 250ms
+
+Значения датчика в указанных единицах:
+Температура: 21.14 Градусы Цельсия
