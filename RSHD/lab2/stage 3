@@ -1,0 +1,4 @@
+mkdir -p $HOME/dpk35
+psql -U postgres2 -p 9296 -d postgres
+
+psql -h pg107 -p 9296 gooduser -d postgres
