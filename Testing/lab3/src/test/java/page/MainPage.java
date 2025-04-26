@@ -28,4 +28,14 @@ public class MainPage extends DefaultPage {
     }
 
 
+    public boolean validateProjectExistence(String name) {
+        try {
+            By project = By.xpath("//*[@href = '/ArsenyVekshin/" + name + "']");
+            find(project);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

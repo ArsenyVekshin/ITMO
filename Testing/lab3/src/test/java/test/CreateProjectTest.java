@@ -41,6 +41,15 @@ public class CreateProjectTest extends DefaultTest {
         projectSettingsPage.clickDeleteProjectButton();
         projectSettingsPage.setProjectNameConfirmField(projectSlug);
         projectSettingsPage.clickConfirmedDeleteProjectButton();
+
+
+        mainPage.open();
+        mainPage.browseWholePage();
+        try{
+            Thread.sleep(5000);
+        } catch (Exception e) {}
+        mainPage.open();
+        assertFalse(mainPage.validateProjectExistence(projectSlug));
     }
 
 
@@ -54,7 +63,9 @@ public class CreateProjectTest extends DefaultTest {
 
         fillProjectFields(true);
 
-        //assertEquals("https://gitlab.se.ifmo.ru/ArsenyVekshin/"+projectSlug, driver.getCurrentUrl());
+        mainPage.open();
+        mainPage.browseWholePage();
+        assertTrue(mainPage.validateProjectExistence(projectSlug));
     }
 
     @Test
@@ -76,7 +87,9 @@ public class CreateProjectTest extends DefaultTest {
 
         fillProjectFields(false);
 
-        //assertEquals("https://gitlab.se.ifmo.ru/ArsenyVekshin/"+projectSlug, driver.getCurrentUrl());
+        mainPage.open();
+        mainPage.browseWholePage();
+        assertTrue(mainPage.validateProjectExistence(projectSlug));
     }
 
 
